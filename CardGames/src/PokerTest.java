@@ -49,9 +49,7 @@ public class PokerTest extends CardGame {
 			final int k = i;
 			hands[i].addCardListener(new CardAdapter() {
 			      public void leftDoubleClicked(Card card)
-			      {
-			    	  //card.removeFromHand(true); //it isn't removed... WHY?
-			    	  //i want this to work: 
+			      {			
 			    	  card.setVerso(true);
 			    	  card.transfer(burntCards, true);
 			    	  Card newCard = stock.getLast();
@@ -72,9 +70,6 @@ public class PokerTest extends CardGame {
 	 * TODO: implement full houses and straights!
 	 * test for bugs
 	 * 
-	 * Breaks something! Doesn't leave the given hand as it was.
-	 * I have no idea what <.<
-	 * 
 	 * @param hand
 	 * @return
 	 */
@@ -89,15 +84,21 @@ public class PokerTest extends CardGame {
 		goodStuff.addAll(toArrayList(hand.getTrips()));
 		goodStuff.addAll(toArrayList(hand.getPairs()));
 		//somehow buggy:
-		Hand handHiCard = new Hand(deck);
-		Card hiCard = hand.get(0).clone();
+		
+		//This line makes problems:
+		//Hand handHiCard = new Hand(deck);
+		
 		//int posHighestCard = hand.getMaxPosition(SortType.RANKPRIORITY);
 		//Card hiCard = hand.get(posHighestCard).clone();
-		handHiCard.insert(hiCard, false);
-		goodStuff.add(handHiCard);
+		//handHiCard.insert(hiCard, false);
+		//goodStuff.add(handHiCard);
 		return goodStuff.get(0);
 	}
-	
+	/**
+	 * TODO: generate an int value to a given Combo
+	 * @param combo
+	 * @return
+	 */
 	private int getValueOfCombo(Hand combo) {
 		return 0;
 	}
