@@ -86,12 +86,12 @@ public class PokerTest extends CardGame {
 		//somehow buggy:
 		
 		//This line makes problems:
-		//Hand handHiCard = new Hand(deck);
+		Hand handHiCard = new Hand(deck);
 		
-		//int posHighestCard = hand.getMaxPosition(SortType.RANKPRIORITY);
-		//Card hiCard = hand.get(posHighestCard).clone();
-		//handHiCard.insert(hiCard, false);
-		//goodStuff.add(handHiCard);
+		int posHighestCard = hand.getMaxPosition(SortType.RANKPRIORITY);
+		Card hiCard = hand.get(posHighestCard);
+		handHiCard.insert(hiCard, false);
+		goodStuff.add(handHiCard);
 		return goodStuff.get(0);
 	}
 	/**

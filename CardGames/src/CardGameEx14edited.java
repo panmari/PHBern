@@ -141,7 +141,7 @@ public class CardGameEx14edited extends CardGame
       if (c == null)
         continue;
       c.setVerso(true);
-      bids[i].transfer(c, stocks[player], false, true);  // Non blocking
+      bids[i].transferNonBlocking(c, stocks[player]);  // Non blocking
     }
   }
 
