@@ -21,8 +21,10 @@ public class PokerApr16 extends CardGame {
 	public enum ComboType {
 		SingleCard, Pair, Trips, Straight, FullHouse, Flush, Quads, StraightFlush, 
 	}
+	
+	//TODO: look up right order of Suits
 	public enum Suit {
-		KREUZ, KARO, HERZ, PIK
+		HERZ, KREUZ, KARO, PIK
 	}
 
 	public enum Rank {
@@ -55,7 +57,7 @@ public class PokerApr16 extends CardGame {
 	}
 
 	private void initHands() {
-		hands = deck.dealingOut(nbPlayers, nbCards, false);
+		hands = deck.dealingOut(nbPlayers, nbCards, true);
 		for (int i = 0; i < nbPlayers; i++) {
 			final int k = i;
 			hands[i].addCardListener(new CardAdapter() {
@@ -68,7 +70,8 @@ public class PokerApr16 extends CardGame {
 					newCard.setVerso(false);
 					System.out.println("Highest Value Hand " + k + "\n"
 							+ getHighestCombo(hands[k]) + "\n");
-					System.out.println("Is player 0 winner? " + isPlayer0Winner());
+					System.out.println("Is player0 (top) winner? "
+							+ isPlayer0Winner());
 				}
 			});
 			hands[i].setTargetArea(new TargetArea(burntCardsLocation));
@@ -76,6 +79,8 @@ public class PokerApr16 extends CardGame {
 			hands[i].setView(this, new RowLayout(handLocations[i], 450));
 			hands[i].sort(SortType.RANKPRIORITY, false);
 			hands[i].draw();
+			System.out.println("Highest Value Hand " + i + "\n"
+					+ getHighestCombo(hands[i]) + "\n");
 		}
 	}
 
@@ -145,13 +150,22 @@ public class PokerApr16 extends CardGame {
 	private boolean isPlayer0Winner() {
 		PokerCombo combo0 = getHighestCombo(hands[0]);
 		PokerCombo combo1 = getHighestCombo(hands[1]);
+		//better combo?
 		if (combo0.comboType.ordinal() > combo1.comboType.ordinal())
 			return true;
 		else if (combo0.comboType.ordinal() < combo1.comboType.ordinal())
 			return false;
-		else return combo0.hand.getFirst().getRankId() < combo1.hand.getFirst().getRankId();
-		//TODO: what if rankID is the same? go for suit order!
-		//TODO: pairs -> highest offcard
+		//same combo -> higher rank of combo?
+		else if (combo0.hand.getFirst().getRankId() < 
+				combo1.hand.getFirst().getRankId())
+			return true;
+		else if (combo0.hand.getFirst().getRankId() > 
+				combo1.hand.getFirst().getRankId())
+			return false;
+		//same combo, same rank -> higher suit of combo?
+		else return (combo0.hand.getFirst().getSuitId() < 
+				combo1.hand.getFirst().getSuitId());
+		//TODO: pairs/tripples/quads -> highest offcard
 	}
 
 	public static void main(String[] args) {
@@ -173,14 +187,24 @@ public class PokerApr16 extends CardGame {
 	class PokerCombo {
 		Hand hand;
 		ComboType comboType;
+		Card offCard;
 		
 		public PokerCombo(Hand hand, ComboType comboType) {
 			this.hand = hand;
 			this.comboType = comboType;
 		}
 		
+		public PokerCombo(Hand hand, ComboType comboType, Card offCard) {
+			//with offcard, only for pairs, trips and quads
+			this.hand = hand;
+			this.comboType = comboType;
+			this.offCard = offCard;
+		}
+		
 		public String toString() {
 			String str = "Type of Combo: " + comboType + "\n";
+			if (offCard != null)
+				str+= "Offcard: " + offCard + "\n";
 			str += hand;
 			return str;
 		}

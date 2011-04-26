@@ -1,6 +1,5 @@
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
-import ch.aplu.util.Monitor;
 import java.awt.*;
 
 // Version von Clab1
