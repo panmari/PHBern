@@ -19,7 +19,7 @@ import ch.aplu.jgamegrid.Location;
 
 public class PokerApr16 extends CardGame {
 	public enum ComboType {
-		StraightFlush, Quads, Flush, FullHouse, Straight, Trips, Pair, SingleCard
+		SingleCard, Pair, Trips, Straight, FullHouse, Flush, Quads, StraightFlush, 
 	}
 	public enum Suit {
 		KREUZ, KARO, HERZ, PIK
@@ -68,6 +68,7 @@ public class PokerApr16 extends CardGame {
 					newCard.setVerso(false);
 					System.out.println("Highest Value Hand " + k + "\n"
 							+ getHighestCombo(hands[k]) + "\n");
+					System.out.println("Is player 0 winner? " + isPlayer0Winner());
 				}
 			});
 			hands[i].setTargetArea(new TargetArea(burntCardsLocation));
@@ -140,8 +141,17 @@ public class PokerApr16 extends CardGame {
 		return flushes;
 	}
 
-	private int compareCombos(PokerCombo combo1, PokerCombo combo2) {
-		return 0;
+	
+	private boolean isPlayer0Winner() {
+		PokerCombo combo0 = getHighestCombo(hands[0]);
+		PokerCombo combo1 = getHighestCombo(hands[1]);
+		if (combo0.comboType.ordinal() > combo1.comboType.ordinal())
+			return true;
+		else if (combo0.comboType.ordinal() < combo1.comboType.ordinal())
+			return false;
+		else return combo0.hand.getFirst().getRankId() < combo1.hand.getFirst().getRankId();
+		//TODO: what if rankID is the same? go for suit order!
+		//TODO: pairs -> highest offcard
 	}
 
 	public static void main(String[] args) {
