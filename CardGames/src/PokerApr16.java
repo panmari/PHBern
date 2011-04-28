@@ -23,6 +23,7 @@ public class PokerApr16 extends CardGame {
 	}
 	
 	//TODO: look up right order of Suits
+	//TODO: look up how that offhand-stuff works
 	public enum Suit {
 		HERZ, KREUZ, KARO, PIK
 	}
@@ -97,7 +98,7 @@ public class PokerApr16 extends CardGame {
 						ComboType.StraightFlush);
 		if(hand.getQuads().length > 0)
 			return new PokerCombo(hand.getQuads()[0], 
-					ComboType.Quads);
+					ComboType.Quads, hand);
 		
 		if(!getFlush(hand).isEmpty())
 			return new PokerCombo(getFlush(hand).get(0), 
@@ -113,11 +114,11 @@ public class PokerApr16 extends CardGame {
 		
 		if (hand.getTrips().length > 0)
 			return new PokerCombo(hand.getTrips()[0], 
-					ComboType.Trips);
+					ComboType.Trips, hand);
 		
 		if (hand.getPairs().length > 0)
 			return new PokerCombo(hand.getPairs()[0], 
-					ComboType.Pair);
+					ComboType.Pair, hand);
 
 		Hand handHiCard = new Hand(deck);
 		int posHighestCard = hand.getMaxPosition(SortType.RANKPRIORITY);
@@ -163,9 +164,11 @@ public class PokerApr16 extends CardGame {
 				combo1.hand.getFirst().getRankId())
 			return false;
 		//same combo, same rank -> higher suit of combo?
-		else return (combo0.hand.getFirst().getSuitId() < 
+		else if (combo0.offCard == null) 
+			return (combo0.hand.getFirst().getSuitId() < 
 				combo1.hand.getFirst().getSuitId());
-		//TODO: pairs/tripples/quads -> highest offcard
+		else return (combo0.offCard.getRankId() < 
+				combo1.offCard.getRankId());
 	}
 
 	public static void main(String[] args) {
@@ -194,11 +197,14 @@ public class PokerApr16 extends CardGame {
 			this.comboType = comboType;
 		}
 		
-		public PokerCombo(Hand hand, ComboType comboType, Card offCard) {
-			//with offcard, only for pairs, trips and quads
-			this.hand = hand;
-			this.comboType = comboType;
-			this.offCard = offCard;
+		public PokerCombo(Hand hand, ComboType comboType, Hand wholeHand) {
+			//Also transmitts whole hand for computing offCard
+			// only for pairs, quads & trips
+			this(hand, comboType);
+			ArrayList<Card> leftCards = wholeHand.getCardList();
+			leftCards.removeAll(hand.getCardList());
+			//0 is highest card, coz it's ranksort
+			this.offCard = leftCards.get(0);
 		}
 		
 		public String toString() {
