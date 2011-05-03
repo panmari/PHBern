@@ -68,15 +68,16 @@ public class CardTable extends CardGame {
 						}
 					} else {
 						setStatusText("Evaluating round...");
-						currentPlayerIndex = transferToWinner();
 						agent.sendCommand("", CardPlayer.Command.CARDS_TO_WINNER);
+						transferToWinner();
 					}
+				} else {
+					agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY);
 				}
 				if (hands[currentPlayerIndex].isEmpty()) {
 					//gameOver();
 					System.out.println("game over");
 				}
-				agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY);
 			}
 
 			private boolean isSameRank() {
@@ -107,14 +108,14 @@ public class CardTable extends CardGame {
 		agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY);
 	}
 
-	public int transferToWinner() {
+	public void transferToWinner() {
 		delay(1000);
 		int nbWinner = 0;
 		for (int i = 1; i < nbPlayers; i++)
 			if (bids[i].getLast().getRankId() < bids[nbWinner].getLast().getRankId())
 				nbWinner = i;
 		transferToStock(nbWinner);
-		return nbWinner;
+		this.currentPlayerIndex = nbWinner;
 	}
 
 	private void transferToStock(int player) {

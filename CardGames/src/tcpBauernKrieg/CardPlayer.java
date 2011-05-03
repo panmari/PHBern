@@ -4,6 +4,8 @@ package tcpBauernKrieg;
 import ch.aplu.tcp.*;
 import ch.aplu.util.*;
 import javax.swing.JOptionPane;
+
+import java.awt.Color;
 import java.util.*;
 
 public class CardPlayer
@@ -70,6 +72,7 @@ public class CardPlayer
           cardTable.moveCardToBid(data[1], data[2]);
           break;
         case Command.CARDS_TO_WINNER:
+        	cardTable.setBgColor(Color.black);
         	cardTable.transferToWinner();
         	break;
       }
@@ -114,7 +117,7 @@ public class CardPlayer
     currentPlayerName = connectList.get(0);
     if (nb > nbPlayers)
     {
-      mop.setText("Game room fill. Terminating now...");
+      mop.setText("Game room full. Terminating now...");
       CardTable.delay(3000);
       System.exit(0);
     }
