@@ -1,7 +1,6 @@
 // Labyrinth.java
 
 import ch.aplu.jgamegrid.*;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
@@ -47,7 +46,15 @@ class Bug extends Actor {
 	private ArrayList<Location> visitedLocations;
 	private Location previousLoc = startLocation;
 	private GameGrid gg;
-
+	
+	//would be nicer:
+	/*
+	public Bug(GameGrid gg, Location startLocation) {
+		this(gg);
+		this.startLocation = startLocation;
+	}
+	*/
+	
 	public Bug(GameGrid gg) {
 		super(true, "smallbug.gif"); // Rotatable
 		exitLocation = new Location(gg.getNbHorzCells() - 1, gg
