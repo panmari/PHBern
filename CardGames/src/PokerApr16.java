@@ -69,6 +69,7 @@ public class PokerApr16 extends CardGame {
 					newCard.transfer(hands[k], true);
 					// Modified AP
 					newCard.setVerso(false);
+					hands[k].sort(SortType.RANKPRIORITY, true);;
 					System.out.println("Highest Value Hand " + k + "\n"
 							+ getHighestCombo(hands[k]) + "\n");
 					System.out.println("Is player0 (top) winner? "
@@ -86,38 +87,38 @@ public class PokerApr16 extends CardGame {
 	}
 
 	/**
-	 * TODO: implement full houses and straights! test for bugs
+	 * test for bugs
 	 * 
 	 * @param hand
 	 * @return
 	 */
 	private PokerCombo getHighestCombo(Hand hand) {
 		for (Suit s : Suit.values())
-			if (hand.getSequences(s, 5).length > 0)
-				return new PokerCombo(hand.getSequences(s, 5)[0], 
+			if (hand.extractSequences(s, 5).length > 0)
+				return new PokerCombo(hand.extractSequences(s, 5)[0], 
 						ComboType.StraightFlush);
-		if(hand.getQuads().length > 0)
-			return new PokerCombo(hand.getQuads()[0], 
+		if(hand.extractQuads().length > 0)
+			return new PokerCombo(hand.extractQuads()[0], 
 					ComboType.Quads, hand);
 		
-		if(!getFlush(hand).isEmpty())
-			return new PokerCombo(getFlush(hand).get(0), 
+		if(!extractFlush(hand).isEmpty())
+			return new PokerCombo(extractFlush(hand).get(0), 
 				ComboType.Flush);
 		
-		if (getHighestFullHouse(hand) != null)
-			return new PokerCombo(getHighestFullHouse(hand), 
+		if (extractHighestFullHouse(hand) != null)
+			return new PokerCombo(extractHighestFullHouse(hand), 
 					ComboType.FullHouse);
 		
-		if (hand.getSequences(5).length > 0) // straight
-			return new PokerCombo(hand.getSequences(5)[0], 
+		if (hand.extractSequences(5).length > 0) // straight
+			return new PokerCombo(hand.extractSequences(5)[0], 
 					ComboType.Straight);
 		
-		if (hand.getTrips().length > 0)
-			return new PokerCombo(hand.getTrips()[0], 
+		if (hand.extractTrips().length > 0)
+			return new PokerCombo(hand.extractTrips()[0], 
 					ComboType.Trips, hand);
 		
-		if (hand.getPairs().length > 0)
-			return new PokerCombo(hand.getPairs()[0], 
+		if (hand.extractPairs().length > 0)
+			return new PokerCombo(hand.extractPairs()[0], 
 					ComboType.Pair, hand);
 
 		Hand handHiCard = new Hand(deck);
@@ -127,7 +128,7 @@ public class PokerApr16 extends CardGame {
 		return new PokerCombo(handHiCard, ComboType.SingleCard);
 	}
 
-	private List<Hand> getFlush(Hand hand) {
+	private List<Hand> extractFlush(Hand hand) {
 		LinkedList<Hand> flushes = new LinkedList<Hand>();
 		for (Suit t: Suit.values()) {
 			int cardCounter = 0;
@@ -175,10 +176,10 @@ public class PokerApr16 extends CardGame {
 		new PokerApr16();
 	}
 
-	private Hand getHighestFullHouse(Hand hand) {
+	private Hand extractHighestFullHouse(Hand hand) {
 		Hand fullHouse = null;
-		Hand[] trips = hand.getTrips();
-		Hand[] pairs = hand.getPairs();
+		Hand[] trips = hand.extractTrips();
+		Hand[] pairs = hand.extractPairs();
 		if (trips.length > 0 && pairs.length > 0) {
 			fullHouse = new Hand(this.deck);
 			fullHouse.insert(trips[0], false);

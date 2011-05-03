@@ -3,7 +3,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/muzi/PHBernAsi/lib/aplu5.jar"/>
-	<classpathentry kind="lib" path="/home/muzi/PHBernAsi/lib/JGameGrid.jar"/>
+	<classpathentry kind="lib" path="/home/muzi/PHBernAsi/lib/JGameGrid.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/muzi/PHBernAsi/lib/GameGridJavaDoc/doc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/home/muzi/PHBernAsi/lib/TcpJLib.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
