@@ -66,14 +66,17 @@ public class CardTable extends CardGame {
 							Card c = hands[i].getLast();
 							c.transfer(bids[i], true);
 						}
+						agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY, 0); //abwechslungsweise
 					} else {
 						setStatusText("Evaluating round...");
+						//this command is never sent:
 						agent.sendCommand("", CardPlayer.Command.CARDS_TO_WINNER);
 						transferToWinner();
+						agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY, 1); //gewinner nochmal
 					}
-				} else {
-					agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY);
-				}
+				} else agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY, 0); //abwechslungsweise
+					
+					
 				if (hands[currentPlayerIndex].isEmpty()) {
 					//gameOver();
 					System.out.println("game over");
@@ -115,7 +118,6 @@ public class CardTable extends CardGame {
 			if (bids[i].getLast().getRankId() < bids[nbWinner].getLast().getRankId())
 				nbWinner = i;
 		transferToStock(nbWinner);
-		this.currentPlayerIndex = nbWinner;
 	}
 
 	private void transferToStock(int player) {
@@ -127,14 +129,13 @@ public class CardTable extends CardGame {
 				bids[i].transferNonBlocking(c, stocks[player]);
 			}
 		}
-		agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY);
 	}
 
 	protected void moveCardToBid(int playerIndex, int cardNumber) {
 		Card card = hands[playerIndex].getCard(cardNumber);
 		card.setVerso(false);
 		hands[playerIndex].transfer(card, bids[playerIndex], true);
-		agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY);
+		agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY, 0);
 	}
 
 	protected void stopGame(String client) {

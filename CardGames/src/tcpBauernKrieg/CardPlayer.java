@@ -12,7 +12,7 @@ public class CardPlayer
 {
   private final static boolean debug = true;
   private final String serverName = "CardServer BauernKrieg";
-  private String sessionID = "Cardsadfe &4**&/**()";
+  private String sessionID = "Cardsadsdd**()";
   private TcpAgent agent;
   private CardServer cardServer;
   private CardTable cardTable;
@@ -71,8 +71,8 @@ public class CardPlayer
         case Command.CARD_TO_BID:
           cardTable.moveCardToBid(data[1], data[2]);
           break;
+          
         case Command.CARDS_TO_WINNER:
-        	cardTable.setBgColor(Color.black);
         	cardTable.transferToWinner();
         	break;
       }
