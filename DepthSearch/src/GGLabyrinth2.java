@@ -1,20 +1,20 @@
-// Labyrinth.java
 
 import ch.aplu.jgamegrid.*;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
 import java.util.ArrayList;
 
-public class GGLabyrinth {
+public class GGLabyrinth2 {
 	private final int nbHorzCells = 31; // must be odd
 	private final int nbVertCells = 31; // ditto
 	private final int cellSize = 18;
 
-	public GGLabyrinth() {
+	public GGLabyrinth2() {
 		GameGrid gg = new GameGrid(nbHorzCells, nbVertCells, cellSize, false);
 		GGMaze maze = drawMaze(gg);
-		Bug sbug = new Bug(gg);
+		Bug2 sbug = new Bug2(gg);
 		gg.addActor(sbug, maze.getStartLocation());
 		gg.show();
 		sbug.startSearch();
@@ -35,28 +35,20 @@ public class GGLabyrinth {
 	}
 
 	public static void main(String[] args) {
-		new GGLabyrinth();
+		new GGLabyrinth2();
 	}
 }
 
 // ------------------class Bug ------------------------------------
-class Bug extends Actor {
+class Bug2 extends Actor {
 	private final Location startLocation = new Location(0, 1);
 	private final Location exitLocation;
 	private ArrayList<Location> visitedLocations;
 	private Location previousLoc = startLocation;
 	private GameGrid gg;
-	
-	//would be nicer:
-	/*
-	public Bug(GameGrid gg, Location startLocation) {
-		this(gg);
-		this.startLocation = startLocation;
-	}
-	*/
-	
-	public Bug(GameGrid gg) {
-		super(true, "smallbug.gif"); // Rotatable
+
+	public Bug2(GameGrid gg) {
+		super(true, "sprites/smallbug.gif"); // Rotatable
 		exitLocation = new Location(gg.getNbHorzCells() - 1, gg
 				.getNbVertCells() - 2);
 		visitedLocations = new ArrayList<Location>();
@@ -68,8 +60,7 @@ class Bug extends Actor {
 	}
 
 	private void searchPath(Location loc, int dist) {
-		gg.setActorOnTop(this);
-		gg.setPaintOrder(TextActor.class, Bug.class);
+		gg.setPaintOrder(Bug2.class, TextActor.class);
 		gg.refresh();
 		if (visitedLocations.contains(exitLocation)
 				|| visitedLocations.contains(loc))
@@ -81,7 +72,7 @@ class Bug extends Actor {
 				return;
 			else {
 				// Aktuelle Zelle markieren und beschriften
-				delay(50);
+				delay(500);
 				TextActor distMark = new TextActor("" + dist);
 				distMark.setLocationOffset(new Point(-7, 0));
 				gg.addActor(distMark, loc);
@@ -98,7 +89,7 @@ class Bug extends Actor {
 
 				// Falls das Ziel auf diesem Weg nicht erreicht, rotes X
 				if (!visitedLocations.contains(exitLocation)) {
-					delay(50); 
+					delay(500); 
 					gg.removeActorsAt(loc, TextActor.class); //delete Number
 					TextActor wrongMark = new TextActor("x", Color.red, 
 							Color.white, new Font("SansSerif", Font.PLAIN, 12));
