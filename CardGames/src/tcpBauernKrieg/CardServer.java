@@ -113,11 +113,7 @@ public class CardServer extends TcpBridge implements TcpBridgeListener
         if (nbReady == nbPlayers)
         {
         	nbReady = 0;
-        	try {
-        		giveTurn(indata[1] == 1);
-        	} catch(IndexOutOfBoundsException e) {
-        		giveTurn(false);
-        	}
+        	giveTurn(false);
         }
 
         break;
@@ -144,10 +140,11 @@ public class CardServer extends TcpBridge implements TcpBridgeListener
               System.out.println("Sent CARDS_TO_WINNER to " + playerList.get(i));
             }
           }
+    	  giveTurn(true);
     	  break;
     }
   }
-
+  
   private void giveTurn(boolean samePlayerAgain)
   {
 	if (samePlayerAgain) {

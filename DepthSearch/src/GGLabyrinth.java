@@ -68,7 +68,8 @@ class Bug extends Actor {
 	}
 
 	private void searchPath(Location loc, int dist) {
-		this.setOnTop();
+		gg.setActorOnTop(this);
+		gg.setPaintOrder(TextActor.class, Bug.class);
 		gg.refresh();
 		if (visitedLocations.contains(exitLocation)
 				|| visitedLocations.contains(loc))

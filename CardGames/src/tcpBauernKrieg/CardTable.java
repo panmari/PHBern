@@ -66,15 +66,13 @@ public class CardTable extends CardGame {
 							Card c = hands[i].getLast();
 							c.transfer(bids[i], true);
 						}
-						agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY, 0); //abwechslungsweise
+						agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY);
 					} else {
 						setStatusText("Evaluating round...");
-						//this command is never sent:
 						agent.sendCommand("", CardPlayer.Command.CARDS_TO_WINNER);
 						transferToWinner();
-						agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY, 1); //gewinner nochmal
 					}
-				} else agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY, 0); //abwechslungsweise
+				} else agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY);
 					
 					
 				if (hands[currentPlayerIndex].isEmpty()) {
