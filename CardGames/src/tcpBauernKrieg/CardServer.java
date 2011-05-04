@@ -148,8 +148,9 @@ public class CardServer extends TcpBridge implements TcpBridgeListener
   private void giveTurn(boolean samePlayerAgain)
   {
 	if (samePlayerAgain) {
-		turnPlayerIndex -= 1;
-		turnPlayerIndex %= nbPlayers;
+		if (turnPlayerIndex == 0)
+			turnPlayerIndex = nbPlayers -1;
+		else turnPlayerIndex -= 1;
 	}
     for (int i = 0; i < playerList.size(); i++)
     {

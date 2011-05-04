@@ -16,7 +16,6 @@ public class CardTable extends CardGame {
 		ASS, KOENIG, DAME, BAUER, ZEHN, NEUN, ACHT, SIEBEN, SECHS
 	}
 
-	//
 	protected static Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
 	private final int nbPlayers = 2;
 	private final int nbStartCards = 18;
@@ -64,9 +63,16 @@ public class CardTable extends CardGame {
 					if (isSameRank() && !hands[currentPlayerIndex].isEmpty()) {
 						for (int i = 0; i < nbPlayers; i++) {
 							Card c = hands[i].getLast();
+							//impossible it works that easily >.<
 							c.transfer(bids[i], true);
+							/* 
+							 * actually, it doesn't matter who puts his card 
+							 * first onto the bid, As long as both player do it. 
+							 * It could work like that!
+							 */
+							agent.sendCommand("", CardPlayer.Command.CARD_TO_BID,
+									i, card.getCardNumber());
 						}
-						agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY);
 					} else {
 						setStatusText("Evaluating round...");
 						agent.sendCommand("", CardPlayer.Command.CARDS_TO_WINNER);
@@ -148,6 +154,7 @@ public class CardTable extends CardGame {
 	}
 
 	protected void setOtherTurn() {
+		hands[currentPlayerIndex].setTouchEnabled(false);
 		setStatusText("Wait for you turn.");
 	}
 }
