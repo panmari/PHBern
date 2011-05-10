@@ -1,3 +1,4 @@
+package bugLabyrinth;
 
 import ch.aplu.jgamegrid.*;
 
