@@ -1,6 +1,7 @@
 package AegidLabyrinth;
 
 import ch.aplu.jgamegrid.*;
+
 import java.awt.Color;
   
 public class GGLabyrinth extends GameGrid
@@ -14,7 +15,7 @@ public class GGLabyrinth extends GameGrid
     super(nbHorzCells, nbVertCells, cellSize);
     setSimulationPeriod(250);
     GGMaze maze = drawMaze(this);
-    Bug sbug = new Bug(this, maze.getStartLocation(), maze.getExitLocation());
+    Bug sbug = new Bug(this);
     addActor(sbug, maze.getStartLocation());
     show();
     doRun();

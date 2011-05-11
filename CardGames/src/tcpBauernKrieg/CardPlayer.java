@@ -69,7 +69,7 @@ public class CardPlayer
           break;
 
         case Command.CARD_TO_BID:
-          cardTable.moveCardToBid(data[1], data[2]);
+          cardTable.moveOpponentCardToBid(data[1]);
           break;
           
         case Command.CARDS_TO_WINNER:

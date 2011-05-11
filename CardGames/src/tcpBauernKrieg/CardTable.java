@@ -51,16 +51,14 @@ public class CardTable extends CardGame {
 				hands[i].insert(cardNumbers[i * nbStartCards + k], false);
 		}
 
-		hands[currentPlayerIndex].sort(Hand.SortType.SUITPRIORITY, false);
-		hands[currentPlayerIndex].addCardListener(new CardAdapter() {
+		hands[0].addCardListener(new CardAdapter() {
 			public void leftDoubleClicked(Card card) {
-				hands[currentPlayerIndex].setTouchEnabled(false);
-				agent.sendCommand("", CardPlayer.Command.CARD_TO_BID,
-						currentPlayerIndex, card.getCardNumber());
+				hands[0].setTouchEnabled(false);
+				agent.sendCommand("", CardPlayer.Command.CARD_TO_BID, card.getCardNumber());
 				card.setVerso(false);
-				card.transfer(bids[currentPlayerIndex], true);
+				card.transfer(bids[0], true);
 				if ((bids[0].getNumberOfCards() + bids[1].getNumberOfCards()) % 2 == 0) {
-					if (isSameRank() && !hands[currentPlayerIndex].isEmpty()) {
+					if (isSameRank() && !hands[1].isEmpty()) {
 						for (int i = 0; i < nbPlayers; i++) {
 							Card c = hands[i].getLast();
 							//impossible it works that easily >.<
@@ -71,7 +69,7 @@ public class CardTable extends CardGame {
 							 * It could work like that!
 							 */
 							agent.sendCommand("", CardPlayer.Command.CARD_TO_BID,
-									i, card.getCardNumber());
+									card.getCardNumber());
 						}
 					} else {
 						setStatusText("Evaluating round...");
@@ -135,11 +133,11 @@ public class CardTable extends CardGame {
 		}
 	}
 
-	protected void moveCardToBid(int playerIndex, int cardNumber) {
-		Card card = hands[playerIndex].getCard(cardNumber);
+	protected void moveOpponentCardToBid(int cardNumber) {
+		Card card = hands[1].getCard(cardNumber);
 		card.setVerso(false);
-		hands[playerIndex].transfer(card, bids[playerIndex], true);
-		agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY, 0);
+		hands[1].transfer(card, bids[1], true);
+		agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY);
 	}
 
 	protected void stopGame(String client) {
@@ -150,11 +148,11 @@ public class CardTable extends CardGame {
 
 	protected void setMyTurn() {
 		setStatusText("It's your turn. Double click on one of your cards to play it.");
-		hands[currentPlayerIndex].setTouchEnabled(true);
+		hands[0].setTouchEnabled(true);
 	}
 
 	protected void setOtherTurn() {
-		hands[currentPlayerIndex].setTouchEnabled(false);
+		hands[0].setTouchEnabled(false);
 		setStatusText("Wait for you turn.");
 	}
 }

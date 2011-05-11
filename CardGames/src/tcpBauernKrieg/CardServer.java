@@ -124,7 +124,7 @@ public class CardServer extends TcpBridge implements TcpBridgeListener
           if (!playerList.get(i).equals(source))
           {
             sendCommand(serverName, playerList.get(i),
-              CardPlayer.Command.CARD_TO_BID, indata[1], indata[2]);
+              CardPlayer.Command.CARD_TO_BID, indata[1]);
             System.out.println("Sent CARD_TO_BID to " + playerList.get(i));
           }
         }

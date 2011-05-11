@@ -1,31 +1,32 @@
 package AegidLabyrinth;
-import ch.aplu.jgamegrid.*;
-import ch.aplu.jgamegrid.Location;
 
+// Bug.java
+
+import ch.aplu.jgamegrid.*;
 import java.util.*;
 import java.awt.*;
 import ch.aplu.util.*;
 
 class Bug extends Actor
 {
-  private final Location startLocation;
+  private final Location startLocation = new Location(0, 1);
   private final Location exitLocation;
   private ArrayList<Location> visitedLocations;
-  private Location previousLoc;
+  private Location previousLoc = startLocation;
   private GameGrid gg;
 
-  public Bug(GameGrid gg, Location startLoc, Location exitLoc)
+  public Bug(GameGrid gg)
   {
     super(true, "sprites/smallbug.gif"); // Rotatable
-    this.startLocation = startLoc;
-    this.exitLocation = exitLoc;
-    previousLoc = startLocation;
+    exitLocation = new Location(gg.getNbHorzCells() - 1, gg.getNbVertCells() - 2);
     visitedLocations = new ArrayList<Location>();
     this.gg = gg;
   }
 
   public void startSearch()
   {
+    gg.addActor(new TextActor(""), new Location(0, 0));
+    gg.setPaintOrder(Bug.class, TextActor.class);
     searchPath(startLocation, 0);
   }
 
@@ -37,7 +38,6 @@ class Bug extends Actor
   private void searchPath(Location loc, int dist)
   {
     Monitor.putSleep();
-    gg.setPaintOrder(Bug.class, TextActor.class);
     if (visitedLocations.contains(exitLocation)
       || visitedLocations.contains(loc))
       return;
@@ -52,7 +52,7 @@ class Bug extends Actor
         // Aktuelle Zelle markieren und beschriften
         TextActor distMark = new TextActor("" + dist);
         distMark.setLocationOffset(new Point(-7, 0));
-        gg.addActor(distMark, loc);
+        gg.addActorNoRefresh(distMark, loc);
 
         // Naechste Zelle bestimmen (rekursiv)
         if (canMove(new Location(loc.x, loc.y - 1))) // up
@@ -71,7 +71,7 @@ class Bug extends Actor
           TextActor wrongMark = new TextActor("x", Color.red,
             Color.white, new Font("SansSerif", Font.PLAIN, 12));
           distMark.setLocationOffset(new Point(-8, 0));
-          gg.addActor(wrongMark, loc);
+          gg.addActorNoRefresh(wrongMark, loc);
           setLocationFacing(loc);
         }
       }
