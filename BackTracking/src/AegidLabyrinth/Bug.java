@@ -44,7 +44,7 @@ class Bug extends Actor {
 			else {
 				// Aktuelle Zelle markieren und beschriften
 				TextActor distMark = new TextActor("" + dist);
-				distMark.setLocationOffset(new Point(-7, 0));
+				distMark.setLocationOffset(new Point(-8, 0));
 				gg.addActorNoRefresh(distMark, loc);
 
 				// Naechste Zelle bestimmen (rekursiv)
@@ -62,7 +62,7 @@ class Bug extends Actor {
 					gg.removeActorsAt(loc, TextActor.class); // delete number
 					TextActor wrongMark = new TextActor("x", Color.red,
 							Color.white, new Font("SansSerif", Font.PLAIN, 12));
-					distMark.setLocationOffset(new Point(-8, 0));
+					distMark.setLocationOffset(new Point(-10, 0));
 					gg.addActorNoRefresh(wrongMark, loc);
 					setLocationFacing(loc);
 				}

@@ -17,6 +17,7 @@ public class GGLabyrinth extends GameGrid
     GGMaze maze = drawMaze(this);
     Bug sbug = new Bug(this);
     addActor(sbug, maze.getStartLocation());
+    setTitle("Recursive Depthsearch");
     show();
     doRun();
     sbug.startSearch();
