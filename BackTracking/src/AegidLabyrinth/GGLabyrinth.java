@@ -1,6 +1,7 @@
 package AegidLabyrinth;
 
 import ch.aplu.jgamegrid.*;
+import ch.aplu.util.Monitor;
 
 import java.awt.Color;
   
@@ -14,13 +15,10 @@ public class GGLabyrinth extends GameGrid
   {
     super(nbHorzCells, nbVertCells, cellSize);
     setSimulationPeriod(250);
-    GGMaze maze = drawMaze(this);
-    Bug sbug = new Bug(this);
-    addActor(sbug, maze.getStartLocation());
-    setTitle("Recursive Depthsearch");
     show();
     doRun();
-    sbug.startSearch();
+   	initializeMaze();
+    setTitle("Recursive Depthsearch");
   }
 
   private GGMaze drawMaze(GameGrid gg)
@@ -37,6 +35,19 @@ public class GGLabyrinth extends GameGrid
           bg.fillCell(location, Color.white);
       }
     return maze;
+  }
+  
+  private void initializeMaze() {
+	  GGMaze maze = drawMaze(this);
+	  Bug sbug = new Bug(this);
+	  addActor(sbug, maze.getStartLocation());
+	  sbug.startSearch();
+  }
+  
+  public void reset(){
+	  this.removeAllActors();
+	  initializeMaze();
+	  Monitor.wakeUp();
   }
 
   public static void main(String[] args)

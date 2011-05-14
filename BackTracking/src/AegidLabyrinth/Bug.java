@@ -1,7 +1,5 @@
 package AegidLabyrinth;
 
-// Bug.java
-
 import ch.aplu.jgamegrid.*;
 import java.util.*;
 import java.awt.*;
@@ -69,7 +67,7 @@ class Bug extends Actor {
 			}
 		}
 	}
-
+	
 	private void setLocationFacing(Location loc) {
 		setDirection(previousLoc.getCompassDirectionTo(loc));
 		previousLoc = loc;
