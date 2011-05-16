@@ -14,6 +14,7 @@ public class GGMazeDepthSearch extends GameGrid {
 	public GGMazeDepthSearch() {
 		super(31, 31, 18, false);
 		GGMaze maze = drawMaze();
+		setTitle("Depth Search - executed by a bug!");
 		sbug = new SearchingBug(this, maze.getStartLocation(), maze.getExitLocation());
 		addActor(sbug, maze.getStartLocation());
 		show();
@@ -38,11 +39,9 @@ public class GGMazeDepthSearch extends GameGrid {
 		this.removeActors(TextActor.class);
 		System.out.println("Reseting");
 		GGMaze maze = drawMaze();
-		refresh();
 		sbug.reset();
 		sbug.setLocation(maze.getStartLocation());
 		sbug.startSearch();
-		//sbug.show();
 	}
 
 	public static void main(String[] args) {
@@ -71,12 +70,12 @@ class SearchingBug extends Actor {
 	public void startSearch() {
 		searchPath(startLocation, 0);
 		System.out.println("Found exit!");
-		delay(1000);
+		delay(5000); //wait 5 seconds, then reset
 		gg.reset();
 	}
 
 	public void reset() {
-		visitedLocations = new ArrayList<Location>();
+		visitedLocations.clear();
 	}
 	
 	private void searchPath(Location loc, int dist) {
@@ -92,7 +91,6 @@ class SearchingBug extends Actor {
 				return;
 			else {
 				// Aktuelle Zelle markieren und beschriften
-				delay(delayDuration);
 				TextActor distMark = new TextActor("" + dist);
 				distMark.setLocationOffset(new Point(-7, 0));
 				gg.addActor(distMark, loc);
@@ -109,7 +107,6 @@ class SearchingBug extends Actor {
 
 				// Falls das Ziel auf diesem Weg nicht erreicht, rotes X
 				if (!visitedLocations.contains(exitLocation)) {
-					delay(delayDuration); 
 					gg.removeActorsAt(loc, TextActor.class); //delete Number
 					TextActor wrongMark = new TextActor("x", Color.red, 
 							Color.white, new Font("SansSerif", Font.PLAIN, 12));
@@ -125,6 +122,7 @@ class SearchingBug extends Actor {
 		setDirection(previousLoc.getCompassDirectionTo(loc));
 		previousLoc = loc;
 		setLocation(loc);
+		delay(delayDuration); 
 	}
 
 	private boolean canMove(Location location) {
