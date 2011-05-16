@@ -7,22 +7,21 @@ import java.awt.Font;
 import java.awt.Point;
 import java.util.ArrayList;
 
-public class GGLabyrinth2 {
-	private final int nbHorzCells = 31; // must be odd
-	private final int nbVertCells = 31; // ditto
-	private final int cellSize = 18;
+public class GGMazeDepthSearch extends GameGrid {
 
-	public GGLabyrinth2() {
-		GameGrid gg = new GameGrid(nbHorzCells, nbVertCells, cellSize, false);
-		GGMaze maze = drawMaze(gg);
-		Bug2 sbug = new Bug2(gg, maze.getStartLocation(), maze.getExitLocation());
-		gg.addActor(sbug, maze.getStartLocation());
-		gg.show();
+	private SearchingBug sbug;
+	
+	public GGMazeDepthSearch() {
+		super(31, 31, 18, false);
+		GGMaze maze = drawMaze();
+		sbug = new SearchingBug(this, maze.getStartLocation(), maze.getExitLocation());
+		addActor(sbug, maze.getStartLocation());
+		show();
 		sbug.startSearch();
 	}
 
-	private GGMaze drawMaze(GameGrid gg) {
-		GGBackground bg = gg.getBg();
+	private GGMaze drawMaze() {
+		GGBackground bg = getBg();
 		GGMaze maze = new GGMaze(nbHorzCells, nbVertCells);
 		for (int x = 0; x < nbHorzCells; x++)
 			for (int y = 0; y < nbVertCells; y++) {
@@ -34,37 +33,54 @@ public class GGLabyrinth2 {
 			}
 		return maze;
 	}
+	
+	public void reset() {
+		this.removeActors(TextActor.class);
+		System.out.println("Reseting");
+		GGMaze maze = drawMaze();
+		refresh();
+		sbug.reset();
+		sbug.setLocation(maze.getStartLocation());
+		sbug.startSearch();
+		//sbug.show();
+	}
 
 	public static void main(String[] args) {
-		new GGLabyrinth2();
+		new GGMazeDepthSearch();
 	}
 }
 
 // ------------------class Bug ------------------------------------
-class Bug2 extends Actor {
+class SearchingBug extends Actor {
 	private final Location startLocation;
 	private final Location exitLocation;
-	private final int delayDuration = 20;
+	private final int delayDuration = 50;
 	private ArrayList<Location> visitedLocations;
 	private Location previousLoc;
 	private GameGrid gg;
 
-	public Bug2(GameGrid gg, Location startLoc, Location exitLoc) {
+	public SearchingBug(GameGrid gg, Location startLoc, Location exitLoc) {
 		super(true, "sprites/smallbug.gif"); // Rotatable
 	    this.startLocation = startLoc;
 	    this.exitLocation = exitLoc;
 	    previousLoc = startLocation;
 	    visitedLocations = new ArrayList<Location>();
 	    this.gg = gg;
-		this.gg = gg;
 	}
 
 	public void startSearch() {
 		searchPath(startLocation, 0);
+		System.out.println("Found exit!");
+		delay(1000);
+		gg.reset();
 	}
 
+	public void reset() {
+		visitedLocations = new ArrayList<Location>();
+	}
+	
 	private void searchPath(Location loc, int dist) {
-		gg.setPaintOrder(Bug2.class, TextActor.class);
+		gg.setPaintOrder(SearchingBug.class, TextActor.class);
 		gg.refresh();
 		if (visitedLocations.contains(exitLocation)
 				|| visitedLocations.contains(loc))
