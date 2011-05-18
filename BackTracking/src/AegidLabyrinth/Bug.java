@@ -29,6 +29,10 @@ class Bug extends Actor {
 	public void act() {
 		Monitor.wakeUp();
 	}
+	
+	public void reset() {
+		visitedLocations.clear();
+	}
 
 	private void searchPath(Location loc, int dist) {
 		if (visitedLocations.contains(exitLocation)

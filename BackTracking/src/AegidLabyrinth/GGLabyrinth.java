@@ -45,8 +45,9 @@ public class GGLabyrinth extends GameGrid
   }
   
   public void reset(){
-	  this.removeAllActors();
-	  initializeMaze();
+	  this.removeActors(TextActor.class);
+	  //initializeMaze();
+	  
 	  Monitor.wakeUp();
   }
 
