@@ -56,14 +56,14 @@ public class GGQueensBackTrack extends GameGrid {
 		nrSteps++;
 		refresh();
 		Monitor.putSleep();
-		if (isThreatenedByOtherQueen(queens[nrQueen].getLocation()) || troubleForNextQueen)
+		queens[nrQueen].move();
+		if (isThreatenedByOtherQueen(queens[nrQueen].getLocation()))
 			if (queens[nrQueen].getY() == 0) {
 				queens[nrQueen].removeSelf();
 				setStatusText("Tracing steps back..");
-				solveQueens(nrQueen-1, true);
+				return;
 			}
 			else {
-				queens[nrQueen].move();
 				setStatusText("Moving forward..");
 				solveQueens(nrQueen, false);
 			}
