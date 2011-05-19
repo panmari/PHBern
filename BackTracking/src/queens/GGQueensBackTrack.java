@@ -10,14 +10,15 @@ import ch.aplu.util.Monitor;
 
 public class GGQueensBackTrack extends GameGrid {
 	
-	final static int nrQueens = 8; //changes number of queens & size of board!
+	final static int nrQueens = 15; //changes number of queens & size of board!
 	QueenActor[] queens = new QueenActor[nrQueens];
 	private int nrSteps;
 	
 	public GGQueensBackTrack() {
-		super(nrQueens,nrQueens, 600/nrQueens, Color.black);
+		super(nrQueens,nrQueens, 600/nrQueens);
 		this.setBgColor(Color.white);
 		setTitle("Damenproblem");
+		drawPattern();
 		this.addStatusBar(25);
 		show();
 		for (int i = 0; i < queens.length; i++) {
@@ -33,6 +34,15 @@ public class GGQueensBackTrack extends GameGrid {
 	
 	public void act() {
 		Monitor.wakeUp();
+	}
+	
+	private void drawPattern() {
+		GGBackground bg = getBg();
+		for (int x = 0; x < nbHorzCells; x++)
+			for (int y = 0; y < nbVertCells; y++) {
+				if ((x+y) % 2 == 0)
+					bg.fillCell(new Location(x, y), new Color(255, 206, 158));
+			}
 	}
 	
 	public void reset() {

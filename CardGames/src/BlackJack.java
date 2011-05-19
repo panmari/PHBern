@@ -34,18 +34,6 @@ public class BlackJack extends CardGame
   private Hand talon;
   private int currentBet = 0, funds = START_MONEY;
   
-  //TODO: Implement "BlackJack": Ace + 10 is best way to get 21 points
-  //TODO: hide toolBar after setting bet.
-  //TODO: Fatal Error, why?
-  //TODO: rightclick for counting downwards? But there is no .previous();
-
-  /*
-   * Changelog:
-   *  Implemented bets!
-   *  Cards are now transfered as verso, then shown in hand.
-   * 
-   */
-  
   public BlackJack()
   {
     super(600, 600, 30);
