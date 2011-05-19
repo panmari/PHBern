@@ -24,12 +24,7 @@ public class GGQueensBackTrack extends GameGrid {
 		for (int i = 0; i < queens.length; i++) {
 			queens[i] = new QueenActor();
 		}
-		startSolvingQueens();
-	}
-	
-	private void startSolvingQueens() {
-		addActor(queens[0], new Location(0, nbVertCells-1));
-		solveQueens(0, false);
+		solveQueens();
 	}
 	
 	public void act() {
@@ -52,29 +47,39 @@ public class GGQueensBackTrack extends GameGrid {
 		setStatusText("Situation reset..");
 	}
 	
-	private void solveQueens(int nrQueen, boolean troubleForNextQueen) {
-		nrSteps++;
-		refresh();
-		Monitor.putSleep();
-		if (isThreatenedByOtherQueen(queens[nrQueen].getLocation()) || troubleForNextQueen)
-			if (queens[nrQueen].getY() == 0) {
-				queens[nrQueen].removeSelf();
-				setStatusText("Tracing steps back..");
-				solveQueens(nrQueen-1, true);
-			}
+	private void solveQueens() {
+		boolean notSolved = true;
+		int nrQueen = 0;
+		boolean troubleForNextQueen = false;
+		addActor(queens[0], new Location(0, nbVertCells-1));
+		while (notSolved) {
+			nrSteps++;
+			refresh();
+			Monitor.putSleep();
+			if (isThreatenedByOtherQueen(queens[nrQueen].getLocation()) || troubleForNextQueen)
+				if (queens[nrQueen].getY() == 0) {
+					queens[nrQueen].removeSelf();
+					setStatusText("Tracing steps back..");
+					nrQueen--;
+					troubleForNextQueen = true;
+				}
+				else {
+					queens[nrQueen].move();
+					setStatusText("Moving forward..");
+					troubleForNextQueen = false;
+				}
 			else {
-				queens[nrQueen].move();
-				setStatusText("Moving forward..");
-				solveQueens(nrQueen, false);
+				if(nrQueen == queens.length - 1) { //solved!
+					notSolved = false;
+					success();
+				} 
+				else {
+					nrQueen++;
+					addActorNoRefresh(queens[nrQueen], new Location(nrQueen, nbVertCells-1));
+					setStatusText("Adding next queen..");
+					troubleForNextQueen = false;
+				}
 			}
-		else {
-			if(nrQueen == queens.length - 1) { //solved!
-				success();
-				return;
-			}
-			addActorNoRefresh(queens[nrQueen + 1], new Location(nrQueen + 1, nbVertCells-1));
-			setStatusText("Adding next queen..");
-			solveQueens(nrQueen + 1, false);
 		}
 	}
 	
