@@ -6,58 +6,71 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import ch.aplu.jgamegrid.*;
+import ch.aplu.util.Monitor;
 
 public class GGQueensBackTrack extends GameGrid {
 	
-	final static int nrQueens = 4;
+	final static int nrQueens = 8; //changes number of queens & size of board!
 	QueenActor[] queens = new QueenActor[nrQueens];
+	private int nrSteps;
 	
 	public GGQueensBackTrack() {
-		super(nrQueens,nrQueens, 100, Color.black);
+		super(nrQueens,nrQueens, 600/nrQueens, Color.black);
 		this.setBgColor(Color.white);
 		setTitle("Damenproblem");
 		this.addStatusBar(25);
 		show();
 		for (int i = 0; i < queens.length; i++) {
-			queens[i] = new QueenActor(i);
+			queens[i] = new QueenActor();
 		}
-		startAddingQueens();
+		startSolvingQueens();
 	}
 	
-	private void startAddingQueens() {
+	private void startSolvingQueens() {
 		addActor(queens[0], new Location(0, nbVertCells-1));
-		queenz(0, false);
-		refresh();
+		solveQueens(0, false);
 	}
 	
-	private void queenz(int nrQueen, boolean troubleForNextQueen) {
+	public void act() {
+		Monitor.wakeUp();
+	}
+	
+	public void reset() {
+		//TODO: fix reset
+		removeAllActors();
+		nrSteps = 0;
+		setStatusText("Situation reset..");
+	}
+	
+	private void solveQueens(int nrQueen, boolean troubleForNextQueen) {
+		nrSteps++;
 		refresh();
-		delay(1000);
+		Monitor.putSleep();
 		if (isThreatenedByOtherQueen(queens[nrQueen].getLocation()) || troubleForNextQueen)
 			if (queens[nrQueen].getY() == 0) {
 				queens[nrQueen].removeSelf();
 				setStatusText("Tracing steps back..");
-				queenz(nrQueen-1, true);
+				solveQueens(nrQueen-1, true);
 			}
 			else {
 				queens[nrQueen].move();
 				setStatusText("Moving forward..");
-				queenz(nrQueen, false);
+				solveQueens(nrQueen, false);
 			}
 		else {
 			if(nrQueen == queens.length - 1) { //solved!
 				success();
 				return;
 			}
-			addActor(queens[nrQueen + 1], new Location(nrQueen + 1, nbVertCells-1));
-			setStatusText("Added next queen..");
-			queenz(nrQueen + 1, false);
+			addActorNoRefresh(queens[nrQueen + 1], new Location(nrQueen + 1, nbVertCells-1));
+			setStatusText("Adding next queen..");
+			solveQueens(nrQueen + 1, false);
 		}
 	}
 	
 	private void success() {
-		//TODO: add some sprite?
-		setStatusText("Found Solution!");
+		//TODO: add some fancy sprite?
+		setStatusText("Found Solution! It took: " + nrSteps + " steps.");
 	}
 
 	private boolean isThreatenedByOtherQueen(Location queenLoc) {

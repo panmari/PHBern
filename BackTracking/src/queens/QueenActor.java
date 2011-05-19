@@ -1,15 +1,15 @@
 package queens;
 
 import ch.aplu.jgamegrid.Actor;
+import ch.aplu.jgamegrid.Location;
 
 public class QueenActor extends Actor {
 
-	public QueenActor(int i) {
-		super(true, "sprites/smallbug.gif");
+	public QueenActor() {
+		super("sprites/Dame.png");
 	}
 
 	public void reset() {
-		setY(this.getYStart());
-		this.setDirection(270);
+		this.setDirection(Location.NORTH);
 	}
 }
