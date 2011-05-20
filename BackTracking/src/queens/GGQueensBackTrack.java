@@ -10,9 +10,10 @@ import ch.aplu.util.Monitor;
 
 public class GGQueensBackTrack extends GameGrid {
 	
-	final static int nrQueens = 15; //changes number of queens & size of board!
+	final static int nrQueens = 5; //changes number of queens & size of board!
 	QueenActor[] queens = new QueenActor[nrQueens];
 	private int nrSteps;
+	private boolean thereWasTrouble;
 	
 	public GGQueensBackTrack() {
 		super(nrQueens,nrQueens, 600/nrQueens);
@@ -29,7 +30,7 @@ public class GGQueensBackTrack extends GameGrid {
 	
 	private void startSolvingQueens() {
 		addActor(queens[0], new Location(0, nbVertCells-1));
-		solveQueens(0, false);
+		solveQueens(0);
 	}
 	
 	public void act() {
@@ -42,16 +43,37 @@ public class GGQueensBackTrack extends GameGrid {
 			for (int y = 0; y < nbVertCells; y++) {
 				if ((x+y) % 2 == 0)
 					bg.fillCell(new Location(x, y), new Color(255, 206, 158));
+				else bg.fillCell(new Location(x, y), new Color(209, 139, 71));
 			}
 	}
+	//this shit doesn't work as intended
+	private void solveQueens(int nrQueen) {
+		if (nrQueen == nbHorzCells-1)
+			success();
+		else {
+			addOneMoreQueen(nrQueen + 1);
+		}
+	}
 	
+	private void addOneMoreQueen(int nrQueen) {
+		addActorNoRefresh(queens[nrQueen], new Location(nrQueen, nbVertCells-1));
+		while (isThreatenedByOtherQueen(queens[nrQueen].getLocation()))
+			if (queens[nrQueen].getY() > 0)
+				queens[nrQueen].move();
+			else { 
+				queens[nrQueen].removeSelf();
+				thereWasTrouble = true;
+				break;
+			}
+	}
+
 	public void reset() {
 		//TODO: fix reset
 		removeAllActors();
 		nrSteps = 0;
 		setStatusText("Situation reset..");
 	}
-	
+/*	
 	private void solveQueens(int nrQueen, boolean troubleForNextQueen) {
 		nrSteps++;
 		refresh();
@@ -77,7 +99,7 @@ public class GGQueensBackTrack extends GameGrid {
 			solveQueens(nrQueen + 1, false);
 		}
 	}
-	
+*/	
 	private void success() {
 		//TODO: add some fancy sprite?
 		setStatusText("Found Solution! It took: " + nrSteps + " steps.");
