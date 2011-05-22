@@ -6,10 +6,11 @@ import java.awt.Component;
 import java.awt.Point;
 import java.util.*;
 
-public class BoardSolitaire extends GameGrid implements GGMouseListener {
+public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 	final int DOWN = 0;
 	final int UP = 1;
 	Actor draggedMarble;
+	ArrayList<Actor> allMarbles = new ArrayList<Actor>();
 
 	private ArrayList<Location> boardPatternLocations = new ArrayList<Location>();
 	private Location initialMarbleLocation;
@@ -19,62 +20,68 @@ public class BoardSolitaire extends GameGrid implements GGMouseListener {
 
 		loadMarbleLocations();
 		loadMarbles();
-		addMouseListener(this, GGMouse.lDrag);
-		addMouseListener(this, GGMouse.lRelease);
 		show();
 	}
 
-	public boolean mouseEvent(GGMouse mouse) {
-		//is getMouseLocation buggy?
-		Location mouseLoc = this.toLocation(mouse.getX(), mouse.getY());
-		Actor marble = getOneActorAt(mouseLoc, Marble.class);
-
+	public void mouseTouched(Actor touchedMarble, GGMouse mouse, Point spot) {
+		Location mouseLoc = toLocation(mouse.getX(), mouse.getY());
+		Point mousePoint = new Point(mouse.getX(), mouse.getY());
 		switch (mouse.getEvent()) {
 		case GGMouse.lDrag:
-			if (draggedMarble == null && marble != null) {
-				draggedMarble = marble;
-				initialMarbleLocation = marble.getLocation();
+			if (draggedMarble == null) {
+				draggedMarble = touchedMarble;
+				initialMarbleLocation = touchedMarble.getLocation();
 				draggedMarble.show(UP);
 				draggedMarble.setOnTop();
+				disableOtherTouchListeners(touchedMarble);
+				//TODO: disable touchListener of all other Marbles
 			}
-			if (draggedMarble != null)
-				draggedMarble.setPixelLocation(new Point(mouse.getX(), mouse.getY()));
+			else{
+				draggedMarble.setPixelLocation(mousePoint);
+			}
 			break;
+			
 		case GGMouse.lRelease:
+			try {
 			draggedMarble.setLocationOffset(new Point(0, 0));
-			if (isValidJumpLocation(mouseLoc, initialMarbleLocation))
+			if (isValidJumpLocation(mouseLoc, initialMarbleLocation)
+					&& jumpedMarbleExists(mouseLoc, initialMarbleLocation)) {
 				draggedMarble.setLocation(getMouseLocation());
+				Actor jumpedMarble = getJumpedMarble(mouseLoc, initialMarbleLocation);
+				allMarbles.remove(jumpedMarble);
+				removeActor(jumpedMarble);
+			}
 			else draggedMarble.setLocation(initialMarbleLocation);
 			draggedMarble.show(DOWN);
 			draggedMarble = null;
+			activateAllTouchListeners();
+			} catch (NullPointerException e) {
+				System.out.println("this shouldn't happen, something lagged behind");
+			}
 			break;
 		}
-		/*
-		 * //if there is a marble if(marble != null &&
-		 * isPossibleLocation(location)) { //if no marble has been selected
-		 * before, lift it up if(marble.getIdVisible() == DOWN && oneUp == null)
-		 * marble.show(UP); //if one marble has been selected before and an
-		 * other one is selected, set //the old one down and lift the new one up
-		 * else if(oneUp != null) { marble.show(UP); oneUp.show(DOWN); } //if
-		 * the selected marble has already been lifted up and selected again,
-		 * //set it back down else marble.show(DOWN); } //if selected location
-		 * is empty and a marble has been selected before check //if the marble
-		 * between can be jumped and removed else if(oneUp != null && marble ==
-		 * null && isPossibleLocation(location)) { Location upLoc =
-		 * oneUp.getLocation(); Double dir = upLoc.getDirectionTo(location); int
-		 * distance = upLoc.getDistanceTo(location);
-		 * 
-		 * if(distance == 2 || ((dir == 45 || dir == 135 || dir == 225 || dir ==
-		 * 315) && distance == 3)) { Actor between =
-		 * getOneActorAt(upLoc.getNeighbourLocation(dir));
-		 * 
-		 * if(between != null) { between.removeSelf();
-		 * oneUp.setLocation(location); oneUp.show(DOWN);
-		 * 
-		 * isGameOver(); } } }
-		 */
-		refresh();
-		return true;
+		refresh(); //this gets called a lot -> laggy?	
+	}
+
+	private void disableOtherTouchListeners(Actor touchedMarble) {
+		for (Actor marble: allMarbles)
+			if (marble != touchedMarble)
+				marble.setMouseTouchEnabled(false);
+	}
+	
+	private void activateAllTouchListeners() {
+		for (Actor marble: allMarbles)
+			marble.setMouseTouchEnabled(true);
+	}
+
+	private boolean jumpedMarbleExists(Location loc, Location initialLoc) {
+		return getJumpedMarble(loc, initialLoc) != null;
+	}
+	
+	private Actor getJumpedMarble(Location loc, Location initialLoc) {
+		Double dir = loc.getDirectionTo(initialLoc);
+		Location overJumpedLoc = loc.getNeighbourLocation(dir);
+		return getOneActorAt(overJumpedLoc, Marble.class);
 	}
 
 	// Set locations where a marble is set at the start
@@ -90,10 +97,16 @@ public class BoardSolitaire extends GameGrid implements GGMouseListener {
 		}
 	}
 
-	// set marbles on the board
+	/** 
+	 * Initializes marbles on the board
+	 */
 	private void loadMarbles() {
-		for (Location loc: boardPatternLocations)
-			addActor(new Marble(DOWN), loc);
+		for (Location loc: boardPatternLocations) {
+			Marble marble = new Marble(DOWN);
+			marble.addMouseTouchListener(this, GGMouse.lDrag | GGMouse.lRelease);
+			allMarbles.add(marble);
+			addActor(marble, loc);
+		}
 		this.removeActorsAt(new Location(3, 3)); //make hole in middle
 	}
 
@@ -108,20 +121,10 @@ public class BoardSolitaire extends GameGrid implements GGMouseListener {
 				&& getActorsAt(loc, Marble.class).size() == 1);
 	}
 
-	// get marble which has been selected to be played
-	private Actor getOneActorUp() {
-		Actor oneUp = null;
-
-		ArrayList<Actor> marbles = getActors(Marble.class);
-		for (Actor m : marbles) {
-			if (m.getIdVisible() == UP)
-				oneUp = m;
-		}
-
-		return oneUp;
-	}
-
-	// check if game is won or lost
+	/**
+	 * not in use!
+	 * TODO: rewrite later mb?
+	 */
 	private void isGameOver() {
 		ArrayList<Location> leftOvers = getOccupiedLocations();
 		// One left => you win
