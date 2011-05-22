@@ -33,8 +33,6 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 				initialMarbleLocation = touchedMarble.getLocation();
 				draggedMarble.show(UP);
 				draggedMarble.setOnTop();
-				disableOtherTouchListeners(touchedMarble);
-				//TODO: disable touchListener of all other Marbles
 			}
 			else{
 				draggedMarble.setPixelLocation(mousePoint);
@@ -54,24 +52,12 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 			else draggedMarble.setLocation(initialMarbleLocation);
 			draggedMarble.show(DOWN);
 			draggedMarble = null;
-			activateAllTouchListeners();
 			} catch (NullPointerException e) {
 				System.out.println("this shouldn't happen, something lagged behind");
 			}
 			break;
 		}
 		refresh(); //this gets called a lot -> laggy?	
-	}
-
-	private void disableOtherTouchListeners(Actor touchedMarble) {
-		for (Actor marble: allMarbles)
-			if (marble != touchedMarble)
-				marble.setMouseTouchEnabled(false);
-	}
-	
-	private void activateAllTouchListeners() {
-		for (Actor marble: allMarbles)
-			marble.setMouseTouchEnabled(true);
 	}
 
 	private boolean jumpedMarbleExists(Location loc, Location initialLoc) {
