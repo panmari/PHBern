@@ -2,6 +2,7 @@ package Solitaire;
 
 import ch.aplu.jgamegrid.*;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.util.*;
 
@@ -10,7 +11,8 @@ public class BoardSolitaire extends GameGrid implements GGMouseListener {
 	final int UP = 1;
 	Actor draggedMarble;
 
-	private ArrayList<Location> locations = new ArrayList<Location>();
+	private ArrayList<Location> boardPatternLocations = new ArrayList<Location>();
+	private Location initialMarbleLocation;
 
 	public BoardSolitaire() {
 		super(7, 7, 70, null, "sprites/board.png", false);
@@ -23,21 +25,27 @@ public class BoardSolitaire extends GameGrid implements GGMouseListener {
 	}
 
 	public boolean mouseEvent(GGMouse mouse) {
-		Actor marble = getOneActorAt(getMouseLocation(), Marble.class);
-		Actor oneUp = getOneActorUp();
+		//is getMouseLocation buggy?
+		Location mouseLoc = this.toLocation(mouse.getX(), mouse.getY());
+		Actor marble = getOneActorAt(mouseLoc, Marble.class);
 
 		switch (mouse.getEvent()) {
 		case GGMouse.lDrag:
-			if (draggedMarble == null && marble != null)
+			if (draggedMarble == null && marble != null) {
 				draggedMarble = marble;
+				initialMarbleLocation = marble.getLocation();
+				draggedMarble.show(UP);
+				draggedMarble.setOnTop();
+			}
 			if (draggedMarble != null)
-				draggedMarble.setPixelLocation(new Point(mouse.getX(), mouse
-						.getY()));
+				draggedMarble.setPixelLocation(new Point(mouse.getX(), mouse.getY()));
 			break;
 		case GGMouse.lRelease:
 			draggedMarble.setLocationOffset(new Point(0, 0));
-			if (isPossibleLocation(getMouseLocation()))
+			if (isValidJumpLocation(mouseLoc, initialMarbleLocation))
 				draggedMarble.setLocation(getMouseLocation());
+			else draggedMarble.setLocation(initialMarbleLocation);
+			draggedMarble.show(DOWN);
 			draggedMarble = null;
 			break;
 		}
@@ -74,28 +82,30 @@ public class BoardSolitaire extends GameGrid implements GGMouseListener {
 		for (int y = 0; y < 7; y++) {
 			if (y < 2 || y > 4) {
 				for (int x = 2; x < 5; x++)
-					locations.add(new Location(x, y));
+					boardPatternLocations.add(new Location(x, y));
 			} else {
 				for (int x = 0; x < 7; x++)
-					locations.add(new Location(x, y));
+					boardPatternLocations.add(new Location(x, y));
 			}
 		}
 	}
 
 	// set marbles on the board
 	private void loadMarbles() {
-		for (int l = 0; l < locations.size(); l++) {
-			if (!locations.get(l).equals(new Location(3, 3)))
-				addActor(new Marble(DOWN), locations.get(l));
-		}
+		for (Location loc: boardPatternLocations)
+			addActor(new Marble(DOWN), loc);
+		this.removeActorsAt(new Location(3, 3)); //make hole in middle
 	}
 
-	// check if location is inside board
-	private boolean isPossibleJumpLocation(Location loc, Location previousLoc) {
-		Double dir = loc.getDirectionTo(previousLoc);
-		for (int possibleDir = 90; possibleDir < 360; possibleDir += 90)
-			
-		return (locations.contains(loc) && previousLoc.getDistanceTo(loc) == 2)
+	/**
+	 * check if location is a valid jump location 
+	 */
+	private boolean isValidJumpLocation(Location loc, Location previousLoc) {
+		ArrayList<Location> possibleLocs = new ArrayList<Location>();
+		for (int possibleDir = 0; possibleDir < 360; possibleDir += 90)
+			possibleLocs.add(previousLoc.getAdjacentLocation(possibleDir, 2));
+		return (boardPatternLocations.contains(loc) && possibleLocs.contains(loc)
+				&& getActorsAt(loc, Marble.class).size() == 1);
 	}
 
 	// get marble which has been selected to be played
