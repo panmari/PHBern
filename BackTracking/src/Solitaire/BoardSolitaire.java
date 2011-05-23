@@ -10,7 +10,6 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 	final int DOWN = 0;
 	final int UP = 1;
 	Actor draggedMarble;
-	ArrayList<Actor> allMarbles = new ArrayList<Actor>();
 
 	private ArrayList<Location> boardPatternLocations = new ArrayList<Location>();
 	private Location initialMarbleLocation;
@@ -24,6 +23,7 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 	}
 
 	public void mouseTouched(Actor touchedMarble, GGMouse mouse, Point spot) {
+		
 		Location mouseLoc = toLocation(mouse.getX(), mouse.getY());
 		Point mousePoint = new Point(mouse.getX(), mouse.getY());
 		switch (mouse.getEvent()) {
@@ -41,17 +41,17 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 			
 		case GGMouse.lRelease:
 			try {
-			draggedMarble.setLocationOffset(new Point(0, 0));
-			if (isValidJumpLocation(mouseLoc, initialMarbleLocation)
-					&& jumpedMarbleExists(mouseLoc, initialMarbleLocation)) {
-				draggedMarble.setLocation(getMouseLocation());
-				Actor jumpedMarble = getJumpedMarble(mouseLoc, initialMarbleLocation);
-				allMarbles.remove(jumpedMarble);
-				removeActor(jumpedMarble);
-			}
-			else draggedMarble.setLocation(initialMarbleLocation);
-			draggedMarble.show(DOWN);
-			draggedMarble = null;
+				draggedMarble.setLocationOffset(new Point(0, 0));
+				if (isValidJumpLocation(mouseLoc, initialMarbleLocation)
+						&& jumpedMarbleExists(mouseLoc, initialMarbleLocation)) {
+					draggedMarble.setLocation(mouseLoc);
+					Actor jumpedMarble = getJumpedMarble(mouseLoc, initialMarbleLocation);
+					removeActor(jumpedMarble);
+				}
+				else draggedMarble.setLocation(initialMarbleLocation);
+				draggedMarble.show(DOWN);
+				draggedMarble = null;
+				isGameOver();
 			} catch (NullPointerException e) {
 				System.out.println("this shouldn't happen, something lagged behind");
 			}
@@ -90,7 +90,6 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 		for (Location loc: boardPatternLocations) {
 			Marble marble = new Marble(DOWN);
 			marble.addMouseTouchListener(this, GGMouse.lDrag | GGMouse.lRelease);
-			allMarbles.add(marble);
 			addActor(marble, loc);
 		}
 		this.removeActorsAt(new Location(3, 3)); //make hole in middle
@@ -100,39 +99,32 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 	 * check if location is a valid jump location 
 	 */
 	private boolean isValidJumpLocation(Location loc, Location previousLoc) {
-		ArrayList<Location> possibleLocs = new ArrayList<Location>();
+		ArrayList<Location> validJumpLocs = new ArrayList<Location>();
 		for (int possibleDir = 0; possibleDir < 360; possibleDir += 90)
-			possibleLocs.add(previousLoc.getAdjacentLocation(possibleDir, 2));
-		return (boardPatternLocations.contains(loc) && possibleLocs.contains(loc)
+			validJumpLocs.add(previousLoc.getAdjacentLocation(possibleDir, 2));
+		return (boardPatternLocations.contains(loc) && validJumpLocs.contains(loc)
 				&& getActorsAt(loc, Marble.class).size() == 1);
 	}
 
 	/**
 	 * not in use!
-	 * TODO: rewrite later mb?
 	 */
-	private void isGameOver() {
-		ArrayList<Location> leftOvers = getOccupiedLocations();
+	private boolean isGameOver() {
+		ArrayList<Actor> leftMarbles = getActors(Marble.class);
 		// One left => you win
-		if (leftOvers.size() == 1) {
+		if (leftMarbles.size() == 1) {
 			addActor(new Actor("sprites/you_win.gif"), new Location(3, 3));
 			restart();
+			return true;
 		} else {
-			boolean gameover = true;
-
-			// more than one left, but without neighbours => you loose
-			for (Location lO : leftOvers) {
-				ArrayList<Location> neighbours = lO.getNeighbourLocations(1);
-				for (Location n : neighbours) {
-					if (getOneActorAt(n) != null)
-						gameover = false;
-				}
+			//no more valid jumps possible => you lose!
+			for (Actor a: leftMarbles) {
+				if (!a.getNeighbours(1).isEmpty()) 
+					return false;
 			}
-
-			if (gameover) {
-				addActor(new Actor("sprites/gameover.png"), new Location(3, 3));
-				restart();
-			}
+			addActor(new Actor("sprites/gameover.png"), new Location(3, 3));
+			restart();
+			return true;
 		}
 	}
 
