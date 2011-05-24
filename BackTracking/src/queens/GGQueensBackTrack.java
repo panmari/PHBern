@@ -1,8 +1,6 @@
 package queens;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.Point;
 import java.util.ArrayList;
 
 import ch.aplu.jgamegrid.*;
@@ -10,10 +8,10 @@ import ch.aplu.util.Monitor;
 
 public class GGQueensBackTrack extends GameGrid {
 	
-	final static int nrQueens = 5; //changes number of queens & size of board!
+	final static int nrQueens = 7; //changes number of queens & size of board!
 	QueenActor[] queens = new QueenActor[nrQueens];
 	private int nrSteps;
-	private boolean thereWasTrouble;
+	private boolean reset;
 	
 	public GGQueensBackTrack() {
 		super(nrQueens,nrQueens, 600/nrQueens);
@@ -25,12 +23,7 @@ public class GGQueensBackTrack extends GameGrid {
 		for (int i = 0; i < queens.length; i++) {
 			queens[i] = new QueenActor();
 		}
-		startSolvingQueens();
-	}
-	
-	private void startSolvingQueens() {
-		addActor(queens[0], new Location(0, nbVertCells-1));
-		solveQueens(0);
+		solveQueens();
 	}
 	
 	public void act() {
@@ -68,41 +61,54 @@ public class GGQueensBackTrack extends GameGrid {
 	}
 
 	public void reset() {
-		//TODO: fix reset
+		reset = true;
 		removeAllActors();
 		nrSteps = 0;
+		Monitor.wakeUp();
 		setStatusText("Situation reset..");
+		solveQueens();
 	}
-/*	
-	private void solveQueens(int nrQueen, boolean troubleForNextQueen) {
-		nrSteps++;
-		refresh();
-		Monitor.putSleep();
-		queens[nrQueen].move();
-		if (isThreatenedByOtherQueen(queens[nrQueen].getLocation()))
-			if (queens[nrQueen].getY() == 0) {
-				queens[nrQueen].removeSelf();
-				setStatusText("Tracing steps back..");
-				return;
-			}
+	
+	private void solveQueens() {
+		boolean notSolved = true;
+		int nrQueen = 0;
+		boolean troubleForNextQueen = false;
+		reset = false;
+		addActor(queens[0], new Location(0, nbVertCells-1));
+		while (notSolved && !reset) {
+			nrSteps++;
+			refresh();
+			Monitor.putSleep();
+			if (isThreatenedByOtherQueen(queens[nrQueen].getLocation()) || troubleForNextQueen)
+				if (queens[nrQueen].getY() == 0) {
+					queens[nrQueen].removeSelf();
+					setStatusText("Tracing steps back..");
+					nrQueen--;
+					troubleForNextQueen = true;
+				}
+				else {
+					queens[nrQueen].move();
+					setStatusText("Moving forward..");
+					troubleForNextQueen = false;
+				}
 			else {
-				setStatusText("Moving forward..");
-				solveQueens(nrQueen, false);
+				if(nrQueen == queens.length - 1) { //solved!
+					notSolved = false;
+					success();
+				} 
+				else {
+					nrQueen++;
+					addActorNoRefresh(queens[nrQueen], new Location(nrQueen, nbVertCells-1));
+					setStatusText("Adding next queen..");
+					troubleForNextQueen = false;
+				}
 			}
-		else {
-			if(nrQueen == queens.length - 1) { //solved!
-				success();
-				return;
-			}
-			addActorNoRefresh(queens[nrQueen + 1], new Location(nrQueen + 1, nbVertCells-1));
-			setStatusText("Adding next queen..");
-			solveQueens(nrQueen + 1, false);
 		}
 	}
-*/	
+	
 	private void success() {
 		//TODO: add some fancy sprite?
-		setStatusText("Found Solution! It took: " + nrSteps + " steps.");
+		setStatusText("Found Solution! It took " + nrSteps + " steps.");
 	}
 
 	private boolean isThreatenedByOtherQueen(Location queenLoc) {
