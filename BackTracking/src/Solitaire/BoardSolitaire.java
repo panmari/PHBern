@@ -121,13 +121,20 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 		} else {
 			//check if there are any valid moves left
 			for (Actor a: leftMarbles) {
-				if (!a.getNeighbours(1).isEmpty()) 
+				if (hasOrthagonalNeighbours(a)) 
 					return;
 			}
 			//no more valid jumps possible => you lose!
 			addActor(new Actor("sprites/gameover.png"), new Location(3, 3));
 			restart();
 		}
+	}
+
+	private boolean hasOrthagonalNeighbours(Actor a) {
+		for (Location loc: a.getLocation().getNeighbourLocations(0.5))
+			if (getActorsAt(loc, Marble.class).size() != 0)
+				return true;
+		return false;
 	}
 
 	// restart game
