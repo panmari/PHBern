@@ -11,7 +11,6 @@ public class GGQueensBackTrack extends GameGrid {
 	final static int nrQueens = 7; //changes number of queens & size of board!
 	QueenActor[] queens = new QueenActor[nrQueens];
 	private int nrSteps;
-	private boolean reset;
 	
 	public GGQueensBackTrack() {
 		super(nrQueens,nrQueens, 600/nrQueens);
@@ -39,29 +38,8 @@ public class GGQueensBackTrack extends GameGrid {
 				else bg.fillCell(new Location(x, y), new Color(209, 139, 71));
 			}
 	}
-	//this shit doesn't work as intended
-	private void solveQueens(int nrQueen) {
-		if (nrQueen == nbHorzCells-1)
-			success();
-		else {
-			addOneMoreQueen(nrQueen + 1);
-		}
-	}
-	
-	private void addOneMoreQueen(int nrQueen) {
-		addActorNoRefresh(queens[nrQueen], new Location(nrQueen, nbVertCells-1));
-		while (isThreatenedByOtherQueen(queens[nrQueen].getLocation()))
-			if (queens[nrQueen].getY() > 0)
-				queens[nrQueen].move();
-			else { 
-				queens[nrQueen].removeSelf();
-				thereWasTrouble = true;
-				break;
-			}
-	}
 
 	public void reset() {
-		reset = true;
 		removeAllActors();
 		nrSteps = 0;
 		Monitor.wakeUp();
@@ -73,9 +51,8 @@ public class GGQueensBackTrack extends GameGrid {
 		boolean notSolved = true;
 		int nrQueen = 0;
 		boolean troubleForNextQueen = false;
-		reset = false;
 		addActor(queens[0], new Location(0, nbVertCells-1));
-		while (notSolved && !reset) {
+		while (notSolved) {
 			nrSteps++;
 			refresh();
 			Monitor.putSleep();
@@ -95,12 +72,12 @@ public class GGQueensBackTrack extends GameGrid {
 				if(nrQueen == queens.length - 1) { //solved!
 					notSolved = false;
 					success();
+					break;
 				} 
 				else {
 					nrQueen++;
 					addActorNoRefresh(queens[nrQueen], new Location(nrQueen, nbVertCells-1));
 					setStatusText("Adding next queen..");
-					troubleForNextQueen = false;
 				}
 			}
 		}
