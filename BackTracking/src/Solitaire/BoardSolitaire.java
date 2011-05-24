@@ -16,7 +16,7 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 
 	public BoardSolitaire() {
 		super(7, 7, 70, null, "sprites/board.png", false);
-
+		setTitle("Solitaire");
 		loadMarbleLocations();
 		loadMarbles();
 		show();
@@ -48,7 +48,9 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 					Actor jumpedMarble = getJumpedMarble(mouseLoc, initialMarbleLocation);
 					removeActor(jumpedMarble);
 				}
-				else draggedMarble.setLocation(initialMarbleLocation);
+				else {
+					draggedMarble.setLocation(initialMarbleLocation);
+				}
 				draggedMarble.show(DOWN);
 				draggedMarble = null;
 				isGameOver();
@@ -97,6 +99,10 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 
 	/**
 	 * check if location is a valid jump location 
+	 * A location is only a valid jump location if:
+	 * 		1. It's part of the boards pattern.
+	 * 		2. It's situated orthogonally with a distance of 2 squares
+	 * 		3. The dragged Marble is the only marble on this field (= it was empty before)
 	 */
 	private boolean isValidJumpLocation(Location loc, Location previousLoc) {
 		ArrayList<Location> validJumpLocs = new ArrayList<Location>();
@@ -106,31 +112,27 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 				&& getActorsAt(loc, Marble.class).size() == 1);
 	}
 
-	/**
-	 * not in use!
-	 */
-	private boolean isGameOver() {
+	private void isGameOver() {
 		ArrayList<Actor> leftMarbles = getActors(Marble.class);
 		// One left => you win
 		if (leftMarbles.size() == 1) {
 			addActor(new Actor("sprites/you_win.gif"), new Location(3, 3));
 			restart();
-			return true;
 		} else {
-			//no more valid jumps possible => you lose!
+			//check if there are any valid moves left
 			for (Actor a: leftMarbles) {
 				if (!a.getNeighbours(1).isEmpty()) 
-					return false;
+					return;
 			}
+			//no more valid jumps possible => you lose!
 			addActor(new Actor("sprites/gameover.png"), new Location(3, 3));
 			restart();
-			return true;
 		}
 	}
 
 	// restart game
 	private void restart() {
-		delay(3000);
+		delay(5000);
 		removeAllActors();
 		loadMarbles();
 	}
