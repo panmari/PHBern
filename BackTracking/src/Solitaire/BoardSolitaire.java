@@ -65,8 +65,8 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 	}
 	
 	private Actor getJumpedMarble(Location loc, Location initialLoc) {
-		Double dir = loc.getDirectionTo(initialLoc);
-		Location overJumpedLoc = loc.getNeighbourLocation(dir);
+		Double jumpDirection = loc.getDirectionTo(initialLoc);
+		Location overJumpedLoc = loc.getNeighbourLocation(jumpDirection);
 		return getOneActorAt(overJumpedLoc, Marble.class);
 	}
 
