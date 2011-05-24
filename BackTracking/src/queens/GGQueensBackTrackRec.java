@@ -8,18 +8,26 @@ import ch.aplu.util.Monitor;
 
 public class GGQueensBackTrackRec extends GameGrid {
 	
-	final static int nrQueens = 7; //changes number of queens & size of board!
-	private int nrSteps;
+	final static int nrQueens = 5; //changes number of queens & size of board!
 	
 	public GGQueensBackTrackRec() {
 		super(nrQueens,nrQueens, 600/nrQueens);
 		this.setBgColor(Color.white);
 		setTitle("Damenproblem");
 		drawPattern();
-		this.addStatusBar(25);
+		addStatusBar(25);
 		show();
-		System.out.println(solveQueens(nrQueens, nrQueens));
-		System.out.println("done");
+		ArrayList<int[][]> solutions = solveQueens(nrQueens, nrQueens);
+		setStatusText("Done, found " + solutions.size() + " different solutions. ");
+		
+		setSimulationPeriod(2000);
+		while (true) { //shuffle through solutions
+			for(int[][] computedSolution: solutions) {
+				arrangeQueensOnBoard(computedSolution);
+				refresh();
+				Monitor.putSleep();
+			}
+		}
 	}
 	
 	public void act() {
@@ -37,11 +45,7 @@ public class GGQueensBackTrackRec extends GameGrid {
 	}
 
 	public void reset() {
-		removeAllActors();
-		nrSteps = 0;
-		Monitor.wakeUp();
-		setStatusText("Situation reset..");
-		solveQueens(nrQueens, nrQueens);
+		setStatusText("Reset doesn't work, restart the application.");
 	}
 	
 	private ArrayList<int[][]> solveQueens(int row, int column) {
@@ -58,68 +62,40 @@ public class GGQueensBackTrackRec extends GameGrid {
 		for (int[][] solution: partSolution) {
 			for (int i = 0; i < column; i++) {
 				if (noConflicts(newRow, i, solution)) {
-					solution[i][newRow] = 1;
-					newSolution.add(solution);
-				}
+					setStatusText("No conflicts -> save partial solution");
+					int[][] solutionClone = cloneArray(solution);
+					solutionClone[i][newRow] = 1;
+					newSolution.add(solutionClone);
+				} else setStatusText("Conflict -> drop partial solution");
+				refresh();
+				//Monitor.putSleep(); //for max speed comment this out
 			}
 		}
 		return newSolution;
 	}
 
 	private boolean noConflicts(int newRow, int i, int[][] solution) {
+		arrangeQueensOnBoard(solution);
+		addActorNoRefresh(new QueenActor(),new Location(i, newRow));
+		return !isThreatenedByOtherQueen(new Location(i, newRow));
+	}
+	
+	private void arrangeQueensOnBoard(int[][] solution) {
 		removeAllActors();
 		for (int x = 0; x < nrQueens; x++) {
 			for (int y = 0; y < nrQueens; y++) {
 				if (solution[x][y] == 1)
-					addActor(new QueenActor(),new Location(x, y));
+					addActorNoRefresh(new QueenActor(),new Location(x, y));
 			}
 		}
-		return !isThreatenedByOtherQueen(new Location(i, newRow));
 	}
 
-	/*
-	
-	def damenproblem(reihen, spalten):
-	    if reihen <= 0:
-	        return [[]] # keine Dame zu setzen; leeres Brett ist Lösung
-	    else:
-	        return eine_dame_dazu(reihen - 1, spalten, damenproblem(reihen - 1, spalten))
-	 
-	# Probiere alle Spalten, in denen für eine gegebene Teillösung
-	# eine Dame in "neue_reihe" gestellt werden kann.
-	# Wenn kein Konflikt mit der Teillösung auftritt,
-	# ist eine neue Lösung des um eine Reihe erweiterten
-	# Bretts gefunden.
-	def eine_dame_dazu(neue_reihe, spalten, vorherige_loesungen):
-	    neue_loesungen = []
-	    for loesung in vorherige_loesungen:
-	        # Versuche, eine Dame in jeder Spalte von neue_reihe einzufügen.
-	        for neue_spalte in range(spalten):
-	            # print('Versuch: %s in Reihe %s' % (neue_spalte, neue_reihe))
-	            if kein_konflikt(neue_reihe, neue_spalte, loesung):
-	                # Kein Konflikte, also ist dieser Versuch eine Lösung.
-	                neue_loesungen.append(loesung + [neue_spalte])
-	    return neue_loesungen
-	 
-	# Kann eine Dame an die Position "neue_spalte"/"neue_reihe" gestellt werden,
-	# ohne dass sie eine der schon stehenden Damen schlagen kann?
-	def kein_konflikt(neue_reihe, neue_spalte, loesung):
-	    # Stelle sicher, dass die neue Dame mit keiner der existierenden
-	    # Damen auf einer Spalte oder Diagonalen steht.
-	    for reihe in range(neue_reihe):
-	        if loesung[reihe]         == neue_spalte              or  # Gleiche Spalte
-	           loesung[reihe] + reihe == neue_spalte + neue_reihe or  # Gleiche Diagonale
-	           loesung[reihe] - reihe == neue_spalte - neue_reihe:    # Gleiche Diagonale
-	                return False
-	    return True
-	 
-	for loesung in damenproblem(8, 8):
-	    print(loesung)
-	    
-	    */
-	private void success() {
-		//TODO: add some fancy sprite?
-		setStatusText("Found Solution! It took " + nrSteps + " steps.");
+	public static int[][] cloneArray(int[][] solution){
+		int[][] copy = new int[solution.length][];
+		for(int i = 0 ; i < solution.length ; i++){
+			System.arraycopy(solution[i], 0, copy[i] = new int[solution[i].length], 0, solution[i].length);
+		}
+		return copy;
 	}
 
 	private boolean isThreatenedByOtherQueen(Location queenLoc) {
