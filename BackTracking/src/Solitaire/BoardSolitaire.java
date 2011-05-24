@@ -23,24 +23,22 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 	}
 
 	public void mouseTouched(Actor touchedMarble, GGMouse mouse, Point spot) {
-		
+		//this is buggy on linux, marbles tend to "hang" for a bit
 		Location mouseLoc = toLocation(mouse.getX(), mouse.getY());
 		Point mousePoint = new Point(mouse.getX(), mouse.getY());
 		switch (mouse.getEvent()) {
-		case GGMouse.lDrag:
-			if (draggedMarble == null) {
+		case GGMouse.lPress:
+				//define draggedMarble:
 				draggedMarble = touchedMarble;
 				initialMarbleLocation = touchedMarble.getLocation();
 				draggedMarble.show(UP);
 				draggedMarble.setOnTop();
-			}
-			else{
+			break;
+		case GGMouse.lDrag:
 				draggedMarble.setPixelLocation(mousePoint);
-			}
 			break;
 			
 		case GGMouse.lRelease:
-			try {
 				draggedMarble.setLocationOffset(new Point(0, 0));
 				if (isValidJumpLocation(mouseLoc, initialMarbleLocation)
 						&& jumpedMarbleExists(mouseLoc, initialMarbleLocation)) {
@@ -54,9 +52,6 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 				draggedMarble.show(DOWN);
 				draggedMarble = null;
 				isGameOver();
-			} catch (NullPointerException e) {
-				System.out.println("this shouldn't happen, something lagged behind");
-			}
 			break;
 		}
 		refresh(); //this gets called a lot -> laggy?	
@@ -91,7 +86,7 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 	private void loadMarbles() {
 		for (Location loc: boardPatternLocations) {
 			Marble marble = new Marble(DOWN);
-			marble.addMouseTouchListener(this, GGMouse.lDrag | GGMouse.lRelease);
+			marble.addMouseTouchListener(this, GGMouse.lPress | GGMouse.lDrag | GGMouse.lRelease);
 			addActor(marble, loc);
 		}
 		this.removeActorsAt(new Location(3, 3)); //make hole in middle
