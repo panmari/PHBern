@@ -2,7 +2,6 @@ package Solitaire;
 
 import ch.aplu.jgamegrid.*;
 
-import java.awt.Component;
 import java.awt.Point;
 import java.util.*;
 
@@ -20,10 +19,15 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 		loadMarbleLocations();
 		loadMarbles();
 		show();
+		setSimulationPeriod(20);
+		doRun();
 	}
 
+	public void act() {
+		refresh();
+	}
+	
 	public void mouseTouched(Actor touchedMarble, GGMouse mouse, Point spot) {
-		//this is buggy on linux, marbles tend to "hang" for a bit
 		Location mouseLoc = toLocation(mouse.getX(), mouse.getY());
 		Point mousePoint = new Point(mouse.getX(), mouse.getY());
 		switch (mouse.getEvent()) {
@@ -34,6 +38,7 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 				draggedMarble.show(UP);
 				draggedMarble.setOnTop();
 			break;
+			
 		case GGMouse.lDrag:
 				draggedMarble.setPixelLocation(mousePoint);
 			break;
@@ -50,11 +55,9 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 					draggedMarble.setLocation(initialMarbleLocation);
 				}
 				draggedMarble.show(DOWN);
-				draggedMarble = null;
 				isGameOver();
 			break;
-		}
-		refresh(); //this gets called a lot -> laggy?	
+		}	
 	}
 
 	private boolean jumpedMarbleExists(Location loc, Location initialLoc) {
@@ -67,7 +70,19 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 		return getOneActorAt(overJumpedLoc, Marble.class);
 	}
 
-	// Set locations where a marble is set at the start
+	/**
+	 * Initializes the pattern of the board.
+	 * In our case, it always looks like:
+	 * xxx000xxx
+	 * xxx000xxx
+	 * xxx000xxx
+	 * 000000000
+	 * 000000000
+	 * 000000000
+	 * xxx000xxx
+	 * xxx000xxx
+	 * xxx000xxx
+	 */
 	private void loadMarbleLocations() {
 		for (int y = 0; y < 7; y++) {
 			if (y < 2 || y > 4) {
@@ -81,7 +96,8 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 	}
 
 	/** 
-	 * Initializes marbles on the board
+	 * Initializes marbles on the board. It puts a marble
+	 * on every location of the boards pattern, except for the middle.
 	 */
 	private void loadMarbles() {
 		for (Location loc: boardPatternLocations) {
