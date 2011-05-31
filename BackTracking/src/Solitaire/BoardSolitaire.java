@@ -33,14 +33,21 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 		switch (mouse.getEvent()) {
 		case GGMouse.lPress:
 				//define draggedMarble:
+			if (draggedMarble == null) {
 				draggedMarble = touchedMarble;
 				initialMarbleLocation = touchedMarble.getLocation();
 				draggedMarble.show(UP);
 				draggedMarble.setOnTop();
+			} else { //to prevent "hanging" on Linux OS: reset Marble
+				draggedMarble.show(DOWN);
+				draggedMarble.setLocationOffset(new Point(0, 0));
+				draggedMarble.setLocation(initialMarbleLocation);
+				draggedMarble = null;
+			}
 			break;
-			
 		case GGMouse.lDrag:
-				draggedMarble.setPixelLocation(mousePoint);
+				if (draggedMarble != null)
+					draggedMarble.setPixelLocation(mousePoint);
 			break;
 			
 		case GGMouse.lRelease:
@@ -55,9 +62,10 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 					draggedMarble.setLocation(initialMarbleLocation);
 				}
 				draggedMarble.show(DOWN);
+				draggedMarble = null;
 				isGameOver();
 			break;
-		}	
+		}
 	}
 
 	private boolean jumpedMarbleExists(Location loc, Location initialLoc) {
@@ -100,12 +108,16 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 	 * on every location of the boards pattern, except for the middle.
 	 */
 	private void loadMarbles() {
-		for (Location loc: boardPatternLocations) {
+		Location[] testArray = {new Location(2,2), new Location(2,3), new Location(4,5)};
+		//for (Location loc: boardPatternLocations) {
+		for (Location loc: testArray) {
 			Marble marble = new Marble(DOWN);
 			marble.addMouseTouchListener(this, GGMouse.lPress | GGMouse.lDrag | GGMouse.lRelease);
-			addActor(marble, loc);
+			addActorNoRefresh(marble, loc);
 		}
 		this.removeActorsAt(new Location(3, 3)); //make hole in middle
+		
+		
 	}
 
 	/**
@@ -132,7 +144,7 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 		} else {
 			//check if there are any valid moves left
 			for (Actor a: leftMarbles) {
-				if (hasOrthagonalNeighbours(a)) 
+				if (hasOrthagonalJumpableNeighbours(a)) 
 					return;
 			}
 			//no more valid jumps possible => you lose!
@@ -141,10 +153,15 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 		}
 	}
 
-	private boolean hasOrthagonalNeighbours(Actor a) {
-		for (Location loc: a.getLocation().getNeighbourLocations(0.5))
-			if (getActorsAt(loc, Marble.class).size() != 0)
+	private boolean hasOrthagonalJumpableNeighbours(Actor a) {
+		Location marbleLoc = a.getLocation();
+		for (Location loc: marbleLoc.getNeighbourLocations(0.5)) {
+			double locDir = marbleLoc.getDirectionTo(loc);
+			Location jumpLoc = loc.getNeighbourLocation(locDir);
+			if (getActorsAt(loc, Marble.class).size() != 0 &&
+					isValidJumpLocation(jumpLoc, marbleLoc))
 				return true;
+		}
 		return false;
 	}
 
