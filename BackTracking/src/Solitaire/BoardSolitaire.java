@@ -46,13 +46,14 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 			}
 			break;
 		case GGMouse.lDrag:
-				if (draggedMarble != null)
-					draggedMarble.setPixelLocation(mousePoint);
+			if (draggedMarble != null)
+				draggedMarble.setPixelLocation(mousePoint);
 			break;
 			
 		case GGMouse.lRelease:
+			if (draggedMarble != null) {
 				draggedMarble.setLocationOffset(new Point(0, 0));
-				if (isValidJumpLocation(mouseLoc, initialMarbleLocation)
+				if (isValidJumpLocation(mouseLoc, initialMarbleLocation, true)
 						&& jumpedMarbleExists(mouseLoc, initialMarbleLocation)) {
 					draggedMarble.setLocation(mouseLoc);
 					Actor jumpedMarble = getJumpedMarble(mouseLoc, initialMarbleLocation);
@@ -64,6 +65,7 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 				draggedMarble.show(DOWN);
 				draggedMarble = null;
 				isGameOver();
+			}
 			break;
 		}
 	}
@@ -108,9 +110,7 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 	 * on every location of the boards pattern, except for the middle.
 	 */
 	private void loadMarbles() {
-		Location[] testArray = {new Location(2,2), new Location(2,3), new Location(4,5)};
-		//for (Location loc: boardPatternLocations) {
-		for (Location loc: testArray) {
+		for (Location loc: boardPatternLocations) {
 			Marble marble = new Marble(DOWN);
 			marble.addMouseTouchListener(this, GGMouse.lPress | GGMouse.lDrag | GGMouse.lRelease);
 			addActorNoRefresh(marble, loc);
@@ -122,17 +122,25 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 
 	/**
 	 * check if location is a valid jump location 
+	 * 	 * 
 	 * A location is only a valid jump location if:
 	 * 		1. It's part of the boards pattern.
 	 * 		2. It's situated orthogonally with a distance of 2 squares
 	 * 		3. The dragged Marble is the only marble on this field (= it was empty before)
+	 * 
+	 * Point 3 changes if you use this method while not dragging a marble! Then, the amount
+	 * of marbles on the field has to be 0
 	 */
-	private boolean isValidJumpLocation(Location loc, Location previousLoc) {
+	private boolean isValidJumpLocation(Location loc, Location previousLoc, boolean isDragged) {
+		int expectedMarbleNr;
+		if (isDragged)
+			expectedMarbleNr = 1;
+		else expectedMarbleNr = 0;
 		ArrayList<Location> validJumpLocs = new ArrayList<Location>();
 		for (int possibleDir = 0; possibleDir < 360; possibleDir += 90)
 			validJumpLocs.add(previousLoc.getAdjacentLocation(possibleDir, 2));
 		return (boardPatternLocations.contains(loc) && validJumpLocs.contains(loc)
-				&& getActorsAt(loc, Marble.class).size() == 1);
+				&& getActorsAt(loc, Marble.class).size() == expectedMarbleNr);
 	}
 
 	private void isGameOver() {
@@ -159,7 +167,7 @@ public class BoardSolitaire extends GameGrid implements GGMouseTouchListener {
 			double locDir = marbleLoc.getDirectionTo(loc);
 			Location jumpLoc = loc.getNeighbourLocation(locDir);
 			if (getActorsAt(loc, Marble.class).size() != 0 &&
-					isValidJumpLocation(jumpLoc, marbleLoc))
+					isValidJumpLocation(jumpLoc, marbleLoc, false))
 				return true;
 		}
 		return false;
