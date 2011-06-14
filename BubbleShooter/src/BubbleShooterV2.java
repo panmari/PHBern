@@ -201,12 +201,14 @@ class Pointer extends Actor
   public Pointer()
   {
     super(true, "sprites/pointer.png");
+    this.setLocationOffset(new Point(0,-80));
   }
 
   public void act()
   {
 	  Location mousePos = gameGrid.getMouseLocation();
 	  if (mousePos != null) {
+		  System.out.println(getLocation());
 		  double dirToMouse = getLocation().getDirectionTo(mousePos);
 		  setDirection(dirToMouse);
 	  }
