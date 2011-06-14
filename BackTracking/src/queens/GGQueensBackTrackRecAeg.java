@@ -10,7 +10,7 @@ import ch.aplu.jgamegrid.*;
 
 public class GGQueensBackTrackRecAeg extends GameGrid
 {
-  private final static int nrQueens = 8; //changes number of queens & size of board!
+  private final static int nrQueens = 6; //changes number of queens & size of board!
   private boolean mustWait = true;
 
   public GGQueensBackTrackRecAeg()

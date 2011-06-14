@@ -1,8 +1,6 @@
 // Reversi.java
 
 import ch.aplu.jgamegrid.*;
-
-import java.awt.Point;
 import java.util.*;
 
 public class BubbleShooterV2 extends GameGrid implements GGMouseListener
@@ -189,7 +187,7 @@ class Bubble extends Actor
 
   public void act()
   {
-
+	  
   }
 }
 
@@ -201,14 +199,14 @@ class Pointer extends Actor
   public Pointer()
   {
     super(true, "sprites/pointer.png");
-    this.setLocationOffset(new Point(0,-80));
+    //this.setLocationOffset(new Point(0,-80));
+    //edited picture so it fits
   }
 
   public void act()
   {
 	  Location mousePos = gameGrid.getMouseLocation();
 	  if (mousePos != null) {
-		  System.out.println(getLocation());
 		  double dirToMouse = getLocation().getDirectionTo(mousePos);
 		  setDirection(dirToMouse);
 	  }
