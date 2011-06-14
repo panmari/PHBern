@@ -1,6 +1,8 @@
 // Reversi.java
 
 import ch.aplu.jgamegrid.*;
+
+import java.awt.Point;
 import java.util.*;
 
 public class BubbleShooterV2 extends GameGrid implements GGMouseListener
@@ -13,7 +15,7 @@ public class BubbleShooterV2 extends GameGrid implements GGMouseListener
   public BubbleShooterV2()
   {
     super(37, 38, 20, false);
-
+    
     bubbleList.add(shooter);
     for(int x = 27; x < 37; x+=2)
       bubbleList.add(new Location(x, 36));
@@ -28,9 +30,11 @@ public class BubbleShooterV2 extends GameGrid implements GGMouseListener
       for(int x = y; x < 37-y; x+=2)
         addRandomBubble2(new Location(x, 2*y-1));
     }
-
     addMouseListener(this, GGMouse.lPress);
+    addActor(new Pointer(), shooter);
     show();
+    setSimulationPeriod(30);
+    doRun();
   }
 
   //do if mouse is pressed inside the playground
@@ -186,5 +190,25 @@ class Bubble extends Actor
   public void act()
   {
 
+  }
+}
+
+/*------------------------------------------------------------------------------
+ * Pointer
+ */
+class Pointer extends Actor
+{
+  public Pointer()
+  {
+    super(true, "sprites/pointer.png");
+  }
+
+  public void act()
+  {
+	  Location mousePos = gameGrid.getMouseLocation();
+	  if (mousePos != null) {
+		  double dirToMouse = getLocation().getDirectionTo(mousePos);
+		  setDirection(dirToMouse);
+	  }
   }
 }
