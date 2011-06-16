@@ -1,3 +1,4 @@
+package bubbleShooter;
 // Reversi.java
 
 import ch.aplu.jgamegrid.*;

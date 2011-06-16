@@ -8,7 +8,7 @@ import ch.aplu.util.Monitor;
 
 public class GGQueensBackTrackRec extends GameGrid {
 	
-	final static int nrQueens = 8; //changes number of queens & size of board!
+	final static int nrQueens = 5; //changes number of queens & size of board!
 	
 	public GGQueensBackTrackRec() {
 		super(nrQueens,nrQueens, 600/nrQueens);
