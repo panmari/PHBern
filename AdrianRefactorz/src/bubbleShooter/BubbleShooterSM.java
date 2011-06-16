@@ -6,13 +6,13 @@ import ch.aplu.jgamegrid.*;
 import java.awt.Point;
 import java.util.*;
 
-public class BubbleShooterV2 extends GameGrid implements GGMouseListener {
+public class BubbleShooterSM extends GameGrid implements GGMouseListener {
 	int nbOfBubbleColors = 5; // Zahl zwischen 1 - 5
 	Location shootLoc = new Location(18, 36); // Location of the shooter
 	ArrayList<Location> bubblePreviewLocations = new ArrayList<Location>(); 
 	// Location-List of shooter and bubbles to come
 	
-	public BubbleShooterV2() {
+	public BubbleShooterSM() {
 		super(37, 38, 20, false);
 
 		bubblePreviewLocations.add(shootLoc);
@@ -67,7 +67,7 @@ public class BubbleShooterV2 extends GameGrid implements GGMouseListener {
 	}
 
 	public static void main(String[] args) {
-		new BubbleShooterV2();
+		new BubbleShooterSM();
 	}
 }
 
