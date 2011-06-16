@@ -8,92 +8,62 @@ import java.util.*;
 
 public class BubbleShooterV2 extends GameGrid implements GGMouseListener {
 	int nbOfBubbleColors = 5; // Zahl zwischen 1 - 5
-	Location shooter = new Location(18, 36); // Location of the shooter
-	ArrayList<Location> bubbleList = new ArrayList<Location>(); // Location-List
-																// of shooter
-																// and bubbles
-																// to come
-	ArrayList<Location> similarNeighbours = new ArrayList<Location>(); // Location-List
-																		// of
-																		// similar
-																		// neighbours
-
+	Location shootLoc = new Location(18, 36); // Location of the shooter
+	ArrayList<Location> bubblePreviewLocations = new ArrayList<Location>(); 
+	// Location-List of shooter and bubbles to come
+	
 	public BubbleShooterV2() {
 		super(37, 38, 20, false);
 
-		bubbleList.add(shooter);
+		bubblePreviewLocations.add(shootLoc);
 		for (int x = 27; x < 37; x += 2)
-			bubbleList.add(new Location(x, 36));
-
-		// load shooter and future bubble list
-		for (Location bubble : bubbleList)
-			addRandomBubble2(bubble);
-
-		// load bubbles
+			bubblePreviewLocations.add(new Location(x, 36));
+		for (Location loc : bubblePreviewLocations)
+			addRandomBubble(loc);
+		// initialize Bubble field:
 		for (int y = 1; y < 6; y++) {
 			for (int x = y; x < 37 - y; x += 2)
-				addRandomBubble2(new Location(x, 2 * y - 1));
+				addRandomBubble(new Location(x, 2 * y - 1));
 		}
 		addMouseListener(this, GGMouse.lPress);
-		addActor(new Pointer(), shooter);
+		addActor(new Pointer(), shootLoc);
+		setPaintOrder(Pointer.class, Bubble.class);
 		show();
-		setSimulationPeriod(30);
+		setSimulationPeriod(30); // => 33 refreshes per second
 		doRun();
 	}
 
-	// do if mouse is pressed inside the playground
 	public boolean mouseEvent(GGMouse mouse) {
-		Bubble shootBubble = (Bubble) getOneActorAt(shooter, Bubble.class);
+		Bubble shootBubble = (Bubble) getOneActorAt(shootLoc, Bubble.class);
 		shootBubble.shoot(new Point(mouse.getX(), mouse.getY()));
-		resetShooterAndBubbleList();
-		endOfGame();
+		refillBubbles();
+		checkForGameOver();
 		return true;
 	}
 
-	// Add a random Bubble
-	public void addRandomBubble2(Location loc) {
+	private void addRandomBubble(Location loc) {
 		int rN = (int) (Math.random() * nbOfBubbleColors);
 		addActor(new Bubble(rN, this), loc);
 	}
 
-	// changes location of shot bubble, if does not match to grid
-	public Location setValidLocation(Location location) {
-		if (getOneActorAt(new Location(location.x, location.y - 2)) != null)
-			return new Location(location.x + 1, location.y);
-		else if (getOneActorAt(new Location(location.x - 1, location.y)) != null)
-			return new Location(location.x + 1, location.y);
-		else if (getOneActorAt(new Location(location.x + 1, location.y)) != null)
-			return new Location(location.x - 1, location.y);
-		else if (getOneActorAt(new Location(location.x, location.y - 1)) != null)
-			return new Location(location.x + 1, location.y + 1);
-		else if (getOneActorAt(new Location(location.x - 1, location.y - 1)) != null)
-			return new Location(location.x, location.y + 1);
-		else if (getOneActorAt(new Location(location.x + 1, location.y - 1)) != null)
-			return new Location(location.x, location.y + 1);
-		else if (getOneActorAt(new Location(location.x - 2, location.y - 1)) != null)
-			return new Location(location.x - 1, location.y + 1);
-		else if (getOneActorAt(new Location(location.x + 2, location.y - 1)) != null)
-			return new Location(location.x + 1, location.y + 1);
-		else
-			return location;
+	/** 
+	 * Reloads the shooter and updates the BubbleList
+	 */
+	private void refillBubbles() {
+		for (int b = 1; b < bubblePreviewLocations.size(); b++)
+			getOneActorAt(bubblePreviewLocations.get(b)).setLocation(bubblePreviewLocations.get(b - 1));
+
+		addRandomBubble(bubblePreviewLocations.get(bubblePreviewLocations.size() - 1));
 	}
 
-	// Adds all neighbors with the same ImageID to the ArrayList similar
-	// Neighbors
-	
-
-	// reloads the shooter and updates the BubbleList
-	public void resetShooterAndBubbleList() {
-		for (int b = 1; b < bubbleList.size(); b++)
-			getOneActorAt(bubbleList.get(b)).setLocation(bubbleList.get(b - 1));
-
-		addRandomBubble2(bubbleList.get(bubbleList.size() - 1));
-	}
-
-	// Checks if only shooter and bubble list is left
-	public void endOfGame() {
-		if (getNumberOfActors() <= 6)
+	/**
+	 *  The game is over if only the shooter & the preview Bubbles are left. 
+	 */
+	private void checkForGameOver() {
+		if (getNumberOfActors() <= 6) {
 			addActor(new Actor("sprites/gameover.png"), new Location(18, 15));
+			this.stopGameThread();
+		}
 	}
 
 	public static void main(String[] args) {
@@ -139,7 +109,8 @@ class Bubble extends Actor {
 		setPixelLocation(new Point((int)x, (int)y));
 		areBubblesAroundMe();
 	}
-
+	
+	//TODO: refactor this!
 	public Location setValidLocation(Location location) {
 		if (gg.getOneActorAt(new Location(location.x, location.y - 2)) != null)
 			return new Location(location.x + 1, location.y);
