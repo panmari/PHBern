@@ -10,11 +10,10 @@ public class BubbleShooterSM extends GameGrid implements GGMouseListener {
 	int nbOfBubbleColors = 5; // Zahl zwischen 1 - 5
 	Location shootLoc = new Location(18, 36); // Location of the shooter
 	ArrayList<Location> bubblePreviewLocations = new ArrayList<Location>();
-
 	// Location-List of shooter and bubbles to come
 
 	public BubbleShooterSM() {
-		super(37, 38, 20, Color.red, false);
+		super(37, 38, 20, false);
 		addMouseListener(this, GGMouse.lPress);
 		initializeActors();
 		show();
@@ -60,7 +59,7 @@ public class BubbleShooterSM extends GameGrid implements GGMouseListener {
 	}
 
 	/**
-	 * Reloads the shooter and updates the BubbleList
+	 * Reloads the shooter and updates the preview Bubbles
 	 */
 	private void refillPreviewBubbles() {
 		for (int b = 1; b < bubblePreviewLocations.size(); b++)
@@ -99,7 +98,7 @@ class Bubble extends Actor {
 		this.gg = gg;
 		show(imgId);
 		setActEnabled(false);
-		setCollisionCircle(new Point(0, 0), (int)bubbleRadius+1);
+		setCollisionCircle(new Point(0, 0), (int) bubbleRadius);
 	}
 
 	public void shoot(Point mousePos) {
@@ -115,7 +114,6 @@ class Bubble extends Actor {
 
 	@Override
 	public int collide(Actor a1, Actor a2) {
-		//System.out.println(a1.getLocation() + " a2: " + a2.getLocation());
 		setActEnabled(false);
 		setLocation(validateLocation(getLocation(), x));
 		addActorCollisionListener(null);
@@ -143,9 +141,6 @@ class Bubble extends Actor {
 	 * Bubble-Grid. Means: an even row is not allowed, and 
 	 * every second row starting with 1 changes behaviour on the column-grid
 	 * To see more: Change the GameGrid Constructor so it shows the grid.
-	 * @param loc
-	 * @param x
-	 * @return
 	 */
 	private Location validateLocation(Location loc, double x) {
 		if (loc.y % 2 == 0)
@@ -157,9 +152,9 @@ class Bubble extends Actor {
 	}
 
 	private Location fixX(Location loc, double x) {
-		System.out.println(x + " bit of math: " + x%gg.cellSize);
 		int fix;
-		if (x % 1 > 0.5)
+		System.out.println((x / gg.cellSize )% 1);
+		if ((x / gg.cellSize )% 1 > 0.5)
 			fix = 1;
 		else fix = -1;
 		return new Location(loc.x + fix, loc.y);
