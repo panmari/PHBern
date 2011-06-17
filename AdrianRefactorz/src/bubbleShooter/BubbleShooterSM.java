@@ -99,10 +99,7 @@ class Bubble extends Actor {
 		this.gg = gg;
 		show(imgId);
 		setActEnabled(false);
-	}
-
-	public void reset() {
-		setCollisionCircle(new Point(0, 0), 22);
+		setCollisionCircle(new Point(0, 0), (int)bubbleRadius+1);
 	}
 
 	public void shoot(Point mousePos) {
@@ -118,10 +115,10 @@ class Bubble extends Actor {
 
 	@Override
 	public int collide(Actor a1, Actor a2) {
-		System.out.println(a1.getLocation() + " a2: " + a2.getLocation());
+		//System.out.println(a1.getLocation() + " a2: " + a2.getLocation());
 		setActEnabled(false);
-		setActorCollisionEnabled(false);
-		setLocation(validateLocation(getLocation()));
+		setLocation(validateLocation(getLocation(), x));
+		addActorCollisionListener(null);
 		this.setLocationOffset(new Point(0, 0)); // centers Bubble in Grid
 		removeSameColorNeighbours(this);
 		return 100;
@@ -141,42 +138,33 @@ class Bubble extends Actor {
 		// areBubblesAroundMe();
 	}
 
-	private Location validateLocation(Location loc) {
+	/**
+	 * Transforms the given Location into a valid location of the 
+	 * Bubble-Grid. Means: an even row is not allowed, and 
+	 * every second row starting with 1 changes behaviour on the column-grid
+	 * To see more: Change the GameGrid Constructor so it shows the grid.
+	 * @param loc
+	 * @param x
+	 * @return
+	 */
+	private Location validateLocation(Location loc, double x) {
 		if (loc.y % 2 == 0)
-			return validateLocation(new Location(loc.x, loc.y + 1));
-		else if ((loc.y % 4 == 1 && loc.x % 2 == 0)
-				|| (loc.y % 4 == 3 && loc.x % 2 == 1))
+			return validateLocation(new Location(loc.x, loc.y + 1), x);
+		else if ((loc.y % 4 == 1 && loc.x % 2 == 1)
+				|| (loc.y % 4 == 3 && loc.x % 2 == 0))
 			return loc;
-		else
-			return fixX(loc);
+		else return fixX(loc, x);
 	}
 
-	private Location fixX(Location loc) {
-		return new Location(loc.x + 1, loc.y);
+	private Location fixX(Location loc, double x) {
+		System.out.println(x + " bit of math: " + x%gg.cellSize);
+		int fix;
+		if (x % 1 > 0.5)
+			fix = 1;
+		else fix = -1;
+		return new Location(loc.x + fix, loc.y);
 	}
-
-	// TODO: refactor this!
-	public Location setValidLocation(Location location) {
-		if (gg.getOneActorAt(new Location(location.x, location.y - 2)) != null)
-			return new Location(location.x + 1, location.y);
-		else if (gg.getOneActorAt(new Location(location.x - 1, location.y)) != null)
-			return new Location(location.x + 1, location.y);
-		else if (gg.getOneActorAt(new Location(location.x + 1, location.y)) != null)
-			return new Location(location.x - 1, location.y);
-		else if (gg.getOneActorAt(new Location(location.x, location.y - 1)) != null)
-			return new Location(location.x + 1, location.y + 1);
-		else if (gg.getOneActorAt(new Location(location.x - 1, location.y - 1)) != null)
-			return new Location(location.x, location.y + 1);
-		else if (gg.getOneActorAt(new Location(location.x + 1, location.y - 1)) != null)
-			return new Location(location.x, location.y + 1);
-		else if (gg.getOneActorAt(new Location(location.x - 2, location.y - 1)) != null)
-			return new Location(location.x - 1, location.y + 1);
-		else if (gg.getOneActorAt(new Location(location.x + 2, location.y - 1)) != null)
-			return new Location(location.x + 1, location.y + 1);
-		else
-			return location;
-	}
-
+	
 	public ArrayList<Bubble> getSameColorNeighbours(Bubble initialBubble) {
 		ArrayList<Bubble> sameColorNeighbours = new ArrayList<Bubble>();
 		Stack<Bubble> uncheckedNeighbours = new Stack<Bubble>();
@@ -197,15 +185,6 @@ class Bubble extends Actor {
 
 	private boolean hasSameColorAs(Bubble compareBubble) {
 		return this.getIdVisible() == compareBubble.getIdVisible();
-	}
-
-	private void areBubblesAroundMe() {
-		if (getY() < gg.getNbVertCells() - 4 && getNeighbours(2).size() > 0) {
-			setActEnabled(false);
-			setLocation(setValidLocation(getLocation()));
-			this.setLocationOffset(new Point(0, 0)); // centers Bubble in Grid
-			removeSameColorNeighbours(this);
-		}
 	}
 
 	private void removeSameColorNeighbours(Bubble initialBubble) {
