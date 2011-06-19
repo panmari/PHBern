@@ -1,16 +1,13 @@
 package bubbleShooter;
 
 import ch.aplu.jgamegrid.*;
-
-import java.awt.Color;
 import java.awt.Point;
 import java.util.*;
 
 public class BubbleShooterSM extends GameGrid implements GGMouseListener {
 	int nbOfBubbleColors = 5; // Zahl zwischen 1 - 5
-	Location shootLoc = new Location(18, 36); // Location of the shooter
+	Location shootLoc = new Location(18, 36);
 	ArrayList<Location> bubblePreviewLocations = new ArrayList<Location>();
-	// Location-List of shooter and bubbles to come
 
 	public BubbleShooterSM() {
 		super(37, 38, 20, false);
@@ -112,6 +109,9 @@ class Bubble extends Actor {
 		setActEnabled(true);
 	}
 
+	/**
+	 * Handles the arriving of the bubble. at the Field of Bubbles
+	 */
 	@Override
 	public int collide(Actor a1, Actor a2) {
 		setActEnabled(false);
@@ -133,7 +133,6 @@ class Bubble extends Actor {
 		x = vx * acceleration + x;
 		y = vy * acceleration + y;
 		setPixelLocation(new Point((int) x, (int) y));
-		// areBubblesAroundMe();
 	}
 
 	/**
@@ -153,7 +152,6 @@ class Bubble extends Actor {
 
 	private Location fixX(Location loc, double x) {
 		int fix;
-		System.out.println((x / gg.cellSize )% 1);
 		if ((x / gg.cellSize )% 1 > 0.5)
 			fix = 1;
 		else fix = -1;
