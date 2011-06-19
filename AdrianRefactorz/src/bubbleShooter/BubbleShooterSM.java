@@ -30,7 +30,7 @@ public class BubbleShooterSM extends GameGrid implements GGMouseListener {
 				addRandomBubble(new Location(x, 2 * y - 1));
 		}
 		addActor(new Pointer(), shootLoc);
-		setPaintOrder(Pointer.class, Bubble.class);
+		setPaintOrder(Bubble.class, Pointer.class);
 	}
 
 	public boolean mouseEvent(GGMouse mouse) {
