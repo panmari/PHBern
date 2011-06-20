@@ -1,5 +1,4 @@
 package halma;
-// BoardSolitaire.java
 
 import ch.aplu.jgamegrid.*;
 import java.util.*;
@@ -30,6 +29,8 @@ public class Halma extends GameGrid implements GGMouseListener
   private ArrayList<Location> blueEndLocations = new ArrayList<Location>();
   private ArrayList<Location> greenEndLocations = new ArrayList<Location>();
 
+  //TODO: refactor into 1 marble, make colors as enum
+  
   public Halma()
   {
     super(19, 25, 20, null, "sprites/halma.png", false);
@@ -72,23 +73,7 @@ public class Halma extends GameGrid implements GGMouseListener
     if((getOneActorAt(location, Next.class) != null) && (oneUp != null))
     {
       oneUp.show(DOWN);
-
-      if(color == BLUE)
-      {
-        color = RED;
-        setTitle("RED plays");
-      }
-      else if(color == RED)
-      {
-        color = GREEN;
-        setTitle("GREEN plays");
-      }
-      else
-      {
-        color = BLUE;
-        setTitle("BLUE plays");
-      }
-      stillPlaying = false;
+      nextPlayersTurn();
     }
 
 
@@ -163,24 +148,7 @@ public class Halma extends GameGrid implements GGMouseListener
         if(!hasNeighbours(location, upLoc))
         {
           oneUp.show(DOWN);
-
-          if(color == BLUE)
-          {
-            color = RED;
-            setTitle("RED plays");
-          }
-          else if(color == RED)
-          {
-            color = GREEN;
-            setTitle("GREEN plays");
-          }
-          else
-          {
-            color = BLUE;
-            setTitle("BLUE plays");
-          }
-
-          stillPlaying = false;
+          nextPlayersTurn();
         }
 
         isGameOver();
@@ -190,6 +158,25 @@ public class Halma extends GameGrid implements GGMouseListener
     refresh();
     return true;
   }
+
+private void nextPlayersTurn() {
+	if(color == BLUE)
+      {
+        color = RED;
+        setTitle("RED plays");
+      }
+      else if(color == RED)
+      {
+        color = GREEN;
+        setTitle("GREEN plays");
+      }
+      else
+      {
+        color = BLUE;
+        setTitle("BLUE plays");
+      }
+      stillPlaying = false;
+}
 
   //load the staring and end locations of the blue player
   private void loadBlueLocations()
@@ -307,18 +294,7 @@ public class Halma extends GameGrid implements GGMouseListener
   //check if location is inside board
   private boolean isPossibleLocation(Location loc)
   {
-    boolean isPossible = false;
-
-    if(getOneActorAt(loc) == null)
-    {
-      for(Location l: allPossibleLocations)
-      {
-        if(l.equals(loc))
-          isPossible = true;
-      }
-    }
-    
-    return isPossible;
+    return allPossibleLocations.contains(loc) && getOneActorAt(loc) == null;
   }
 
   //get stone which has been selected to be played
@@ -426,23 +402,19 @@ public class Halma extends GameGrid implements GGMouseListener
   //check if the stone has neighbours in each possible direction
   private boolean hasNeighbours(Location loc, Location upLoc)
   {
-    boolean hasNeighbour = false;
-
-    if(hasNeighboursInDir(loc, upLoc, 2, 0) && !hasNeighbour)
-      hasNeighbour = true;
-    else if(hasNeighboursInDir(loc, upLoc, -2, 0) && !hasNeighbour)
-      hasNeighbour = true;
-    else if(hasNeighboursInDir(loc, upLoc, 1, 2) && !hasNeighbour)
-      hasNeighbour = true;
-    else if(hasNeighboursInDir(loc, upLoc, 1, -2) && !hasNeighbour)
-      hasNeighbour = true;
-    else if(hasNeighboursInDir(loc, upLoc, -1, 2) && !hasNeighbour)
-      hasNeighbour = true;
-    else if(hasNeighboursInDir(loc, upLoc, -1, -2) && !hasNeighbour)
-      hasNeighbour = true;
-    
-
-    return hasNeighbour;
+    if(hasNeighboursInDir(loc, upLoc, 2, 0))
+      return true;
+    else if(hasNeighboursInDir(loc, upLoc, -2, 0))
+      return true;
+    else if(hasNeighboursInDir(loc, upLoc, 1, 2))
+      return true;
+    else if(hasNeighboursInDir(loc, upLoc, 1, -2))
+      return true;
+    else if(hasNeighboursInDir(loc, upLoc, -1, 2))
+      return true;
+    else if(hasNeighboursInDir(loc, upLoc, -1, -2))
+      return true;
+    else return false;
   }
 
   //check if there are neighbours in given direction
