@@ -1,6 +1,7 @@
 package halma;
 
 import ch.aplu.jgamegrid.*;
+
 import java.util.*;
 import java.awt.*;
 
@@ -18,7 +19,8 @@ public class Halma extends GameGrid implements GGMouseListener
 
   private int color = (int)(Math.random()*3);   //randomly choose one of the colors to start
   private boolean stillPlaying = false;         //needed if stone can still move after a jump
-
+  private HalmaStone movingHS;
+  
   private ArrayList<Location> allPossibleLocations = new ArrayList<Location>();
 
   private ArrayList<Location> redStartLocations = new ArrayList<Location>();
@@ -28,8 +30,6 @@ public class Halma extends GameGrid implements GGMouseListener
   private ArrayList<Location> redEndLocations = new ArrayList<Location>();
   private ArrayList<Location> blueEndLocations = new ArrayList<Location>();
   private ArrayList<Location> greenEndLocations = new ArrayList<Location>();
-
-  //TODO: refactor into 1 marble, make colors as enum
   
   public Halma()
   {
@@ -44,35 +44,21 @@ public class Halma extends GameGrid implements GGMouseListener
     addMouseListener(this, GGMouse.lPress);
 
     //set title
-    if(color == BLUE)
-      setTitle("BLUE starts");
-    else if(color == RED)
-      setTitle("RED starts");
-    else
-      setTitle("GREEN starts");
+    setTitle(HalmaColor.values()[color].name() + " starts");
     show();
   }
 
   //if mouse is pressed
   public boolean mouseEvent(GGMouse mouse)
   {
-    Actor stone = null;
     Location location = toLocationInGrid(mouse.getX(), mouse.getY());
-
-    //only check stones of the playing color
-    if(color == BLUE)
-      stone = getOneActorAt(location, Blue.class);
-    else if(color == GREEN)
-      stone = getOneActorAt(location, Green.class);
-    else
-      stone = getOneActorAt(location, Red.class);
-
+    HalmaStone stone = getHalmaStoneAt(location);
     Actor oneUp = getOneActorUp();
 
     //check if next-button is pressed
     if((getOneActorAt(location, Next.class) != null) && (oneUp != null))
     {
-      oneUp.show(DOWN);
+      movingHS.putDown();
       nextPlayersTurn();
     }
 
@@ -158,6 +144,10 @@ public class Halma extends GameGrid implements GGMouseListener
     refresh();
     return true;
   }
+
+private HalmaStone getHalmaStoneAt(Location location) {
+	return (HalmaStone) getOneActorAt(location);
+}
 
 private void nextPlayersTurn() {
 	if(color == BLUE)
@@ -472,45 +462,26 @@ private void nextPlayersTurn() {
   }
 }
 
-class Blue extends Actor
+class HalmaStone extends Actor
 {
-  public Blue(int img)
+	HalmaColor hc;
+  public HalmaStone(HalmaColor hc)
   {
     super("sprites/blue.png", 2);
-    show(img);
+    show(hc.ordinal() *2);
+    this.hc = hc;
   }
-
-  public void act()
-  {
-
-  }
+  
+  public void putDown() {
+	  //careful, could be hazardous, if not pickUp was called before
+	this.showPreviousSprite();
 }
-
-class Green extends Actor
-{
-  public Green(int img)
-  {
-    super("sprites/green.png", 2);
-    show(img);
+  public void pickUp() {
+	  this.showNextSprite();
   }
 
-  public void act()
-  {
-
-  }
-}
-
-class Red extends Actor
-{
-  public Red(int img)
-  {
-    super("sprites/red.png", 2);
-    show(img);
-  }
-
-  public void act()
-  {
-
+public HalmaColor getColor() {
+	  return hc;
   }
 }
 
@@ -519,10 +490,5 @@ class Next extends Actor
   public Next()
   {
     super("sprites/next.png");
-  }
-
-  public void act()
-  {
-
   }
 }
