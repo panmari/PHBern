@@ -35,4 +35,11 @@ public class HalmaPlayer {
 		}
 		return true;
 	}
+	
+	/**
+	 * mb change uppercase afterwards
+	 */
+	public String toString() {
+		return color.name().toUpperCase();
+	}
 }

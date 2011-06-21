@@ -7,26 +7,20 @@ import java.awt.*;
 
 //------------------------------------------------------------------------------
 public class Halma extends GameGrid implements GGMouseListener {
-	final int DOWN = 0;
-	final int UP = 1;
-	final int BLUE = 0;
-	final int RED = 1;
-	final int GREEN = 2;
-
 	final int restart = 5000; // restart game after ... milliseconds
 
-	private int color = (int) (Math.random() * 3); // randomly choose one of the
-													// colors to start
 	private boolean stillPlaying = false; // needed if stone can still move
 											// after a jump
 	private HalmaStone movingHS;
 
+	//random player starts:
+	private int currentPlayer = (int) (Math.random() * 3);
 	private HalmaPlayer[] players = new HalmaPlayer[3];
 	private ArrayList<Location> allPossibleLocations = new ArrayList<Location>();
 	
 
 	public Halma() {
-		super(19, 25, 20, null, "sprites/halma.png", false);
+		super(19, 25, 20, null, "sprites/halmaBG.png", false);
 		this.setBgColor(Color.WHITE);
 		addActor(new Next(), new Location(16, 23));
 
@@ -35,97 +29,101 @@ public class Halma extends GameGrid implements GGMouseListener {
 		setUpBoard();
 		addMouseListener(this, GGMouse.lClick);
 		// set title
-		setTitle(HalmaColor.values()[color].name() + " starts"); 
-		// TODO: too complicated
+		setTitle(players[currentPlayer] + " STARTS!"); 
 		show();
 	}
 
 	// if mouse is pressed
-	public boolean mouseListenerEvent(GGMouse mouse) {
+	public boolean mouseEvent(GGMouse mouse) {
 		Location location = toLocationInGrid(mouse.getX(), mouse.getY());
 
 		// check if next-button is pressed
 		if (getOneActorAt(location, Next.class) != null && movingHS != null) {
 			movingHS.putDown();
 			nextPlayersTurn();
-		} else {
-			HalmaStone stone = getHalmaStoneAt(location);
-
-			// if there is a stone
-			if (stone != null && !stillPlaying) {
-				// if no stone has been selected before, lift it up
-				if (stone.getIdVisible() == DOWN && movingHS == null)
+			refresh();
+			return true;
+		}
+		
+		HalmaStone stone = getHalmaStoneAt(location);
+		// if clicked on a stone:
+		if (stone != null) {
+			if (stone.isPickedUp())
+				stone.putDown();
+			else {
+				if (movingHS == null) {
 					stone.pickUp();
-				// if one stone has been selected before and an other one is
-				// selected, set
-				// the old one down and lift the new one up
-				else if (movingHS != null) {
+					movingHS = stone;
+				} else {
 					stone.pickUp();
 					movingHS.putDown();
+					movingHS = stone;
 				}
-				// if the selected stone has already been lifted up and selected
-				// again,
-				// set it back down
-				else stone.putDown();
 			}
-			// if selected location is empty and a stone has been selected
-			else if (oneUp != null && stone == null
-					&& isPossibleLocation(location)) {
-				Location upLoc = oneUp.getLocation();
-				int dir = (int) upLoc.getDirectionTo(location);
-				boolean hasActorsBetween = true;
+			refresh();
+			return true;
+		}
+		// if clicked on empty, possible Location with a picked up Stone:
+		if (movingHS != null && isPossibleLocation(location)) {
+			// if move is possible
+			if (hasActorsBetween(movingHS, location)) {
+				stillPlaying = true;
+				movingHS.setLocation(location);
 
-				ArrayList<Location> allBetween = getInterjacent(upLoc, location);
-
-				// if there are no stones between, but the stone has already
-				// jumped
-				if (allBetween.isEmpty() && stillPlaying)
-					hasActorsBetween = false;
-				// if the direction isn't possible
-				else if (dir != 0 && dir != 63 && dir != 116 && dir != 180
-						&& dir != 243 && dir != 296)
-					hasActorsBetween = false;
-				// if the stone should move horizontally
-				else if (dir == 0 || dir == 180) {
-					// if there is no stone between and the stone has already
-					// jumped
-					if (allBetween.size() == 1 && stillPlaying)
-						hasActorsBetween = false;
-					// if the stone hasn't jumped yet
-					else {
-						for (int b = 1; b < allBetween.size(); b += 2) {
-							// if there are emtpy locations in between
-							if (getOneActorAt(allBetween.get(b)) == null)
-								hasActorsBetween = false;
-						}
-					}
+				// if the new location of the set stone has no neighbours
+				if (!hasNeighbours(location, movingHS.getLocation())) {
+					movingHS.putDown();
+					nextPlayersTurn();
 				}
-				// every other possibility
-				else {
-					for (Location between : allBetween) {
-						// if there are emtpy locations in between
-						if (getOneActorAt(between) == null)
-							hasActorsBetween = false;
-					}
-				}
+				checkGameOver();
+			}
+		}
+		refresh();
+		return true;
+	}
 
-				// if move is possible
-				if (hasActorsBetween) {
-					stillPlaying = true;
-					oneUp.setLocation(location);
+	/**
+	 * I have no idea how halma works, so i leave this untouched <.<
+	 * @param hs
+	 * @param loc
+	 * @return
+	 */
+	private boolean hasActorsBetween(HalmaStone hs, Location loc) {
+		Location hsLoc = hs.getLocation();
+		int dir = (int) hsLoc.getDirectionTo(loc);
 
-					// if the new location of the set stone has no neighbours
-					if (!hasNeighbours(location, upLoc)) {
-						oneUp.show(DOWN);
-						nextPlayersTurn();
-					}
-
-					isGameOver();
+		ArrayList<Location> allBetween = getInterjacent(hsLoc, loc);
+		// if there are no stones between, but the stone has already
+		// jumped
+		if (allBetween.isEmpty() && stillPlaying)
+			return false;
+		// if the direction isn't possible
+		else if (dir != 0 && dir != 63 && dir != 116 && dir != 180
+				&& dir != 243 && dir != 296)
+			return false;
+		// if the stone should move horizontally
+		else if (dir == 0 || dir == 180) {
+			// if there is no stone between and the stone has already
+			// jumped
+			if (allBetween.size() == 1 && stillPlaying)
+				return false;
+			// if the stone hasn't jumped yet
+			else {
+				for (int b = 1; b < allBetween.size(); b += 2) {
+					// if there are emtpy locations in between
+					if (getOneActorAt(allBetween.get(b)) == null)
+						return false;
 				}
 			}
 		}
-
-		refresh();
+		// every other possibility
+		else {
+			for (Location between : allBetween) {
+				// if there are emtpy locations in between
+				if (getOneActorAt(between) == null)
+					return false;
+			}
+		}
 		return true;
 	}
 
@@ -134,17 +132,8 @@ public class Halma extends GameGrid implements GGMouseListener {
 	}
 
 	private void nextPlayersTurn() {
-		if (color == BLUE) {
-			color = RED;
-			setTitle("RED plays");
-		} else if (color == RED) {
-			color = GREEN;
-			setTitle("GREEN plays");
-		} else {
-			color = BLUE;
-			setTitle("BLUE plays");
-		}
-		stillPlaying = false;
+		currentPlayer %= currentPlayer + 1;
+		setTitle(players[currentPlayer] + " PLAYS!");
 	}
 
 	// load the staring and end locations of the blue player
@@ -280,9 +269,11 @@ public class Halma extends GameGrid implements GGMouseListener {
 	}
 
 	// check if game is won or lost depending on each color
-	private void checkGameOver(HalmaPlayer currentPlayer) {
-		if(currentPlayer.isWinner()) {
-			
+	private void checkGameOver() {
+		if(players[currentPlayer].isWinner()) {
+			 addActor(new Actor("sprites/you_win.gif"), new Location(10,11));
+		     setTitle(players[currentPlayer] + " WINS!!!");
+		        restart();
 		}
 	}
 
@@ -353,23 +344,31 @@ public class Halma extends GameGrid implements GGMouseListener {
 }
 
 class HalmaStone extends Actor {
-	HalmaColor hc;
+	private HalmaColor hc;
+	private boolean pickedUp;
 
 	public HalmaStone(HalmaColor hc) {
-		super("sprites/blue.png", 2);
+		super("sprites/halmaStone.png", 6);
 		show(hc.ordinal() * 2);
 		this.hc = hc;
 	}
 
 	public void putDown() {
-		// careful, could be hazardous, if not pickUp was called before
+		// careful, could be hazardous, if not pickUp was called before:
+		assert pickedUp;
+		pickedUp = false;
 		this.showPreviousSprite();
 	}
 
 	public void pickUp() {
+		assert !pickedUp;
+		pickedUp = true;
 		this.showNextSprite();
 	}
 
+	public boolean isPickedUp() {
+		return pickedUp;
+	}
 	public HalmaColor getColor() {
 		return hc;
 	}
