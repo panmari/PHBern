@@ -35,22 +35,24 @@ public class Halma extends GameGrid implements GGMouseListener {
 
 	// if mouse is pressed
 	public boolean mouseEvent(GGMouse mouse) {
-		Location location = toLocationInGrid(mouse.getX(), mouse.getY());
+		Location clickLoc = toLocationInGrid(mouse.getX(), mouse.getY());
 
 		// check if next-button is pressed
-		if (getOneActorAt(location, Next.class) != null && movingHS != null) {
+		if (getOneActorAt(clickLoc, Next.class) != null && movingHS != null) {
 			movingHS.putDown();
+			movingHS = null;
 			nextPlayersTurn();
 			refresh();
 			return true;
 		}
 		
-		HalmaStone stone = getHalmaStoneAt(location);
+		HalmaStone stone = getHalmaStoneOfCurrentPlayerAt(clickLoc);
 		// if clicked on a stone:
 		if (stone != null) {
-			if (stone.isPickedUp())
+			if (stone == movingHS) {
 				stone.putDown();
-			else {
+				movingHS = null;
+			} else {
 				if (movingHS == null) {
 					stone.pickUp();
 					movingHS = stone;
@@ -64,15 +66,16 @@ public class Halma extends GameGrid implements GGMouseListener {
 			return true;
 		}
 		// if clicked on empty, possible Location with a picked up Stone:
-		if (movingHS != null && isPossibleLocation(location)) {
+		if (movingHS != null && isPossibleLocation(clickLoc)) {
 			// if move is possible
-			if (hasActorsBetween(movingHS, location)) {
+			if (hasActorsBetween(movingHS, clickLoc)) {
+				Location previousHSLoc = movingHS.getLocation();
 				stillPlaying = true;
-				movingHS.setLocation(location);
-
+				movingHS.setLocation(clickLoc);
 				// if the new location of the set stone has no neighbours
-				if (!hasNeighbours(location, movingHS.getLocation())) {
+				if (!hasNeighbours(clickLoc, previousHSLoc)) {
 					movingHS.putDown();
+					movingHS = null;
 					nextPlayersTurn();
 				}
 				checkGameOver();
@@ -93,8 +96,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 		int dir = (int) hsLoc.getDirectionTo(loc);
 
 		ArrayList<Location> allBetween = getInterjacent(hsLoc, loc);
-		// if there are no stones between, but the stone has already
-		// jumped
+		// if there are no stones between, but the stone has already jumped
 		if (allBetween.isEmpty() && stillPlaying)
 			return false;
 		// if the direction isn't possible
@@ -127,12 +129,15 @@ public class Halma extends GameGrid implements GGMouseListener {
 		return true;
 	}
 
-	public HalmaStone getHalmaStoneAt(Location location) {
-		return (HalmaStone) getOneActorAt(location);
+	public HalmaStone getHalmaStoneOfCurrentPlayerAt(Location location) {
+		HalmaStone hs = (HalmaStone) getOneActorAt(location);
+		if (hs != null && hs.getOwningPlayer() == players[currentPlayer])
+			return hs;
+		else return null;
 	}
 
 	private void nextPlayersTurn() {
-		currentPlayer %= currentPlayer + 1;
+		currentPlayer = (currentPlayer + 1) % players.length;
 		setTitle(players[currentPlayer] + " PLAYS!");
 	}
 
@@ -291,8 +296,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 			return true;
 		else if (hasNeighboursInDir(loc, upLoc, -1, -2))
 			return true;
-		else
-			return false;
+		else return false;
 	}
 
 	// check if there are neighbours in given direction
@@ -301,7 +305,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 		boolean hasNeighbourInDir = false;
 		boolean isEmptyAndPossible = false;
 		Location tmpLoc = loc;
-		ArrayList<Location> tmpLocList = new ArrayList();
+		ArrayList<Location> tmpLocList = new ArrayList<Location>();
 
 		while (!isEmptyAndPossible && !hasNeighbourInDir) {
 			tmpLoc = new Location(tmpLoc.getX() + addToX, tmpLoc.getY()
@@ -344,13 +348,18 @@ public class Halma extends GameGrid implements GGMouseListener {
 }
 
 class HalmaStone extends Actor {
+	public HalmaPlayer player;
 	private HalmaColor hc;
 	private boolean pickedUp;
 
-	public HalmaStone(HalmaColor hc) {
+	public HalmaStone(HalmaPlayer player) {
 		super("sprites/halmaStone.png", 6);
-		show(hc.ordinal() * 2);
-		this.hc = hc;
+		show(player.getColor().ordinal() * 2);
+		this.player = player;
+	}
+
+	public HalmaPlayer getOwningPlayer() {
+		return player;
 	}
 
 	public void putDown() {

@@ -12,6 +12,7 @@ public class HalmaPlayer {
 	
 	public HalmaPlayer(Halma halmaBoard, HalmaColor color, 
 			ArrayList<Location> startLocations, ArrayList<Location> endLocations) {
+		this.halmaBoard = halmaBoard;
 		this.color = color;
 		this.startLocations = startLocations;
 		this.endLocations = endLocations;
@@ -19,7 +20,7 @@ public class HalmaPlayer {
 	
 	public void initializeStones() {
 		for (Location loc : startLocations)
-			halmaBoard.addActor(new HalmaStone(color), loc);
+			halmaBoard.addActor(new HalmaStone(this), loc);
 	}
 
 	/**
@@ -29,7 +30,7 @@ public class HalmaPlayer {
 	 */
 	public boolean isWinner() {
 		for (Location loc : endLocations) {
-			HalmaStone hs = halmaBoard.getHalmaStoneAt(loc);
+			HalmaStone hs = halmaBoard.getHalmaStoneOfCurrentPlayerAt(loc);
 			if (hs == null || hs.getColor() != this.color)
 				return false;
 		}
@@ -41,5 +42,9 @@ public class HalmaPlayer {
 	 */
 	public String toString() {
 		return color.name().toUpperCase();
+	}
+	
+	public HalmaColor getColor() {
+		return color;
 	}
 }
