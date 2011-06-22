@@ -4,13 +4,13 @@ import ch.aplu.jgamegrid.*;
 import java.awt.Point;
 import java.util.*;
 
-public class BubbleShooterSM extends GameGrid implements GGMouseListener {
+public class BubbleShooter extends GameGrid implements GGMouseListener {
 	int nbOfBubbleColors = 5; // Zahl zwischen 1 - 5
 	Location shootLoc = new Location(18, 36);
 	ArrayList<Location> bubblePreviewLocations = new ArrayList<Location>();
 	private boolean previousBubbleArrived = true;
 
-	public BubbleShooterSM() {
+	public BubbleShooter() {
 		super(37, 38, 20, false);
 		addMouseListener(this, GGMouse.lPress);
 		initializeActors();
@@ -85,7 +85,7 @@ public class BubbleShooterSM extends GameGrid implements GGMouseListener {
 	}
 
 	public static void main(String[] args) {
-		new BubbleShooterSM();
+		new BubbleShooter();
 	}
 }
 
@@ -93,11 +93,11 @@ public class BubbleShooterSM extends GameGrid implements GGMouseListener {
  * Bubble
  */
 class Bubble extends Actor {
-	private BubbleShooterSM gg;
+	private BubbleShooter gg;
 	private double vy, vx, x, y;
 	private final double acceleration = 10, bubbleRadius = 20;
 
-	public Bubble(int imgId, BubbleShooterSM gg) {
+	public Bubble(int imgId, BubbleShooter gg) {
 		super("sprites/peg.png", 6);
 		this.gg = gg;
 		show(imgId);

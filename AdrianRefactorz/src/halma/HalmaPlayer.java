@@ -44,6 +44,11 @@ public class HalmaPlayer {
 		return color.name().toUpperCase();
 	}
 	
+	public ArrayList<Location> getAllLocations() {
+		ArrayList<Location> allLocations = new ArrayList<Location>(startLocations);
+		allLocations.addAll(endLocations);
+		return allLocations;
+	}
 	public HalmaColor getColor() {
 		return color;
 	}

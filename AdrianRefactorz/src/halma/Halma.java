@@ -9,8 +9,8 @@ import java.awt.*;
 public class Halma extends GameGrid implements GGMouseListener {
 	final int restart = 5000; // restart game after ... milliseconds
 
-	private boolean stillPlaying = false; // needed if stone can still move
-											// after a jump
+	private boolean jumpModeOn = false; 
+	// needed if stone can still move after a jump
 	private HalmaStone movingHS;
 
 	//random player starts:
@@ -48,7 +48,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 		
 		HalmaStone stone = getHalmaStoneOfCurrentPlayerAt(clickLoc);
 		// if clicked on a stone:
-		if (stone != null) {
+		if (stone != null && !jumpModeOn) {
 			if (stone == movingHS) {
 				stone.putDown();
 				movingHS = null;
@@ -70,7 +70,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 			// if move is possible
 			if (hasActorsBetween(movingHS, clickLoc)) {
 				Location previousHSLoc = movingHS.getLocation();
-				stillPlaying = true;
+				jumpModeOn = true;
 				movingHS.setLocation(clickLoc);
 				// if the new location of the set stone has no neighbours
 				if (!hasNeighbours(clickLoc, previousHSLoc)) {
@@ -97,7 +97,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 
 		ArrayList<Location> allBetween = getInterjacent(hsLoc, loc);
 		// if there are no stones between, but the stone has already jumped
-		if (allBetween.isEmpty() && stillPlaying)
+		if (allBetween.isEmpty() && jumpModeOn)
 			return false;
 		// if the direction isn't possible
 		else if (dir != 0 && dir != 63 && dir != 116 && dir != 180
@@ -107,7 +107,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 		else if (dir == 0 || dir == 180) {
 			// if there is no stone between and the stone has already
 			// jumped
-			if (allBetween.size() == 1 && stillPlaying)
+			if (allBetween.size() == 1 && jumpModeOn)
 				return false;
 			// if the stone hasn't jumped yet
 			else {
@@ -137,29 +137,24 @@ public class Halma extends GameGrid implements GGMouseListener {
 	}
 
 	private void nextPlayersTurn() {
-		stillPlaying = false;
+		jumpModeOn = false;
 		currentPlayer = (currentPlayer + 1) % players.length;
 		setTitle(players[currentPlayer] + " PLAYS!");
 	}
 
-	// load the staring and end locations of the blue player
 	private void loadBlueLocations() {
 		ArrayList<Location> startLocations = new ArrayList<Location>();
 		ArrayList<Location> endLocations = new ArrayList<Location>();
 		int counter = 6;
 		for (int y = 18; y >= 12; y -= 2) {
-			for (int x = (18 - y) / 2; x <= counter; x += 2) {
+			for (int x = (18 - y) / 2; x <= counter; x += 2) 
 				startLocations.add(new Location(x, y));
-				allPossibleLocations.add(new Location(x, y));
-			}
 			counter--;
 		}
 		counter = 6;
 		for (int y = 6; y <= 12; y += 2) {
-			for (int x = y + counter; x <= 12 + counter; x += 2) {
+			for (int x = y + counter; x <= 12 + counter; x += 2)
 				endLocations.add(new Location(x, y));
-				allPossibleLocations.add(new Location(x, y));
-			}
 			counter--;
 		}
 		this.players[0] = new HalmaPlayer(this, HalmaColor.Blue,
@@ -172,18 +167,14 @@ public class Halma extends GameGrid implements GGMouseListener {
 		ArrayList<Location> endLocations = new ArrayList<Location>();
 		int counter = 0;
 		for (int y = 18; y >= 12; y -= 2) {
-			for (int x = y + counter; x >= 12 + counter; x -= 2) {
+			for (int x = y + counter; x >= 12 + counter; x -= 2)
 				startLocations.add(new Location(x, y));
-				allPossibleLocations.add(new Location(x, y));
-			}
 			counter++;
 		}
 		counter = 0;
 		for (int y = 6; y <= 12; y += 2) {
-			for (int x = (18 - y) / 2; x >= counter; x -= 2) {
+			for (int x = (18 - y) / 2; x >= counter; x -= 2)
 				endLocations.add(new Location(x, y));
-				allPossibleLocations.add(new Location(x, y));
-			}
 			counter++;
 		}
 		this.players[1] = new HalmaPlayer(this, HalmaColor.Green,
@@ -196,21 +187,15 @@ public class Halma extends GameGrid implements GGMouseListener {
 		ArrayList<Location> endLocations = new ArrayList<Location>();
 		int counter = 0;
 		for (int y = 6; y >= 0; y -= 2) {
-			for (int x = y + (counter * 3); x <= 12 - counter; x += 2) {
-				// addActor(new Red(0), new Location(x, y));
+			for (int x = y + (counter * 3); x <= 12 - counter; x += 2)
 				startLocations.add(new Location(x, y));
-				allPossibleLocations.add(new Location(x, y));
-			}
 			counter++;
 		}
 
 		counter = 0;
 		for (int y = 18; y <= 24; y += 2) {
-			for (int x = (y + counter) / 3; x <= 12 - counter; x += 2) {
-				// addActor(new Red(0), new Location(x, y));
+			for (int x = (y + counter) / 3; x <= 12 - counter; x += 2) 
 				endLocations.add(new Location(x, y));
-				allPossibleLocations.add(new Location(x, y));
-			}
 			counter++;
 		}
 		this.players[2] = new HalmaPlayer(this, HalmaColor.Red,
@@ -223,7 +208,8 @@ public class Halma extends GameGrid implements GGMouseListener {
 		loadBlueLocations();
 		loadGreenLocations();
 		loadRedLocations();
-
+		for (HalmaPlayer p: players)
+			allPossibleLocations.addAll(p.getAllLocations());
 		int counter = 5;
 		int y2 = 12;
 		for (int y = y2; y >= 8; y -= 2) {
