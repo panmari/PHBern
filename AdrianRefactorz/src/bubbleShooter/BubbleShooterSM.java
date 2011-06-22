@@ -40,7 +40,7 @@ public class BubbleShooterSM extends GameGrid implements GGMouseListener {
 			shootBubble.addCollisionActors(getFieldBubbles());
 			shootBubble.addActorCollisionListener(shootBubble);
 			shootBubble.shoot(new Point(mouse.getX(), mouse.getY()));
-			refillPreviewBubbles();
+			reloadPreviewBubbles();
 			checkForGameOver();
 			previousBubbleArrived = false;
 		}
@@ -64,15 +64,14 @@ public class BubbleShooterSM extends GameGrid implements GGMouseListener {
 	}
 
 	/**
-	 * Reloads the shooter and updates the preview Bubbles
+	 * Reloads the shooter, advances the preview bubbles &
+	 * adds a new preview bubble at the end of the preview list.
 	 */
-	private void refillPreviewBubbles() {
+	private void reloadPreviewBubbles() {
 		for (int b = 1; b < bubblePreviewLocations.size(); b++)
 			getOneActorAt(bubblePreviewLocations.get(b)).setLocation(
 					bubblePreviewLocations.get(b - 1));
-
-		addRandomBubble(bubblePreviewLocations.get(bubblePreviewLocations
-				.size() - 1));
+		addRandomBubble(bubblePreviewLocations.get(bubblePreviewLocations.size() - 1));
 	}
 
 	/**
@@ -81,7 +80,7 @@ public class BubbleShooterSM extends GameGrid implements GGMouseListener {
 	private void checkForGameOver() {
 		if (getNumberOfActors() <= 6) {
 			addActor(new Actor("sprites/gameover.png"), new Location(18, 15));
-			this.stopGameThread();
+			stopGameThread();
 		}
 	}
 
@@ -123,9 +122,9 @@ class Bubble extends Actor {
 	@Override
 	public int collide(Actor shootActor, Actor hitActor) {
 		setActEnabled(false);
-		setLocation(validateLocation(shootActor, hitActor));
+		setLocation(setOnValidLocation(shootActor.getLocation()));
 		addActorCollisionListener(null);
-		this.setLocationOffset(new Point(0, 0)); // centers Bubble in Grid
+		this.setLocationOffset(new Point(0, 0)); // centers sprite
 		removeSameColorNeighbours(this);
 		gg.setReadyForNextBubble();
 		return 100;
@@ -144,24 +143,6 @@ class Bubble extends Actor {
 		setPixelLocation(new Point((int) x, (int) y));
 	}
 	
-	private Location validateLocation(Actor shootActor, Actor hitActor) {
-		Point shootPoint = shootActor.getPixelLocation();
-		Point hitPoint = hitActor.getPixelLocation();
-		Location hitLoc = hitActor.getLocation();
-		int transX = calculateTranslation(shootPoint.x - hitPoint.x);
-		int transY = calculateTranslation(shootPoint.x - hitPoint.y);
-		return new Location(hitLoc.x + transX, hitLoc.y + transY);
-	}
-	
-	private int calculateTranslation(int difference) {
-		if (difference > 10) //east
-			return 2;
-		else if (difference < 10 && difference > -10)
-			return 0;
-		else return -2;
-	}
-	
-
 	/**
 	 * Transforms the given Location into a valid location of the 
 	 * Bubble-Grid. Means: an even row is not allowed, and 
