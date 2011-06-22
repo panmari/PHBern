@@ -137,6 +137,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 	}
 
 	private void nextPlayersTurn() {
+		stillPlaying = false;
 		currentPlayer = (currentPlayer + 1) % players.length;
 		setTitle(players[currentPlayer] + " PLAYS!");
 	}
