@@ -8,6 +8,7 @@ public class BubbleShooterSM extends GameGrid implements GGMouseListener {
 	int nbOfBubbleColors = 5; // Zahl zwischen 1 - 5
 	Location shootLoc = new Location(18, 36);
 	ArrayList<Location> bubblePreviewLocations = new ArrayList<Location>();
+	private boolean previousBubbleArrived = true;
 
 	public BubbleShooterSM() {
 		super(37, 38, 20, false);
@@ -34,13 +35,20 @@ public class BubbleShooterSM extends GameGrid implements GGMouseListener {
 	}
 
 	public boolean mouseEvent(GGMouse mouse) {
-		Bubble shootBubble = (Bubble) getOneActorAt(shootLoc, Bubble.class);
-		shootBubble.addCollisionActors(getFieldBubbles());
-		shootBubble.addActorCollisionListener(shootBubble);
-		shootBubble.shoot(new Point(mouse.getX(), mouse.getY()));
-		refillPreviewBubbles();
-		checkForGameOver();
+		if (previousBubbleArrived) {
+			Bubble shootBubble = (Bubble) getOneActorAt(shootLoc, Bubble.class);
+			shootBubble.addCollisionActors(getFieldBubbles());
+			shootBubble.addActorCollisionListener(shootBubble);
+			shootBubble.shoot(new Point(mouse.getX(), mouse.getY()));
+			refillPreviewBubbles();
+			checkForGameOver();
+			previousBubbleArrived = false;
+		}
 		return true;
+	}
+	
+	public void setReadyForNextBubble() {
+		previousBubbleArrived = true;
 	}
 
 	private ArrayList<Actor> getFieldBubbles() {
@@ -86,11 +94,11 @@ public class BubbleShooterSM extends GameGrid implements GGMouseListener {
  * Bubble
  */
 class Bubble extends Actor {
-	private GameGrid gg;
+	private BubbleShooterSM gg;
 	private double vy, vx, x, y;
 	private final double acceleration = 10, bubbleRadius = 20;
 
-	public Bubble(int imgId, GameGrid gg) {
+	public Bubble(int imgId, BubbleShooterSM gg) {
 		super("sprites/peg.png", 6);
 		this.gg = gg;
 		show(imgId);
@@ -119,6 +127,7 @@ class Bubble extends Actor {
 		addActorCollisionListener(null);
 		this.setLocationOffset(new Point(0, 0)); // centers Bubble in Grid
 		removeSameColorNeighbours(this);
+		gg.setReadyForNextBubble();
 		return 100;
 	}
 
