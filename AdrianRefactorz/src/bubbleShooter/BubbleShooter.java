@@ -1,6 +1,8 @@
 package bubbleShooter;
 
 import ch.aplu.jgamegrid.*;
+
+import java.awt.Component;
 import java.awt.Point;
 import java.util.*;
 
@@ -9,11 +11,14 @@ public class BubbleShooter extends GameGrid implements GGMouseListener {
 	Location shootLoc = new Location(18, 36);
 	ArrayList<Location> bubblePreviewLocations = new ArrayList<Location>();
 	private boolean previousBubbleArrived = true;
-
+	private int points;
+	private Pointer pointer;
+	
 	public BubbleShooter() {
 		super(37, 38, 20, false);
 		addMouseListener(this, GGMouse.lPress);
 		initializeActors();
+		setTitle("BubbleShooter      Points: " + points);
 		show();
 		setSimulationPeriod(30); // => 33 refreshes per second
 		doRun();
@@ -30,12 +35,13 @@ public class BubbleShooter extends GameGrid implements GGMouseListener {
 			for (int x = y; x < 37 - y; x += 2)
 				addRandomBubble(new Location(x, 2 * y - 1));
 		}
-		addActor(new Pointer(), shootLoc);
+		pointer = new Pointer();
+		addActor(pointer, shootLoc);
 		setPaintOrder(Bubble.class, Pointer.class);
 	}
 
 	public boolean mouseEvent(GGMouse mouse) {
-		if (previousBubbleArrived) {
+		if (previousBubbleArrived && pointer.isValidDirection()) {
 			Bubble shootBubble = (Bubble) getOneActorAt(shootLoc, Bubble.class);
 			shootBubble.addCollisionActors(getFieldBubbles());
 			shootBubble.addActorCollisionListener(shootBubble);
@@ -87,6 +93,17 @@ public class BubbleShooter extends GameGrid implements GGMouseListener {
 	public static void main(String[] args) {
 		new BubbleShooter();
 	}
+
+	public void updateGameStatus(Actor shootActor, int numberOfRemovedBubbles) {
+		if (shootActor.getY() > shootLoc.getY() - 2) {
+			Location middle = new Location(nbHorzCells/2, nbVertCells/2);
+			addActor(new Actor("sprites/gameover.png") , middle);
+			stopGameThread();
+		} else {
+			points += numberOfRemovedBubbles*10;
+			setTitle("BubbleShooter      Points: " + points);
+		}
+	}
 }
 
 /*------------------------------------------------------------------------------
@@ -102,7 +119,7 @@ class Bubble extends Actor {
 		this.gg = gg;
 		show(imgId);
 		setActEnabled(false);
-		setCollisionCircle(new Point(0, 0), (int) bubbleRadius);
+		//setCollisionCircle(new Point(0, 0), (int) bubbleRadius); //TODO is this needed?
 	}
 
 	public void shoot(Point mousePos) {
@@ -123,11 +140,25 @@ class Bubble extends Actor {
 	public int collide(Actor shootActor, Actor hitActor) {
 		setActEnabled(false);
 		setLocation(setOnValidLocation(shootActor.getLocation()));
+		checkIfShitHappened(shootActor);
 		addActorCollisionListener(null);
 		this.setLocationOffset(new Point(0, 0)); // centers sprite
-		removeSameColorNeighbours(this);
+		int removedBubblesNr = removeSameColorNeighbours(this);
+		gg.updateGameStatus(shootActor, removedBubblesNr);
 		gg.setReadyForNextBubble();
-		return 100;
+		return 0;
+	}
+
+	/**
+	 * This method needs testing! Just a desperate try to fix
+	 * the "mid-air" bubbles.
+	 * @param shootActor
+	 */
+	private void checkIfShitHappened(Actor shootActor) {
+		if (shootActor.getNeighbours(2).size() == 0) {
+			System.out.println("ffs!");
+			shootActor.setY(shootActor.getY() - 2);
+		}
 	}
 
 	@Override
@@ -188,11 +219,15 @@ class Bubble extends Actor {
 		return this.getIdVisible() == compareBubble.getIdVisible();
 	}
 
-	private void removeSameColorNeighbours(Bubble initialBubble) {
+	private int removeSameColorNeighbours(Bubble initialBubble) {
 		ArrayList<Bubble> sameColorNeighbours = getSameColorNeighbours(initialBubble);
-		if (sameColorNeighbours.size() > 2)
+		if (sameColorNeighbours.size() > 2) {
+			int rmvBubbles = sameColorNeighbours.size();
 			for (Bubble b : sameColorNeighbours)
 				b.removeSelf();
+			return rmvBubbles;
+		}
+		else return 0;
 	}
 }
 
@@ -205,6 +240,15 @@ class Pointer extends Actor {
 		// this.setLocationOffset(new Point(0,-80));
 		// edited picture so it fits, so the line above
 		// isn't necessary anymore.
+	}
+
+	/**
+	 * A valid direction is between 190° and 350° (with 0° = EAST)
+ 	 * This ensures that the bubble isn't shot horizontally, which would
+ 	 * take a long time until it arrives.
+	 */
+	public boolean isValidDirection() {
+		return getDirection() > 190 && getDirection() < 350;
 	}
 
 	public void act() {
