@@ -17,23 +17,18 @@ public class Halma extends GameGrid implements GGMouseListener {
 	private int currentPlayer = (int) (Math.random() * 3);
 	private HalmaPlayer[] players = new HalmaPlayer[3];
 	private ArrayList<Location> allPossibleLocations = new ArrayList<Location>();
-	
 
 	public Halma() {
 		super(19, 25, 20, null, "sprites/halmaBG.png", false);
 		this.setBgColor(Color.WHITE);
 		addActor(new Next(), new Location(16, 23));
-
-		// load positions and set up board
-		loadAllPossibleLocations();
+		initializePlayersAndLocations();
 		setUpBoard();
 		addMouseListener(this, GGMouse.lClick);
-		// set title
 		setTitle(players[currentPlayer] + " STARTS!"); 
 		show();
 	}
 
-	// if mouse is pressed
 	public boolean mouseEvent(GGMouse mouse) {
 		Location clickLoc = toLocationInGrid(mouse.getX(), mouse.getY());
 
@@ -142,7 +137,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 		setTitle(players[currentPlayer] + " PLAYS!");
 	}
 
-	private void loadBlueLocations() {
+	private void initializePlayerBlue() {
 		ArrayList<Location> startLocations = new ArrayList<Location>();
 		ArrayList<Location> endLocations = new ArrayList<Location>();
 		int counter = 6;
@@ -162,7 +157,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 	}
 
 	// load the staring and end locations of the green player
-	private void loadGreenLocations() {
+	private void initializePlayerGreen() {
 		ArrayList<Location> startLocations = new ArrayList<Location>();
 		ArrayList<Location> endLocations = new ArrayList<Location>();
 		int counter = 0;
@@ -182,7 +177,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 	}
 
 	// load the staring and end locations of the red player
-	private void loadRedLocations() {
+	private void initializePlayerRed() {
 		ArrayList<Location> startLocations = new ArrayList<Location>();
 		ArrayList<Location> endLocations = new ArrayList<Location>();
 		int counter = 0;
@@ -203,11 +198,11 @@ public class Halma extends GameGrid implements GGMouseListener {
 	}
 
 	// load all locations inside the board on which a stone can jump
-	private void loadAllPossibleLocations() {
-		//TODO: does this have to be hardcoded? :-s
-		loadBlueLocations();
-		loadGreenLocations();
-		loadRedLocations();
+	private void initializePlayersAndLocations() {
+		//TODO: does this have to be hardcoded? could also be part of enum!
+		initializePlayerBlue();
+		initializePlayerGreen();
+		initializePlayerRed();
 		for (HalmaPlayer p: players)
 			allPossibleLocations.addAll(p.getAllLocations());
 		int counter = 5;
@@ -223,24 +218,30 @@ public class Halma extends GameGrid implements GGMouseListener {
 		}
 	}
 
-	// set up all the stones
+	/**
+	 * Adds all Players stones at the startpositions.
+	 */
 	private void setUpBoard() {
 		for (HalmaPlayer p: players)
 			p.initializeStones();
 	}
 
-	// check if location is inside board
 	private boolean isPossibleLocation(Location loc) {
 		return allPossibleLocations.contains(loc) && getOneActorAt(loc) == null;
 	}
 
-	// get all cells between loc1 and loc2
+	/**
+	 *  get all cells between loc1 and loc2
+	 *  TODO: Refactor
+	 * @param loc1
+	 * @param loc2
+	 * @return
+	 */
 	private ArrayList<Location> getInterjacent(Location loc1, Location loc2) {
 		ArrayList<Location> list = new ArrayList<Location>();
 		if (loc1.x == loc2.x) // Special case: vertical
 		{
-			for (int y = Math.min(loc1.y, loc2.y) + 1; y < Math.max(loc1.y,
-					loc2.y); y++)
+			for (int y = Math.min(loc1.y, loc2.y) + 1; y < Math.max(loc1.y, loc2.y); y++)
 				list.add(new Location(loc1.x, y));
 			return list;
 		}
@@ -260,12 +261,11 @@ public class Halma extends GameGrid implements GGMouseListener {
 		return list;
 	}
 
-	// check if game is won or lost depending on each color
 	private void checkGameOver() {
 		if(players[currentPlayer].isWinner()) {
 			 addActor(new Actor("sprites/you_win.gif"), new Location(10,11));
 		     setTitle(players[currentPlayer] + " WINS!!!");
-		        restart();
+		     restart();
 		}
 	}
 
@@ -318,11 +318,12 @@ public class Halma extends GameGrid implements GGMouseListener {
 				}
 			}
 		}
-
 		return hasNeighbourInDir;
 	}
 
-	// restart game
+	/**
+	 * TODO: Refactor this
+	 */
 	private void restart() {
 		delay(restart);
 		removeAllActors();
@@ -350,7 +351,6 @@ class HalmaStone extends Actor {
 	}
 
 	public void putDown() {
-		// careful, could be hazardous, if not pickUp was called before:
 		assert pickedUp;
 		pickedUp = false;
 		this.showPreviousSprite();

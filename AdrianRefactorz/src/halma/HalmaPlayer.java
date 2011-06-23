@@ -49,6 +49,7 @@ public class HalmaPlayer {
 		allLocations.addAll(endLocations);
 		return allLocations;
 	}
+	
 	public HalmaColor getColor() {
 		return color;
 	}
