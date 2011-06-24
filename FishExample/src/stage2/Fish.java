@@ -1,6 +1,7 @@
-package stage1;
+package stage2;
 
 import ch.aplu.jgamegrid.Actor;
+import ch.aplu.jgamegrid.Location;
 
 class Fish extends Actor {
 
@@ -15,13 +16,24 @@ class Fish extends Actor {
 		if (isMoveValid()) {
 			tryToAvoidTrap();
 			turnRandomly();
+			tryToMate();
 		}
-		else avoidWall();
+		else
+			avoidWall();
 		move();
 	}
 
+	private void tryToMate() {
+		// TODO Teach the fish how to mate!
+	}
+
 	private void tryToAvoidTrap() {
-		//TODO: Teach the fish how to avoid the trap
+		Location trapLoc = trap.getLocation();
+		Location fishLoc = getLocation();
+		if (fishLoc.getDistanceTo(trapLoc) < 50) {
+			System.out.println("panic!");
+			turn(180);
+		}
 	}
 
 	private void avoidWall() {

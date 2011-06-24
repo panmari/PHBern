@@ -1,3 +1,12 @@
-Nummern wieder erhöhen -> vemehren!
+Stage 2
 
-Fische sind unkompliziert, keine männchen & weibchen, irgendwer anders in der Nähe ist ok
+Gute Arbeit! Da die Fische zu intelligent für die Falle waren, wurde diese auch schon
+bald wieder entfernt. Leider hat sich in der kurzen Zeit, als die Fische planlos umherschwamen, 
+ihre Zahl massiv verringert.
+
+Das muss geändert werden! Bring den Fischen bei, sich zu paaren. Die Methode tryToMate() existiert
+schon, ist aber leider leer. Der Fischälteste kann sich noch erinnern, dass es irgendetwas mit zwei
+Fischen, die nahe beeinander sind, zu tun hat. So genau kann er sich aber auch nicht mehr erinnern.
+
+PS: Die Anatomie der Fische ist sehr simpel: es gibt keine Männchen & Weibchen, 
+alle können sich mit allen paaren.
