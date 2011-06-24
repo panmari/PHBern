@@ -12,11 +12,11 @@ public class FishPond extends GameGrid{
 	
 	public FishPond() {
 		super(800, 600, 1, null, false);
-	    setTitle("Fishpond - Stage 1 - Solution");  
+	    setTitle("Fishpond - Stage 2 - Solution");  
 	    FishTrap trap = new FishTrap();
 	    addActor(trap, new Location(-100, -100));
 	    for (int i = 0; i < nrFish; i++)
-		      addActor(new Fish(trap), getRandomEmptyLocation());
+		      addActor(new Fish(this, trap), getRandomEmptyLocation());
 	    setBgColor(Color.BLUE);
 	    show();
 	    doRun();

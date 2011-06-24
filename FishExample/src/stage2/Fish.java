@@ -5,11 +5,16 @@ import ch.aplu.jgamegrid.Location;
 
 class Fish extends Actor {
 
-	FishTrap trap;
+	private FishTrap trap;
+	private FishPond pond;
+	private final int matingDistance = 10;
+	private final double matingProbability = 0.1; 
+	private final int matingExhaustion = 200;
 
-	public Fish(FishTrap trap) {
+	public Fish(FishPond pond, FishTrap trap) {
 		super(true, "sprites/fish.gif");
 		this.trap = trap;
+		this.pond = pond;
 	}
 
 	public void act() {

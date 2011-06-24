@@ -16,7 +16,7 @@ public class FishPond extends GameGrid{
 	    FishTrap trap = new FishTrap();
 	    addActor(trap, getRandomCenterLocation());
 	    for (int i = 0; i < nrFish; i++)
-		      addActor(new Fish(trap), getRandomEmptyLocation());
+		      addActor(new Fish(this, trap), getRandomEmptyLocation());
 	    setBgColor(Color.BLUE);
 	    show();
 	    doRun();

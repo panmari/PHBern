@@ -1,14 +1,21 @@
 package stage2Solution;
 
 import ch.aplu.jgamegrid.Actor;
+import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 
 class Fish extends Actor {
 
-	FishTrap trap;
+	private FishTrap trap;
+	private final int matingDistance = 10;
+	private final double matingProbability = 0.1; 
+	private final int matingExhaustion = 200;
+	int matingCountDown = matingExhaustion;
+	private FishPond pond;
 
-	public Fish(FishTrap trap) {
+	public Fish(FishPond pond, FishTrap trap) {
 		super(true, "sprites/fish.gif");
+		this.pond = pond;
 		this.trap = trap;
 	}
 
@@ -21,10 +28,16 @@ class Fish extends Actor {
 		else
 			avoidWall();
 		move();
+		matingCountDown--;
 	}
 
 	private void tryToMate() {
-		// TODO Teach the fish how to mate!
+		if(getNeighbours(matingDistance).size() != 0 
+				&& Math.random() < matingProbability
+				&& matingCountDown < 0) {
+			pond.addActor(new Fish(pond, trap), getLocation());
+			matingCountDown = matingExhaustion;
+		}
 	}
 
 	private void tryToAvoidTrap() {

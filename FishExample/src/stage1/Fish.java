@@ -4,11 +4,13 @@ import ch.aplu.jgamegrid.Actor;
 
 class Fish extends Actor {
 
-	FishTrap trap;
+	private FishTrap trap;
+	private FishPond pond;
 
-	public Fish(FishTrap trap) {
+	public Fish(FishPond pond, FishTrap trap) {
 		super(true, "sprites/fish.gif");
 		this.trap = trap;
+		this.pond = pond;
 	}
 
 	public void act() {
