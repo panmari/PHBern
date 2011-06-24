@@ -1,0 +1,12 @@
+Stage 1
+
+Jetzt, da du schon einiges über Programmieren weisst, wird es Zeit, deine ersten Aufträge zu suchen.
+Auch die Fische vom ACME-Teich haben von deinen vorzüglichen Fertigkeiten gehört und wollen dich um
+deine Hilfe anheuern. 
+
+Seit kurzem gibt es in ihrem Teich eine Fischfalle, die ihre Zahl dezimiert. Sie wissen zwar schon,
+wie man sich zufällig im Teich hin und her bewegt, ja sie können sogar am Rand umdrehen!
+
+Jetzt ist es an dir, Ihnen beizubringen, wie man einer Fischfalle ausweicht. Sie wissen zwar schon,
+was eine Fischfalle ist (wird als Parameter übergeben) & haben eine Methode avoidTrap(), welche aber
+leer ist.
