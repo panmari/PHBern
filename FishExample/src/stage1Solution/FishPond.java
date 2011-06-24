@@ -1,4 +1,4 @@
-package stage1;
+package stage1Solution;
 
 import java.awt.Color;
 import java.util.Random;
@@ -12,7 +12,7 @@ public class FishPond extends GameGrid{
 	
 	public FishPond() {
 		super(800, 600, 1, null, false);
-	    setTitle("Fishpond - Stage 1");  
+	    setTitle("Fishpond - Stage 1 - Solution");  
 	    FishTrap trap = new FishTrap();
 	    addActor(trap, getRandomCenterLocation());
 	    for (int i = 0; i < nrFish; i++)
