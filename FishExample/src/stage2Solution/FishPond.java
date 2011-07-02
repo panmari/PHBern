@@ -12,7 +12,8 @@ public class FishPond extends GameGrid{
 	
 	public FishPond() {
 		super(800, 600, 1, null, false);
-	    setTitle("Fishpond - Stage 2 - Solution");  
+	    setTitle("Fishpond - Stage 2 - Solution");
+	    addStatusBar(24);
 	    FishTrap trap = new FishTrap();
 	    addActor(trap, new Location(-100, -100));
 	    for (int i = 0; i < nrFish; i++)
@@ -23,6 +24,11 @@ public class FishPond extends GameGrid{
 	    setSimulationPeriod(30);
 	}
 
+
+	public void act() {
+		int fishNr = getActors(Fish.class).size();
+		setStatusText(fishNr + " fish are in the pond.");
+	}
 	
 	private Location getRandomCenterLocation() {
 		Random rnd = new Random();	
