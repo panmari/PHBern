@@ -1,6 +1,9 @@
 Stage 3
 
+Gut gemacht! Schon jetzt tummeln sich wieder massenweise Fische im Teich. Doch leider ist ein
+Teil der Fische noch immer nicht zufrieden. Sie finden, sich fortzupflanzen sei viel zu anstrengend.
+Um sich schneller zu regenerieren, wollen sie nun anfangen, andere Fische aufzufressen.
 
-Fish eat each other?
+Kannst du ihnen dabei helfen?
 
-sich vermehren ist anstrengend & es gibt plötzlich so viele -> sich gegenseitig fressen
+Die Klasse AngryFish steht schon bereit.... [to be continued]
