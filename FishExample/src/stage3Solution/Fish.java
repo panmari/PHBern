@@ -35,7 +35,7 @@ class Fish extends Actor {
 		//this fish is calm, he doesn't eat others.
 	}
 
-	private void tryToMate() {
+	public void tryToMate() {
 		if(getNeighbours(matingDistance).size() != 0 
 				&& Math.random() < matingProbability
 				&& matingCountDown < 0) {

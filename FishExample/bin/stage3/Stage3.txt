@@ -1,9 +1,11 @@
 Stage 3
 
-Gut gemacht! Schon jetzt tummeln sich wieder massenweise Fische im Teich. Doch leider ist ein
-Teil der Fische noch immer nicht zufrieden. Sie finden, sich fortzupflanzen sei viel zu anstrengend.
-Um sich schneller zu regenerieren, wollen sie nun anfangen, andere Fische aufzufressen.
+Gut gemacht! Schon jetzt tummeln sich wieder massenweise Fische im Teich. Doch leider sind nicht alle 
+Fische zufrieden. Ein besonders gemein aussehender Fisch findet, dass es ihm zu eng wird im Teich und will 
+Anfangen, andere Fische aufzufressen. 
+Er findet auch, dass die jetzige Art sich fortzupflanzen viel zu kuschlig ist für ihn. Er will sich allein
+durch Fressen vermehren können. 
 
-Kannst du ihnen dabei helfen?
+Kannst du ihm dabei helfen?
 
 Die Klasse AngryFish steht schon bereit.... [to be continued]
