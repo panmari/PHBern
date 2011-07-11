@@ -2,6 +2,10 @@ package stage3Solution;
 
 public class AngryFish extends Fish {
 
+	private final int eatingDistance = 10;
+	private final int fullStomach = 5;
+	private int eatenFish;
+	
 	public AngryFish(FishPond pond, FishTrap trap) {
 		super(pond, trap);
 		show(1);
@@ -9,11 +13,13 @@ public class AngryFish extends Fish {
 
 	public void tryToEat() {
 		//this fish is angry, he eats others.
-		if(getNeighbours(matingDistance).size() != 0 
-				&& Math.random() < matingProbability
-				&& matingCountDown < 0) {
-			pond.addActor(new Fish(pond, trap), getLocation());
-			matingCountDown = matingExhaustion;
+		if(getNeighbours(eatingDistance, Fish.class).size() != 0) {
+			getNeighbours(eatingDistance, Fish.class).get(0).removeSelf();
+			eatenFish++;
+			if (eatenFish > fullStomach) {
+				pond.addActor(new AngryFish(pond, trap), getLocation());
+				eatenFish = 0;
+			}
 		}
 	}
 }

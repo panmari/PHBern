@@ -8,7 +8,7 @@ import ch.aplu.jgamegrid.Location;
 
 public class FishPond extends GameGrid{
 	
-	private final int nrFish = 10;
+	private final int nrFish = 20;
 	
 	public FishPond() {
 		super(800, 600, 1, null, false);
@@ -16,10 +16,9 @@ public class FishPond extends GameGrid{
 	    addStatusBar(24);
 	    FishTrap trap = new FishTrap();
 	    addActor(trap, new Location(-100, -100));
-	    for (int i = 0; i < nrFish/2; i++)
+	    for (int i = 0; i < nrFish; i++)
 		      addActor(new Fish(this, trap), getRandomEmptyLocation());
-	    for (int i = 0; i < nrFish/2; i++)
-		      addActor(new AngryFish(this, trap), getRandomEmptyLocation());
+		addActor(new AngryFish(this, trap), getRandomEmptyLocation());
 	    setBgColor(Color.BLUE);
 	    show();
 	    doRun();

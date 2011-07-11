@@ -1,17 +1,16 @@
 package stage3Solution;
 
 import ch.aplu.jgamegrid.Actor;
-import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 
 class Fish extends Actor {
 
-	private FishTrap trap;
+	protected FishTrap trap;
 	private final int matingDistance = 10;
 	private final double matingProbability = 0.1; 
 	private final int matingExhaustion = 200;
 	int matingCountDown = matingExhaustion;
-	private FishPond pond;
+	protected FishPond pond;
 
 	public Fish(FishPond pond, FishTrap trap) {
 		super(true, "sprites/fish.gif", 2);
