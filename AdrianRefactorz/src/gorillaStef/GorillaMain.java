@@ -8,12 +8,24 @@ import ch.aplu.jgamegrid.Location;
 public class GorillaMain extends GameGrid {
 
 	WindSock ws = new WindSock();
+	Location[] gorillaLoc = {new Location(35,565), new Location(1165,565)};
+	Location[] bananaLunchLoc = {new Location(70, 535), new Location(1130, 535)};
 	
 	public GorillaMain() {
 		super(1200, 600, 1, null, "sprites/townBig.jpg", true);
 		setSimulationPeriod(30);
-		addActor(ws, new Location(600, 40));
+		addActor(ws, new Location(nbHorzCells/2, 40));
+		ws.setRandomWind();
+		addActor(new Banana(50, -100), bananaLunchLoc[0]);
+		for (Location loc: gorillaLoc)
+			addActor(new Gorilla(), loc);
 		show();
+		//doRun();
+	}
+	
+	public void act() {
+		if (getNbCycles() % 100 == 0)
+			ws.setRandomWind();
 	}
 
 	private double requestNumber(String prompt) {
@@ -31,5 +43,9 @@ public class GorillaMain extends GameGrid {
 			}
 		}
 		return number;
+	}
+	
+	public static void main(String[] args) {
+		new GorillaMain();
 	}
 }

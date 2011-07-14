@@ -236,7 +236,7 @@ class Banana extends Actor
 
   public Banana(Gorillas g)
   {
-    super(true, "sprites/banana.png");
+    super("sprites/banana.png", 4);
     gorillas = g;
   }
 
