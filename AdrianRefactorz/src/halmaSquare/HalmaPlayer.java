@@ -1,5 +1,6 @@
 package halmaSquare;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import ch.aplu.jgamegrid.Location;
@@ -19,14 +20,17 @@ public class HalmaPlayer {
 	}
 	
 	public void initializeStones() {
-		for (Location loc : startLocations)
+		for (Location loc : startLocations) {
+			halmaBoard.getBg().fillCell(loc, Color.lightGray);
 			halmaBoard.addActor(new HalmaStone(this), loc);
+		}
+		halmaBoard.getBg().drawGridLines(Color.black);
 	}
 
 	/**
 	 * Player wins if every Location of endLocation is 
-	 * occupied by a stone of his color
-	 * @return
+	 * occupied by a stone of his color.
+	 * @return true if the current Player wins
 	 */
 	public boolean isWinner() {
 		for (Location loc : endLocations) {
@@ -37,11 +41,8 @@ public class HalmaPlayer {
 		return true;
 	}
 	
-	/**
-	 * mb change uppercase afterwards
-	 */
 	public String toString() {
-		return color.name().toUpperCase();
+		return color.name();
 	}
 	
 	public ArrayList<Location> getAllLocations() {
