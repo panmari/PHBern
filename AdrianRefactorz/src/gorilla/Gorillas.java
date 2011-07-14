@@ -2,7 +2,6 @@ package gorilla;
 
 //Gorillas.java
 import ch.aplu.jgamegrid.*;
-import java.util.*;
 import java.awt.*;
 import javax.swing.JOptionPane;
 
@@ -78,7 +77,7 @@ public class Gorillas extends GameGrid implements GGActorCollisionListener
 
     show();
 
-    degree = requestEntry("Angel:");
+    degree = requestEntry("Angle:");
     speed = requestEntry("Speed:");
 
     banana.setDirSpeedWind(degree, speed, wind);

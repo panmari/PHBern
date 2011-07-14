@@ -185,7 +185,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 		//TASK: quite a boring task... doesn't need much thinking
 		if(players[currentPlayer].isWinner()) {
 			 addActor(new Actor("sprites/you_win.gif"), new Location(10,11));
-		     setTitle(players[currentPlayer] + " WINS!!!");
+		     setTitle(players[currentPlayer] + " wins!!!");
 		     reset();
 		}
 	}
