@@ -335,41 +335,6 @@ public class Halma extends GameGrid implements GGMouseListener {
 	}
 }
 
-class HalmaStone extends Actor {
-	public HalmaPlayer player;
-	private HalmaColor hc;
-	private boolean pickedUp;
-
-	public HalmaStone(HalmaPlayer player) {
-		super("sprites/halmaStone.png", 6);
-		show(player.getColor().ordinal() * 2);
-		this.player = player;
-	}
-
-	public HalmaPlayer getOwningPlayer() {
-		return player;
-	}
-
-	public void putDown() {
-		assert pickedUp;
-		pickedUp = false;
-		this.showPreviousSprite();
-	}
-
-	public void pickUp() {
-		assert !pickedUp;
-		pickedUp = true;
-		this.showNextSprite();
-	}
-
-	public boolean isPickedUp() {
-		return pickedUp;
-	}
-	public HalmaColor getColor() {
-		return hc;
-	}
-}
-
 class Next extends Actor {
 	public Next() {
 		super("sprites/next.png");

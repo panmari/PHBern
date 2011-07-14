@@ -26,11 +26,14 @@ public class Halma extends GameGrid implements GGMouseListener {
 		setTitle(players[currentPlayer] + " starts!"); 
 		show();
 	}
-
+	/* TASK:
+	 * this stuff is kinda tricky, but we can maybe single
+	 * out an easy task somewhere...
+	 */
 	public boolean mouseEvent(GGMouse mouse) {
 		Location clickLoc = toLocationInGrid(mouse.getX(), mouse.getY());
 
-		// rightclick ends move of a Player (replaced next-button with that)
+		// rightclick ends move of a player (replaced next-button with that)
 		if (mouse.getEvent() == GGMouse.rClick) {
 			movingHS.putDown();
 			movingHS = null;
@@ -59,7 +62,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 			return true;
 		}
 		// if clicked on empty, possible Location with a picked up Stone:
-		if (movingHS != null && isPossibleLocation(clickLoc)) {
+		if (movingHS != null && isUnoccupiedLocation(clickLoc)) {
 			// if move is possible
 			if (isValidMove(movingHS, clickLoc)) {
 				jumpModeOn = true;
@@ -122,12 +125,14 @@ public class Halma extends GameGrid implements GGMouseListener {
 		for (int i = 0; i < nbPlayers; i++)
 			startLocations[i] = new ArrayList<Location>();
 		
+		//----------TASK: this could be programmed by students ----------
 		for (int y = 0; y < 6; y++)
 			for (int x = 0; x < 6; x++)
 				if (x + y < 6 && !(x == 0 && y == 5) && !(x == 5 && y == 0)) {
 					startLocations[0].add(new Location(x, y));
 					startLocations[1].add(new Location(nbHorzCells - x - 1, nbHorzCells - y - 1));
 				}
+		// ------------------------------------------------------------
 		
 		this.players[0] = new HalmaPlayer(this, HalmaColor.Blue,
 				startLocations[0], startLocations[1]);
@@ -144,7 +149,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 			p.initializeStones();
 	}
 
-	private boolean isPossibleLocation(Location loc) {
+	private boolean isUnoccupiedLocation(Location loc) {
 		return getOneActorAt(loc) == null;
 	}
 
@@ -156,18 +161,28 @@ public class Halma extends GameGrid implements GGMouseListener {
 	 */
 	private ArrayList<Location> getInterjacent(Location loc1, Location loc2) {
 		ArrayList<Location> interjacentLocs = new ArrayList<Location>();
+		
+		//---------- TASK: this could be programmed by students ----------
+
 		double dir = loc1.getDirectionTo(loc2);
 		Location tempLoc = loc1.getNeighbourLocation(dir);
 		
 		while (!tempLoc.equals(loc2)) {
-			assert isInGrid(tempLoc); //to avoid infinite loops
+			assert isInGrid(tempLoc); //to avoid infinite loops, not needed
 			interjacentLocs.add(tempLoc);
 			tempLoc = tempLoc.getNeighbourLocation(dir);
 		}
+		// ------------------------------------------------------------
+		
 		return interjacentLocs;
 	}
 
+	/**
+	 * Checks if the current player has won the game. 
+	 * Stops the game if so.
+	 */
 	private void checkGameOver() {
+		//TASK: quite a boring task... doesn't need much thinking
 		if(players[currentPlayer].isWinner()) {
 			 addActor(new Actor("sprites/you_win.gif"), new Location(10,11));
 		     setTitle(players[currentPlayer] + " WINS!!!");

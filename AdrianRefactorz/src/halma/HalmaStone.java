@@ -1,11 +1,7 @@
-package halmaSquare;
+package halma;
 
 import ch.aplu.jgamegrid.Actor;
 
-/*
- * TASK: this stuff is kinda tricky, not easy to programm...
- * I wouldn't recommend doing stuff here...
- */
 class HalmaStone extends Actor {
 	public HalmaPlayer player;
 	private HalmaColor hc;
