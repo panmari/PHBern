@@ -22,6 +22,16 @@ public class Banana extends Actor {
 		x = getX();
 		y = getY();
 	}
+	
+	/**
+	 * Banana collided with Gorilla -> current Player wins!
+	 */
+	public int collide(Actor a1, Actor a2) {
+		gg.gameOver();
+		return 0;
+		
+	}
+	
 	public void act() {
 		vy = vy + 9.81*speedFactor;
 		vx = vx + gg.getWindSock().getWind()*speedFactor;

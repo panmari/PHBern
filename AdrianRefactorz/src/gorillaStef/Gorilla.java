@@ -1,5 +1,7 @@
 package gorillaStef;
 
+import java.awt.Point;
+
 import javax.swing.JOptionPane;
 
 import ch.aplu.jgamegrid.Actor;
@@ -16,6 +18,7 @@ public class Gorilla extends Actor{
 		 this.lunchLoc = bananaLunchLoc;
 		 this.gg = gg;
 		 this.ownPlayerNb = playerNb;
+		 setCollisionCircle(new Point(0,0), 29);
 	}
 	
 	public void reset() {
