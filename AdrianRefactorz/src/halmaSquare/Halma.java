@@ -9,20 +9,20 @@ import java.awt.*;
 public class Halma extends GameGrid implements GGMouseListener {
 	final int restart = 5000; // restart game after ... milliseconds
 
+	private int nbPlayers = 2;
 	private boolean jumpModeOn = false; 
 	// needed if stone can still move after a jump
 	private HalmaStone movingHS;
 
 	//random player starts:
-	private int currentPlayer = (int) (Math.random() * 3);
-	private HalmaPlayer[] players = new HalmaPlayer[3];
-	private ArrayList<Location> allPossibleLocations = new ArrayList<Location>();
+	private int currentPlayer = (int) (Math.random() * nbPlayers);	
+	private HalmaPlayer[] players = new HalmaPlayer[nbPlayers];
 
 	public Halma() {
-		super(19, 25, 20, null, "sprites/halmaBG.png", false);
+		super(16, 16, 25, Color.BLACK, null, false);
 		this.setBgColor(Color.WHITE);
 		addActor(new Next(), new Location(16, 23));
-		initializePlayersAndLocations();
+		initializePlayers();
 		setUpBoard();
 		addMouseListener(this, GGMouse.lClick);
 		setTitle(players[currentPlayer] + " STARTS!"); 
@@ -137,87 +137,25 @@ public class Halma extends GameGrid implements GGMouseListener {
 		setTitle(players[currentPlayer] + " PLAYS!");
 	}
 
-	private void initializePlayerBlue() {
-		ArrayList<Location> startLocations = new ArrayList<Location>();
-		ArrayList<Location> endLocations = new ArrayList<Location>();
-		int counter = 6;
-		for (int y = 18; y >= 12; y -= 2) {
-			for (int x = (18 - y) / 2; x <= counter; x += 2) 
-				startLocations.add(new Location(x, y));
-			counter--;
-		}
-		counter = 6;
-		for (int y = 6; y <= 12; y += 2) {
-			for (int x = y + counter; x <= 12 + counter; x += 2)
-				endLocations.add(new Location(x, y));
-			counter--;
-		}
+	private void initializePlayers() {
+		ArrayList<Location>[] startLocations = new ArrayList[nbPlayers];
+		
+		for (int i = 0; i < nbPlayers; i++)
+			startLocations[i] = new ArrayList<Location>();
+		
+		for (int y = 0; y < 6; y++)
+			for (int x = 0; x < 6; x++)
+				if (x + y < 6 && !(x == 0 && y == 5) && !(x == 5 && y == 0)) {
+					startLocations[0].add(new Location(x, y));
+					startLocations[1].add(new Location(nbHorzCells - x - 1, nbHorzCells - y - 1));
+				}
+		
 		this.players[0] = new HalmaPlayer(this, HalmaColor.Blue,
-				startLocations, endLocations);
+				startLocations[0], startLocations[1]);
+		this.players[1] = new HalmaPlayer(this, HalmaColor.Red,
+				startLocations[1], startLocations[0]);
 	}
-
-	// load the staring and end locations of the green player
-	private void initializePlayerGreen() {
-		ArrayList<Location> startLocations = new ArrayList<Location>();
-		ArrayList<Location> endLocations = new ArrayList<Location>();
-		int counter = 0;
-		for (int y = 18; y >= 12; y -= 2) {
-			for (int x = y + counter; x >= 12 + counter; x -= 2)
-				startLocations.add(new Location(x, y));
-			counter++;
-		}
-		counter = 0;
-		for (int y = 6; y <= 12; y += 2) {
-			for (int x = (18 - y) / 2; x >= counter; x -= 2)
-				endLocations.add(new Location(x, y));
-			counter++;
-		}
-		this.players[1] = new HalmaPlayer(this, HalmaColor.Green,
-				startLocations, endLocations);
-	}
-
-	// load the staring and end locations of the red player
-	private void initializePlayerRed() {
-		ArrayList<Location> startLocations = new ArrayList<Location>();
-		ArrayList<Location> endLocations = new ArrayList<Location>();
-		int counter = 0;
-		for (int y = 6; y >= 0; y -= 2) {
-			for (int x = y + (counter * 3); x <= 12 - counter; x += 2)
-				startLocations.add(new Location(x, y));
-			counter++;
-		}
-
-		counter = 0;
-		for (int y = 18; y <= 24; y += 2) {
-			for (int x = (y + counter) / 3; x <= 12 - counter; x += 2) 
-				endLocations.add(new Location(x, y));
-			counter++;
-		}
-		this.players[2] = new HalmaPlayer(this, HalmaColor.Red,
-				startLocations, endLocations);
-	}
-
-	// load all locations inside the board on which a stone can jump
-	private void initializePlayersAndLocations() {
-		//TODO: does this have to be hardcoded? could also be part of enum!
-		initializePlayerBlue();
-		initializePlayerGreen();
-		initializePlayerRed();
-		for (HalmaPlayer p: players)
-			allPossibleLocations.addAll(p.getAllLocations());
-		int counter = 5;
-		int y2 = 12;
-		for (int y = y2; y >= 8; y -= 2) {
-			for (int x = counter; x <= 18 - counter; x += 2) {
-				allPossibleLocations.add(new Location(x, y));
-				if (y != 12)
-					allPossibleLocations.add(new Location(x, y2));
-			}
-			counter++;
-			y2 += 2;
-		}
-	}
-
+	
 	/**
 	 * Adds all Players stones at the startpositions.
 	 */
@@ -227,7 +165,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 	}
 
 	private boolean isPossibleLocation(Location loc) {
-		return allPossibleLocations.contains(loc) && getOneActorAt(loc) == null;
+		return getOneActorAt(loc) == null;
 	}
 
 	/**
@@ -306,10 +244,12 @@ public class Halma extends GameGrid implements GGMouseListener {
 					isEmptyAndPossible = true;
 				else {
 					boolean isPosLoc = false;
-					for (Location posLoc : allPossibleLocations) {
+					/*
+					for (Location posLoc : thi) {
 						if (posLoc.equals(tmpLoc))
 							isPosLoc = true;
 					}
+					*/
 					if (isPosLoc) {
 						isEmptyAndPossible = true;
 						hasNeighbourInDir = true;
