@@ -9,11 +9,13 @@ public class Gorilla extends Actor{
 
 	private Location lunchLoc;
 	private GorillaMain gg;
+	private int ownPlayerNb;
 	
-	public Gorilla(GorillaMain gg, Location bananaLunchLoc) {
+	public Gorilla(GorillaMain gg, Location bananaLunchLoc, int playerNb) {
 		 super("sprites/gorilla.png", 2);
 		 this.lunchLoc = bananaLunchLoc;
 		 this.gg = gg;
+		 this.ownPlayerNb = playerNb;
 	}
 	
 	public void reset() {
@@ -23,18 +25,24 @@ public class Gorilla extends Actor{
 	
 	public void lunchBanana() {
 		show(1);
-		double angle = Math.toRadians(requestNumber("Angle: "));
-		double speed = requestNumber("Speed: ");
+		double angle = 0, speed = 0;
+		while (angle <= 0 || angle >= Math.PI/2)
+			angle = Math.toRadians(requestNumber("Angle (between 0 and 90): "));
+		while (speed <= 0 || speed >= 200)
+			speed = requestNumber("Speed (between 0 and 200): ");
 		double vx = Math.cos(angle)*speed;
 		double vy = Math.sin(angle)*speed;
-		if (isRightGorilla()) //we're left gorilla
+		if (isRightGorilla())
 			vx = -vx;
-		gg.addActor(new Banana(vx, -vy), lunchLoc);
+		Banana b = new Banana(gg, vx, -vy);
+		b.addActorCollisionListener(b);
+		b.addCollisionActor(gg.getEnemyGorilla(ownPlayerNb));
+		gg.addActor(b, lunchLoc);
 		show(0);
 	}
 	
 	private boolean isRightGorilla() {
-		return getX() > gg.nbHorzCells/2;
+		return ownPlayerNb == 1;
 	}
 	
 	private double requestNumber(String prompt) {

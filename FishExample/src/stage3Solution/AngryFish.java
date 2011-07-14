@@ -18,7 +18,7 @@ public class AngryFish extends Fish {
 	}
 
 	public void tryToEat() {
-		//this fish is angry, he eats others.
+		//this fish is angry, he eats other fish.
 		if(getNeighbours(eatingDistance, Fish.class).size() != 0) {
 			getNeighbours(eatingDistance, Fish.class).get(0).removeSelf();
 			eatenFish++;

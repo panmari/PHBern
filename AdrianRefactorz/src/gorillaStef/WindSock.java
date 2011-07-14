@@ -15,10 +15,10 @@ public class WindSock extends Actor {
 		//get a number between -5 and 5:
 		currentWind = (int) (Math.random()*((nrWindStates-1)*2)) - nrWindStates+1;
 		if (currentWind > 0) {
-			setHorzMirror(false);
+			setHorzMirror(true);
 			show(currentWind);
 		} else {
-			setHorzMirror(true);
+			setHorzMirror(false);
 			show(-currentWind);
 		}
 	}

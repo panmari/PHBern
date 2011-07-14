@@ -16,7 +16,8 @@ public class GorillaMain extends GameGrid {
 		setSimulationPeriod(30);
 		addActor(ws, new Location(nbHorzCells/2, 40));
 		for (int i = 0; i < 2; i++) {
-			players[i] = new Gorilla(this, bananaLunchLoc[i]);
+			players[i] = new Gorilla(this, bananaLunchLoc[i], i);
+			players[i].addActorCollisionListener(players[i]);
 			addActor(players[i], gorillaLoc[i]);
 		}
 		show();
@@ -25,11 +26,19 @@ public class GorillaMain extends GameGrid {
 			ws.setRandomWind();
 			players[currentPlayer].lunchBanana();
 			currentPlayer = (currentPlayer + 1) % 2;
+			while (!getActors(Banana.class).isEmpty()) {
+				//wait
+			}
 		}
 	}
+
+	public WindSock getWindSock() {
+		return ws;
+	}
 	
-	public void act() {
-			
+	public Gorilla getEnemyGorilla(int player) {
+		int enemyNb = (player + 1) % 2;
+		return players[enemyNb];
 	}
 	
 	public static void main(String[] args) {
