@@ -24,12 +24,11 @@ public class Banana extends Actor {
 	}
 	
 	/**
-	 * Banana collided with Gorilla -> current Player wins!
+	 * Banana collides with Gorilla -> current Player wins!
 	 */
 	public int collide(Actor a1, Actor a2) {
 		gg.gameOver();
 		return 0;
-		
 	}
 	
 	public void act() {

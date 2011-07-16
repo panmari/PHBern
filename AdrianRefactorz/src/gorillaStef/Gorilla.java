@@ -51,7 +51,6 @@ public class Gorilla extends Actor{
 	private double requestNumber(String prompt) {
 		double number = 0;
 		Boolean invalidEntry = true;
-
 		while (invalidEntry) {
 			try {
 				String entry = JOptionPane.showInputDialog(null, prompt, "",
