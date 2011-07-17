@@ -27,7 +27,8 @@ public class Banana extends Actor {
 	 * Banana collides with Gorilla -> current Player wins!
 	 */
 	public int collide(Actor a1, Actor a2) {
-		gg.gameOver();
+		gg.gorillaWasHit();
+		setActEnabled(false);
 		return 0;
 	}
 	

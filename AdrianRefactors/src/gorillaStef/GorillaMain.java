@@ -13,6 +13,7 @@ public class GorillaMain extends GameGrid {
 	private Gorilla[] players = new Gorilla[2];
 	private int currentPlayer = 0;
 	private Actor youWin = new Actor("sprites/you_win.gif");
+	private boolean gameOver;
 	
 	public GorillaMain() {
 		super(1200, 600, 1, null, "sprites/townBig.jpg", false);
@@ -29,8 +30,15 @@ public class GorillaMain extends GameGrid {
 			ws.setRandomWind();
 			players[currentPlayer].lunchBanana();
 			while (!getActors(Banana.class).isEmpty()) {
-				//banana still flying -> wait
+				if (gameOver) {
+					addActor(youWin, youWinLoc[currentPlayer]);
+					setTitle("Game finished! New game starts in 5 seconds.");
+					refresh(); //should not be needed
+					delay(5000);
+					reset();
+				}
 			}
+			
 			currentPlayer = (currentPlayer + 1) % 2;
 		}
 	}
@@ -52,19 +60,16 @@ public class GorillaMain extends GameGrid {
 		removeActors(Banana.class);
 		removeActor(youWin);
 		getBg().clear();
-	}
-
-	public void gameOver() {
-		addActor(youWin, youWinLoc[currentPlayer]);
-		setTitle("Game finished! New game starts in 5 seconds.");
-		refresh(); //should not be needed
-		delay(5000);
-		reset();
+		gameOver = false;
 	}
 
 	public void setGorillaTitle(boolean isRightGorilla) {
 		if (isRightGorilla)
 			setTitle("Gorilla on the right is throwing!");
 		else setTitle("Gorilla on the left is throwing!");
+	}
+
+	public void gorillaWasHit() {
+		gameOver = true;
 	}
 }
