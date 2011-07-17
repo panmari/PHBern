@@ -6,11 +6,11 @@ import ch.aplu.jgamegrid.Location;
 
 public class GorillaMain extends GameGrid {
 
-	WindSock ws = new WindSock();
-	Location[] gorillaLoc = {new Location(35,565), new Location(1165,565)};
-	Location[] bananaLunchLoc = {new Location(70, 535), new Location(1130, 535)};
-	Location[] youWinLoc = {new Location(100, 500), new Location(1100, 500)};
-	Gorilla[] players = new Gorilla[2];
+	private WindSock ws = new WindSock();
+	private Location[] gorillaLoc = {new Location(35,565), new Location(1165,565)};
+	private Location[] bananaLunchLoc = {new Location(70, 535), new Location(1130, 535)};
+	private Location[] youWinLoc = {new Location(100, 500), new Location(1100, 500)};
+	private Gorilla[] players = new Gorilla[2];
 	private int currentPlayer = 0;
 	private Actor youWin = new Actor("sprites/you_win.gif");
 	
@@ -28,9 +28,8 @@ public class GorillaMain extends GameGrid {
 		while(true) {
 			ws.setRandomWind();
 			players[currentPlayer].lunchBanana();
-			gameOver();
 			while (!getActors(Banana.class).isEmpty()) {
-				//wait
+				//banana still flying -> wait
 			}
 			currentPlayer = (currentPlayer + 1) % 2;
 		}
