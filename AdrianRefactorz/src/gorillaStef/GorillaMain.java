@@ -12,6 +12,7 @@ public class GorillaMain extends GameGrid {
 	Location[] youWinLoc = {new Location(100, 500), new Location(1100, 500)};
 	Gorilla[] players = new Gorilla[2];
 	private int currentPlayer = 0;
+	private Actor youWin = new Actor("sprites/you_win.gif");
 	
 	public GorillaMain() {
 		super(1200, 600, 1, null, "sprites/townBig.jpg", false);
@@ -26,7 +27,11 @@ public class GorillaMain extends GameGrid {
 		doRun();
 		while(true) {
 			ws.setRandomWind();
+			if (currentPlayer == 0)
+				setTitle("Left gorilla is throwing!");
+			else setTitle("Right gorilla is throwing!");
 			players[currentPlayer].lunchBanana();
+			gameOver();
 			while (!getActors(Banana.class).isEmpty()) {
 				//wait
 			}
@@ -46,9 +51,18 @@ public class GorillaMain extends GameGrid {
 	public static void main(String[] args) {
 		new GorillaMain();
 	}
+	
+	public void reset() {
+		removeActors(Banana.class);
+		removeActor(youWin);
+		getBg().clear();
+	}
 
 	public void gameOver() {
-		doPause();
-		addActor(new Actor("sprites/you_win.gif"), youWinLoc[currentPlayer]);
+		addActor(youWin, youWinLoc[currentPlayer]);
+		setTitle("Game finished! New game starts in 5 seconds.");
+		refresh(); //should not be needed
+		delay(5000);
+		reset();
 	}
 }
