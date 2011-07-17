@@ -27,9 +27,6 @@ public class GorillaMain extends GameGrid {
 		doRun();
 		while(true) {
 			ws.setRandomWind();
-			if (currentPlayer == 0)
-				setTitle("Left gorilla is throwing!");
-			else setTitle("Right gorilla is throwing!");
 			players[currentPlayer].lunchBanana();
 			gameOver();
 			while (!getActors(Banana.class).isEmpty()) {
@@ -64,5 +61,11 @@ public class GorillaMain extends GameGrid {
 		refresh(); //should not be needed
 		delay(5000);
 		reset();
+	}
+
+	public void setGorillaTitle(boolean isRightGorilla) {
+		if (isRightGorilla)
+			setTitle("Gorilla on the right is throwing!");
+		else setTitle("Gorilla on the left is throwing!");
 	}
 }

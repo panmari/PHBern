@@ -27,7 +27,8 @@ public class Gorilla extends Actor{
 	}
 	
 	public void lunchBanana() {
-		show(1);
+		gg.setGorillaTitle(isRightGorilla());
+		show(1); //show throwing sprite
 		double angle = 0, speed = 0;
 		while (angle <= 0 || angle >= Math.PI/2)
 			angle = Math.toRadians(requestNumber("Angle (between 0 and 90): "));
