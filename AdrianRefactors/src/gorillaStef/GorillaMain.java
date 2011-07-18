@@ -37,6 +37,7 @@ public class GorillaMain extends GameGrid {
 					delay(5000);
 					reset();
 				}
+				// wait for banana to hit floor or gorilla
 			}
 			
 			currentPlayer = (currentPlayer + 1) % 2;

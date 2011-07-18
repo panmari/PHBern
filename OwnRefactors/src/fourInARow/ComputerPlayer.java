@@ -16,20 +16,34 @@ public class ComputerPlayer {
 	}
 
 	public int getColumn() {
-		// TODO Auto-generated method stub
-		return 0;
+		int[][] board = getBoardAsArrays();
+		return (int) (Math.random()*7);
 	}
 	
 	private int[][] getBoardAsArrays() {
 		int xMax = gg.getNbHorzCells();
 		int yMax = gg.getNbVertCells() - 1; //topmost row doesn't belong to game
-		int[][] board = new int[6][7];
+		int[][] board = new int[xMax][yMax];
 		for (int x = 0; x < xMax; x++) {
 			for (int y = 0; y < yMax; y++) { 
-				Actor token = gg.getOneActorAt(new Location(xMax-x, yMax-y));
-				if (token == null)
-					//blub
+				if (getTokenAt(x, y) == null)
+					board[x][y] = -1;
+				else board[x][y] = getTokenAt(x, y).getPlayer();
 			}
 		}
+		return board;
 	}
+	
+	/**
+	 * (0,0) ist links unten
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	private Token getTokenAt(int x, int y) {
+		int xMax = gg.getNbHorzCells();
+		int yMax = gg.getNbVertCells() - 1; //topmost row doesn't belong to game
+		return (Token) gg.getOneActorAt(new Location(xMax-x, yMax-y));
+	}
+	
 }
