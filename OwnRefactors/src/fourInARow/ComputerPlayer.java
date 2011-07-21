@@ -14,30 +14,28 @@ public class ComputerPlayer {
 		this.gg = gg;
 		this.thisPlayer = nbPlayer;
 		this.enemyPlayer = (thisPlayer + 1) % 2;
-		int[][] board = initializeBoardArray();
-
+		initializeBoardArray();
 	}
 
 	public int getColumn() {
-		printBoard(board);
 		
 		//do something useful with the given board to decide on the next move
 		
 		return (int) (Math.random() * 7);
 	}
 
-	private int[][] initializeBoardArray() {
+	private void initializeBoardArray() {
 		int xMax = gg.getNbHorzCells();
 		int yMax = gg.getNbVertCells() - 1; // topmost row doesn't belong to game
-		int[][] board = new int[xMax][yMax];
+		boardArray = new int[xMax][yMax];
 		for (int x = 0; x < xMax; x++)
 			for (int y = 0; y < yMax; y++)
-				board[x][y] = gg.getNoTokenRepresentation();
-		return board;
+				boardArray[x][y] = gg.getNoTokenRepresentation();
 	}
 	
 	public void updateBoard(int x, int y, int player) {
 		this.boardArray[x][y] = player;
+		printBoard(boardArray);
 	}
 
 	private boolean isBoardEmpty(int[][] board) {

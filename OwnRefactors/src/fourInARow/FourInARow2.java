@@ -37,8 +37,6 @@ public class FourInARow2 extends GameGrid implements GGMouseListener
   {
     getBg().clear();
     removeActors(Token.class); //remove all tokens
-    for (Token[] column : DBot.board) //fill board with "empty" stones
-      Arrays.fill(column, new Token(-1, this));
     currentPlayer = 0; //Human player always starts (bc i'm lazy)
     setStatusText("Game reset! " + (currentPlayer == 0 ? "Yellow" : "Red") + " player begins.");
     activeToken = new Token(currentPlayer, this);
@@ -193,7 +191,7 @@ public class FourInARow2 extends GameGrid implements GGMouseListener
    * @param token
    */
 public void updateComputerPlayerArray(int x, int y, Token token) {
-	ComputerPlayer.updateBoard(x, y - nbVertCells, token.getPlayer());
+	ComputerPlayer.updateBoard(x, (nbVertCells - 1) - y, token.getPlayer());
 }
 }
 
