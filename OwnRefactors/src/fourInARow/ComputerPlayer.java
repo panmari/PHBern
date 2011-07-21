@@ -8,8 +8,9 @@ public class ComputerPlayer {
 	private FourInARowVsComputer gg;
 	private int thisPlayer;
 	private int enemyPlayer;
-	private int[][] boardArray;
+	private int[][] board;
 	int xMax, yMax;
+	private final int VALUE_QUAD = 100, VALUE_TRIPPLE = 10, VALUE_PAIR = 1;
 
 	public ComputerPlayer(FourInARowVsComputer gg, int nbPlayer) {
 		this.gg = gg;
@@ -28,15 +29,15 @@ public class ComputerPlayer {
 	private void initializeBoardArray() {
 		xMax = gg.getNbHorzCells();
 		yMax = gg.getNbVertCells() - 1; // topmost row doesn't belong to game
-		boardArray = new int[xMax][yMax];
+		board = new int[xMax][yMax];
 		for (int x = 0; x < xMax; x++)
 			for (int y = 0; y < yMax; y++)
-				boardArray[x][y] = gg.getNoTokenRepresentation();
+				board[x][y] = gg.getNoTokenRepresentation();
 	}
 
 	public void updateBoard(int x, int y, int player) {
-		this.boardArray[x][y] = player;
-		printBoard(boardArray);
+		this.board[x][y] = player;
+		printBoard(board);
 	}
 
 	private boolean isBoardEmpty(int[][] board) {
@@ -45,6 +46,24 @@ public class ComputerPlayer {
 				return false;
 		}
 		return true;
+	}
+
+	private int evaluateSituation(int player) {
+		int otherPlayer = (player + 1) % 2;
+		int result = 0;
+
+		if (getLines(4, otherPlayer) > 0)
+			return (-1) * VALUE_QUAD;
+
+		if (getLines(4, player) > 0) 
+			return VALUE_QUAD;
+
+		result += VALUE_TRIPPLE * getLines(3, player);
+		result += VALUE_PAIR * getLines(2, player);
+
+		result -= VALUE_TRIPPLE * getLines(3, otherPlayer);
+		result -= VALUE_PAIR * getLines(2, otherPlayer);
+		return result;
 	}
 
 	private void printBoard(int[][] board) {
@@ -58,6 +77,12 @@ public class ComputerPlayer {
 		System.out.println(boardString);
 	}
 
+	int getLines(int length, int player) {
+		return (getHorizontalLines(length, player)
+				+ getVerticalLines(length, player) + getDiagonalLines(length,
+				player));
+	}
+
 	int getHorizontalLines(int length, int player) {
 		int total_hits = 0;
 		if (length > 4 || length < 2)
@@ -67,8 +92,8 @@ public class ComputerPlayer {
 			for (int x = 0; x <= xMax - length; x++) {
 				int hit = 1;
 				for (int t = 1; t < length; t++) {
-					if ((boardArray[x + t][y] != boardArray[x][y])
-							|| (boardArray[x + t][y] != player))
+					if ((board[x + t][y] != board[x][y])
+							|| (board[x + t][y] != player))
 						hit = 0;
 				}
 				total_hits += hit;
@@ -87,8 +112,8 @@ public class ComputerPlayer {
 			for (int y = 0; y <= yMax - length; y++) {
 				int hit = 1;
 				for (int t = 1; t < length; t++) {
-					if ((boardArray[x][y + t] != boardArray[x][y])
-							|| (boardArray[x][y + t] != player))
+					if ((board[x][y + t] != board[x][y])
+							|| (board[x][y + t] != player))
 						hit = 0;
 				}
 				total_hits += hit;
@@ -104,8 +129,8 @@ public class ComputerPlayer {
 			for (int y = 0; y <= (yMax - length); y++) {
 				int hit = 1;
 				for (int t = 1; t < length; t++) {
-					if ((boardArray[x + t][y + t] != boardArray[x][y])
-							|| (boardArray[x + t][y + t] != color))
+					if ((board[x + t][y + t] != board[x][y])
+							|| (board[x + t][y + t] != color))
 						hit = 0;
 				}
 				total_hits += hit;
@@ -116,8 +141,8 @@ public class ComputerPlayer {
 			for (int y = 0; y <= (yMax - length); y++) {
 				int hit = 1;
 				for (int t = 1; t < length; t++) {
-					if ((boardArray[x - t][y + t] != boardArray[x][y])
-							|| (boardArray[x - t][y + t] != color))
+					if ((board[x - t][y + t] != board[x][y])
+							|| (board[x - t][y + t] != color))
 						hit = 0;
 				}
 				total_hits += hit;
@@ -125,4 +150,20 @@ public class ComputerPlayer {
 		}
 		return total_hits;
 	}
+
+	/**
+	 * removes the topmost Token from the given column (only in Array, not in
+	 * GameGrid)
+	 */
+	private void undoLastMove(int column) {
+		int y = yMax - 1;
+		while (y >= 0) {
+			if (board[column][y] != gg.getNoTokenRepresentation()) {
+				board[column][y] = gg.getNoTokenRepresentation();
+				return;
+			}
+			y--;
+		}
+	}
+
 }
