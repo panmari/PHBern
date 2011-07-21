@@ -8,9 +8,9 @@ import ch.aplu.util.Monitor;
 public class Token extends Actor
 {
   private int player, nb;
-  private FourInARow2 gg;
+  private FourInARowVsComputer gg;
 
-  public Token(int player, FourInARow2 gg)
+  public Token(int player, FourInARowVsComputer gg)
   {
     super(false, "sprites/token.png", 2);
     this.player = player;

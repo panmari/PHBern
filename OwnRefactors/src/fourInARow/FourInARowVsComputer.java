@@ -5,7 +5,7 @@ import ch.aplu.jgamegrid.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public class FourInARow2 extends GameGrid implements GGMouseListener
+public class FourInARowVsComputer extends GameGrid implements GGMouseListener
 {
   private int currentPlayer = 0;
   private final int noToken = 2;
@@ -14,7 +14,7 @@ public class FourInARow2 extends GameGrid implements GGMouseListener
   private ComputerPlayer ComputerPlayer;
   private String moveInfo = "Move mouse to a column and click to set the token.";
 
-  public FourInARow2()
+  public FourInARowVsComputer()
   {
     super(7, 7, 70, null, null, false);
     addMouseListener(this, GGMouse.lPress | GGMouse.move);
@@ -177,7 +177,7 @@ public class FourInARow2 extends GameGrid implements GGMouseListener
 
   public static void main(String[] args)
   {
-    new FourInARow2();
+    new FourInARowVsComputer();
   }
   
   public int getNoTokenRepresentation() {
