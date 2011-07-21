@@ -38,6 +38,7 @@ public class Token extends Actor
     { //token has arrived
       setActEnabled(false);
       IPlayer.board[getX()][Math.abs(getY() - 6)] = this; //put into table for computers move
+      gg.updateComputerPlayerArray(getX(), getY(), this);
       if (gg.check4Win(getLocation()))
       {
         gg.setStatusText((player == 0 ? "You won!" : "You lost!")

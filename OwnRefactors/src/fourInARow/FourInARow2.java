@@ -8,6 +8,7 @@ import java.util.Arrays;
 public class FourInARow2 extends GameGrid implements GGMouseListener
 {
   private int currentPlayer = 0;
+  private final int noToken = 2;
   public boolean finished = false;
   Token activeToken;
   private ComputerPlayer ComputerPlayer;
@@ -30,8 +31,6 @@ public class FourInARow2 extends GameGrid implements GGMouseListener
     setStatusText(moveInfo);
     setTitle("Four In A Row (against Computer). Developed by Stefan Moser.");
     ComputerPlayer = new ComputerPlayer(this, 1); //menu for choosing?
-    for (Token[] column : DBot.board) //fill board with "empty" stones
-      Arrays.fill(column, new Token(-1, this));
   }
 
   public void reset()
@@ -93,13 +92,10 @@ public class FourInARow2 extends GameGrid implements GGMouseListener
   {
     Location loc = new Location(x, y);
     if (getOneActorAt(loc) == null)
-      return -1;
+      return noToken;
     else
       return ((Token)getOneActorAt(loc)).getPlayer();
   }
-
-  // @param the location of newly inserted token
-  // @return true, if four are connected through that token
 
   public boolean check4Win(Location loc)
   {
@@ -185,5 +181,19 @@ public class FourInARow2 extends GameGrid implements GGMouseListener
   {
     new FourInARow2();
   }
+  
+  public int getNoTokenRepresentation() {
+		return noToken;
+	}
+
+  /**
+   * Transformation of cell position -> array position happens here!
+   * @param x
+   * @param y
+   * @param token
+   */
+public void updateComputerPlayerArray(int x, int y, Token token) {
+	ComputerPlayer.updateBoard(x, y - nbVertCells, token.getPlayer());
+}
 }
 

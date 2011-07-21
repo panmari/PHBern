@@ -141,15 +141,7 @@ public abstract class IPlayer
     return false;
   }
 
-  protected boolean isBoardEmpty()
-  {
-    for (int i = 0; i < board.length; i++)
-    {
-      if (board[i][0].getPlayer() != -1)
-        return false;
-    }
-    return true;
-  }
+
 
   public void multiArrayCopy(Token[][] source, Token[][] destination)
   {
