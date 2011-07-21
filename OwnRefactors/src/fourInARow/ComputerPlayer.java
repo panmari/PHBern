@@ -10,7 +10,10 @@ public class ComputerPlayer {
 	private int enemyPlayer;
 	private int[][] board;
 	int xMax, yMax;
-	private final int VALUE_QUAD = 100, VALUE_TRIPPLE = 10, VALUE_PAIR = 1;
+	private final int minValue = -10000, maxValue = 10000;
+	private int solution;
+	private final int searchDepth = 6;
+	private final int VALUE_QUAD = 1000, VALUE_TRIPPLE = 10, VALUE_PAIR = 2;
 
 	public ComputerPlayer(FourInARowVsComputer gg, int nbPlayer) {
 		this.gg = gg;
@@ -20,10 +23,8 @@ public class ComputerPlayer {
 	}
 
 	public int getColumn() {
-
-		// do something useful with the given board to decide on the next move
-
-		return (int) (Math.random() * 7);
+		maxValueAB(thisPlayer, searchDepth, minValue, maxValue);
+		return solution;
 	}
 
 	private void initializeBoardArray() {
@@ -40,13 +41,113 @@ public class ComputerPlayer {
 		printBoard(board);
 	}
 
-	private boolean isBoardEmpty(int[][] board) {
-		for (int i = 0; i < board.length; i++) {
-			if (board[i][0] != gg.getNoTokenRepresentation())
-				return false;
+	int maxValueAB(int player, int depth, int alpha, int beta) {
+		int otherPlayer = (player + 1) % 2;
+		int currentValue;
+		
+		if (depth == 0)
+			return evaluateSituation(player);
+		for (int x = 0; x < xMax; x++) {
+			if (insertStone(player, x)) {
+				if (!isBoardFull())
+					currentValue = minValueAB(otherPlayer, depth - 1, alpha,
+							beta);
+				else
+					currentValue = minValueAB(otherPlayer, 0, alpha, beta);
+				undoLastMove(x);
+				if (currentValue >= beta)
+					return beta;
+				if (currentValue > alpha) {
+					if (depth == this.searchDepth)
+						this.solution = x;
+					alpha = currentValue;
+				}
+			}
 		}
-		return true;
+		return alpha;
+	} 
+	
+	private boolean insertStone(int player, int x) {
+		int y = 0;
+		while (y < yMax) {
+			if (board[x][y] == gg.getNoTokenRepresentation()) {
+				board[x][y] = player;
+				return true;
+			}
+			y++;
+		}
+		return false;
 	}
+
+	private boolean isBoardFull() {
+		for (int x = 0; x < xMax; x++)
+			if (board[x][yMax-1] == gg.getNoTokenRepresentation())
+				return false;
+		return false;
+	}
+
+	int minValueAB(int player, int depth, int alpha, int beta) {
+		int otherPlayer = (player + 1) % 2;
+		int currentValue;
+		if (depth == 0)
+			return evaluateSituation(player);
+		for (int x = 0; x < xMax; x++) {
+			if (insertStone(player, x)) {
+				if (!isBoardFull())
+					currentValue = maxValueAB(otherPlayer, depth - 1, alpha,
+							beta);
+				else
+					currentValue = maxValueAB(otherPlayer, 0, alpha, beta);
+				undoLastMove(x);
+				if (currentValue <= alpha)
+					return alpha;
+				if (currentValue < beta)
+					beta = currentValue;
+			}
+		}
+		return beta;
+	}
+
+	int maxValue(int player, int depth) {
+		int result = minValue;
+		int otherPlayer = (player + 1) % 2;
+		int currentValue;
+
+		for (int x = 0; x < xMax; x++) {
+			if (insertStone(player, x)) {
+				if (depth <= 0)
+					currentValue = (evaluateSituation(player));
+				else
+					currentValue = minValue(otherPlayer, depth - 1);
+				undoLastMove(x);
+				if (currentValue > result) {
+					result = currentValue;
+					if (depth == searchDepth)
+						solution = x;
+				}
+			}
+		}
+		return result;
+	}
+
+	int minValue(int player, int depth) {
+		int otherPlayer = (player + 1) % 2;
+		int result = maxValue;
+		int currentValue;
+
+		for (int x = 0; x < xMax; x++) {
+			if (insertStone(player, x)) {
+				if (depth <= 0)
+					currentValue = evaluateSituation(player);
+				else
+					currentValue = maxValue(otherPlayer, depth - 1);
+				undoLastMove(x);
+				if (currentValue < result)
+					result = currentValue;
+			}
+		}
+		return result;
+	} 
 
 	private int evaluateSituation(int player) {
 		int otherPlayer = (player + 1) % 2;
@@ -55,7 +156,7 @@ public class ComputerPlayer {
 		if (getLines(4, otherPlayer) > 0)
 			return (-1) * VALUE_QUAD;
 
-		if (getLines(4, player) > 0) 
+		if (getLines(4, player) > 0)
 			return VALUE_QUAD;
 
 		result += VALUE_TRIPPLE * getLines(3, player);
