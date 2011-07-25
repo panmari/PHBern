@@ -6,7 +6,6 @@ import java.util.Arrays;
 
 public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 	private int currentPlayer = 0;
-	private final int noToken = 2;
 	public boolean finished = false;
 	Token activeToken;
 	private ComputerPlayer computerPlayer;
@@ -19,8 +18,8 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		this.getBg().setBgColor(Color.white);
 		activeToken = new Token(currentPlayer, this);
 		addActor(activeToken, new Location(0, 0), Location.SOUTH);
-		addActor(new BG(), new Location(3, -1)); // outside of grid, so it
-													// doesn't disturb game
+		// outside of grid, so it doesn't disturb game:
+		addActor(new BG(), new Location(3, -1));
 		getBg().setFont(new Font("SansSerif", Font.BOLD, 48));
 		getBg().setPaintColor(Color.red);
 		show();
@@ -29,18 +28,19 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		addStatusBar(30);
 		setStatusText(moveInfo);
 		setTitle("Four In A Row (against Computer). Developed by Stefan Moser.");
-		computerPlayer = new ComputerPlayer(this, 1); // menu for choosing?
+		arrayManager = new ArrayManager(this, nbHorzCells, nbVertCells - 1);
+		computerPlayer = new ComputerPlayer(arrayManager, 1); // menu for choosing?
 	}
 
 	public void reset() {
 		getBg().clear();
-		removeActors(Token.class); // remove all tokens
+		removeActors(Token.class);
 		currentPlayer = 0; // Human player always starts (bc i'm lazy)
 		setStatusText("Game reset! " + (currentPlayer == 0 ? "Yellow" : "Red")
 				+ " player begins.");
 		activeToken = new Token(currentPlayer, this);
 		addActor(activeToken, new Location(0, 0), Location.SOUTH);
-		arrayManager = new ArrayManager(this, nbHorzCells, nbVertCells - 1);
+		arrayManager.reset();
 		finished = false;
 	}
 
@@ -85,7 +85,7 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 	public int getPlayerOfTokenAt(int x, int y) {
 		Location loc = new Location(x, y);
 		if (getOneActorAt(loc) == null)
-			return noToken;
+			return arrayManager.getNoTokenRepresentation();
 		else
 			return ((Token) getOneActorAt(loc)).getPlayer();
 	}
@@ -172,10 +172,6 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		new FourInARowVsComputer();
 	}
 
-	public int getNoTokenRepresentation() {
-		return noToken;
-	}
-
 	/**
 	 * Transformation of cell position -> array position happens here!
 	 * 
@@ -187,7 +183,7 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		arrayManager.addToken(x, (nbVertCells - 1) - y, token.getPlayer());
 	}
 
-	public int[][] getBoardArray() {
-		return arrayManager.getBoardArray();
+	public void printBoard() {
+		arrayManager.printBoard();
 	}
 }

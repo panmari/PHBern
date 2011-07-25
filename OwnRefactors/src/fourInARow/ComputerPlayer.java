@@ -5,26 +5,29 @@ import ch.aplu.jgamegrid.Location;
 
 public class ComputerPlayer {
 
-	private FourInARowVsComputer gg;
 	private int thisPlayer;
 	private int[][] board;
-	int xMax, yMax;
+	private int xMax, yMax;
 	private final int minValue = -10000, maxValue = 10000;
 	private int solution;
 	private final int searchDepth = 6;
 	private final int VALUE_QUAD = 1000, VALUE_TRIPPLE = 10, VALUE_PAIR = 2;
 	private int solutionValue;
+	private ArrayManager am;
 
-	public ComputerPlayer(FourInARowVsComputer gg, int nbPlayer) {
-		this.gg = gg;
+	public ComputerPlayer(ArrayManager am, int nbPlayer) {
+		this.am = am;
 		this.thisPlayer = nbPlayer;
-		this.board = gg.getBoardArray();
+		this.board = am.getBoardArray();
+		this.xMax = am.getxMax();
+		this.yMax = am.getyMax();
 	}
 
 	public int getColumn() {
 		maxValueAB(thisPlayer, searchDepth, minValue, maxValue);
 		//maxValue(thisPlayer, searchDepth);
 		System.out.println(solutionValue);
+		am.printBoard();
 		return solution;
 	}
 
@@ -224,7 +227,7 @@ public class ComputerPlayer {
 	
 	private boolean isBoardFull() {
 		for (int x = 0; x < xMax; x++)
-			if (board[x][yMax-1] == gg.getNoTokenRepresentation())
+			if (board[x][yMax-1] == am.getNoTokenRepresentation())
 				return false;
 		return false;
 	}
@@ -232,7 +235,7 @@ public class ComputerPlayer {
 	private boolean insertStone(int player, int x) {
 		int y = 0;
 		while (y < yMax) {
-			if (board[x][y] == gg.getNoTokenRepresentation()) {
+			if (board[x][y] == am.getNoTokenRepresentation()) {
 				board[x][y] = player;
 				return true;
 			}
@@ -244,8 +247,8 @@ public class ComputerPlayer {
 	private void removeTopmostToken(int column) {
 		int y = yMax - 1;
 		while (y >= 0) {
-			if (board[column][y] != gg.getNoTokenRepresentation()) {
-				board[column][y] = gg.getNoTokenRepresentation();
+			if (board[column][y] != am.getNoTokenRepresentation()) {
+				board[column][y] = am.getNoTokenRepresentation();
 				return;
 			}
 			y--;
