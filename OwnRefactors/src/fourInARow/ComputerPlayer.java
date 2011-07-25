@@ -7,41 +7,28 @@ public class ComputerPlayer {
 
 	private FourInARowVsComputer gg;
 	private int thisPlayer;
-	private int enemyPlayer;
 	private int[][] board;
 	int xMax, yMax;
 	private final int minValue = -10000, maxValue = 10000;
 	private int solution;
 	private final int searchDepth = 6;
 	private final int VALUE_QUAD = 1000, VALUE_TRIPPLE = 10, VALUE_PAIR = 2;
+	private int solutionValue;
 
 	public ComputerPlayer(FourInARowVsComputer gg, int nbPlayer) {
 		this.gg = gg;
 		this.thisPlayer = nbPlayer;
-		this.enemyPlayer = (thisPlayer + 1) % 2;
-		initializeBoardArray();
+		this.board = gg.getBoardArray();
 	}
 
 	public int getColumn() {
 		maxValueAB(thisPlayer, searchDepth, minValue, maxValue);
+		//maxValue(thisPlayer, searchDepth);
+		System.out.println(solutionValue);
 		return solution;
 	}
 
-	private void initializeBoardArray() {
-		xMax = gg.getNbHorzCells();
-		yMax = gg.getNbVertCells() - 1; // topmost row doesn't belong to game
-		board = new int[xMax][yMax];
-		for (int x = 0; x < xMax; x++)
-			for (int y = 0; y < yMax; y++)
-				board[x][y] = gg.getNoTokenRepresentation();
-	}
-
-	public void updateBoard(int x, int y, int player) {
-		this.board[x][y] = player;
-		printBoard(board);
-	}
-
-	int maxValueAB(int player, int depth, int alpha, int beta) {
+	private int maxValueAB(int player, int depth, int alpha, int beta) {
 		int otherPlayer = (player + 1) % 2;
 		int currentValue;
 		
@@ -54,12 +41,14 @@ public class ComputerPlayer {
 							beta);
 				else
 					currentValue = minValueAB(otherPlayer, 0, alpha, beta);
-				undoLastMove(x);
+				removeTopmostToken(x);
 				if (currentValue >= beta)
 					return beta;
 				if (currentValue > alpha) {
-					if (depth == this.searchDepth)
+					if (depth == this.searchDepth) {
 						this.solution = x;
+						solutionValue = alpha; //debug
+					}
 					alpha = currentValue;
 				}
 			}
@@ -67,26 +56,7 @@ public class ComputerPlayer {
 		return alpha;
 	} 
 	
-	private boolean insertStone(int player, int x) {
-		int y = 0;
-		while (y < yMax) {
-			if (board[x][y] == gg.getNoTokenRepresentation()) {
-				board[x][y] = player;
-				return true;
-			}
-			y++;
-		}
-		return false;
-	}
-
-	private boolean isBoardFull() {
-		for (int x = 0; x < xMax; x++)
-			if (board[x][yMax-1] == gg.getNoTokenRepresentation())
-				return false;
-		return false;
-	}
-
-	int minValueAB(int player, int depth, int alpha, int beta) {
+	private int minValueAB(int player, int depth, int alpha, int beta) {
 		int otherPlayer = (player + 1) % 2;
 		int currentValue;
 		if (depth == 0)
@@ -94,11 +64,10 @@ public class ComputerPlayer {
 		for (int x = 0; x < xMax; x++) {
 			if (insertStone(player, x)) {
 				if (!isBoardFull())
-					currentValue = maxValueAB(otherPlayer, depth - 1, alpha,
-							beta);
+					currentValue = maxValueAB(otherPlayer, depth - 1, alpha,beta);
 				else
 					currentValue = maxValueAB(otherPlayer, 0, alpha, beta);
-				undoLastMove(x);
+				removeTopmostToken(x);
 				if (currentValue <= alpha)
 					return alpha;
 				if (currentValue < beta)
@@ -108,7 +77,7 @@ public class ComputerPlayer {
 		return beta;
 	}
 
-	int maxValue(int player, int depth) {
+	private int maxValue(int player, int depth) {
 		int result = minValue;
 		int otherPlayer = (player + 1) % 2;
 		int currentValue;
@@ -116,21 +85,23 @@ public class ComputerPlayer {
 		for (int x = 0; x < xMax; x++) {
 			if (insertStone(player, x)) {
 				if (depth <= 0)
-					currentValue = (evaluateSituation(player));
+					currentValue = evaluateSituation(player);
 				else
 					currentValue = minValue(otherPlayer, depth - 1);
-				undoLastMove(x);
+				removeTopmostToken(x);
 				if (currentValue > result) {
 					result = currentValue;
-					if (depth == searchDepth)
+					if (depth == searchDepth) {
 						solution = x;
+						solutionValue = result; //debug
+					}
 				}
 			}
 		}
 		return result;
 	}
 
-	int minValue(int player, int depth) {
+	private int minValue(int player, int depth) {
 		int otherPlayer = (player + 1) % 2;
 		int result = maxValue;
 		int currentValue;
@@ -141,7 +112,7 @@ public class ComputerPlayer {
 					currentValue = evaluateSituation(player);
 				else
 					currentValue = maxValue(otherPlayer, depth - 1);
-				undoLastMove(x);
+				removeTopmostToken(x);
 				if (currentValue < result)
 					result = currentValue;
 			}
@@ -149,6 +120,11 @@ public class ComputerPlayer {
 		return result;
 	} 
 
+	/**
+	 * subject to change >.<
+	 * @param player
+	 * @return
+	 */
 	private int evaluateSituation(int player) {
 		int otherPlayer = (player + 1) % 2;
 		int result = 0;
@@ -166,25 +142,15 @@ public class ComputerPlayer {
 		result -= VALUE_PAIR * getLines(2, otherPlayer);
 		return result;
 	}
-
-	private void printBoard(int[][] board) {
-		String boardString = "";
-		for (int y = board[0].length - 1; y >= 0; y--) {
-			for (int x = 0; x < board.length; x++) {
-				boardString += "|" + board[x][y] + "|";
-			}
-			boardString += "\n";
-		}
-		System.out.println(boardString);
+	
+	
+	private int getLines(int length, int player) {
+		return (getHorizontalLines(length, player) + 
+				getVerticalLines(length, player) + 
+				getDiagonalLines(length, player));
 	}
 
-	int getLines(int length, int player) {
-		return (getHorizontalLines(length, player)
-				+ getVerticalLines(length, player) + getDiagonalLines(length,
-				player));
-	}
-
-	int getHorizontalLines(int length, int player) {
+	private int getHorizontalLines(int length, int player) {
 		int total_hits = 0;
 		if (length > 4 || length < 2)
 			return 0;
@@ -193,9 +159,11 @@ public class ComputerPlayer {
 			for (int x = 0; x <= xMax - length; x++) {
 				int hit = 1;
 				for (int t = 1; t < length; t++) {
-					if ((board[x + t][y] != board[x][y])
-							|| (board[x + t][y] != player))
+					if (board[x + t][y] != board[x][y]
+							|| board[x + t][y] != player) {
 						hit = 0;
+						break;
+					}
 				}
 				total_hits += hit;
 			}
@@ -203,19 +171,21 @@ public class ComputerPlayer {
 		return total_hits;
 	}
 
-	int getVerticalLines(int length, int player) {
+	private int getVerticalLines(int length, int player) {
 		int total_hits = 0;
 
 		if (length > 4 || length < 2)
 			return 0;
 
-		for (int x = 0; x < 7; x++) {
+		for (int x = 0; x < xMax; x++) {
 			for (int y = 0; y <= yMax - length; y++) {
 				int hit = 1;
 				for (int t = 1; t < length; t++) {
-					if ((board[x][y + t] != board[x][y])
-							|| (board[x][y + t] != player))
+					if (board[x][y + t] != board[x][y]
+							|| board[x][y + t] != player) {
 						hit = 0;
+						break;
+					}
 				}
 				total_hits += hit;
 			}
@@ -223,7 +193,7 @@ public class ComputerPlayer {
 		return total_hits;
 	}
 
-	int getDiagonalLines(int length, int color) {
+	private int getDiagonalLines(int length, int player) {
 		int total_hits = 0;
 
 		for (int x = 0; x <= (xMax - length); x++) {
@@ -231,7 +201,7 @@ public class ComputerPlayer {
 				int hit = 1;
 				for (int t = 1; t < length; t++) {
 					if ((board[x + t][y + t] != board[x][y])
-							|| (board[x + t][y + t] != color))
+							|| (board[x + t][y + t] != player))
 						hit = 0;
 				}
 				total_hits += hit;
@@ -243,7 +213,7 @@ public class ComputerPlayer {
 				int hit = 1;
 				for (int t = 1; t < length; t++) {
 					if ((board[x - t][y + t] != board[x][y])
-							|| (board[x - t][y + t] != color))
+							|| (board[x - t][y + t] != player))
 						hit = 0;
 				}
 				total_hits += hit;
@@ -251,12 +221,27 @@ public class ComputerPlayer {
 		}
 		return total_hits;
 	}
+	
+	private boolean isBoardFull() {
+		for (int x = 0; x < xMax; x++)
+			if (board[x][yMax-1] == gg.getNoTokenRepresentation())
+				return false;
+		return false;
+	}
 
-	/**
-	 * removes the topmost Token from the given column (only in Array, not in
-	 * GameGrid)
-	 */
-	private void undoLastMove(int column) {
+	private boolean insertStone(int player, int x) {
+		int y = 0;
+		while (y < yMax) {
+			if (board[x][y] == gg.getNoTokenRepresentation()) {
+				board[x][y] = player;
+				return true;
+			}
+			y++;
+		}
+		return false;
+	}
+
+	private void removeTopmostToken(int column) {
 		int y = yMax - 1;
 		while (y >= 0) {
 			if (board[column][y] != gg.getNoTokenRepresentation()) {
