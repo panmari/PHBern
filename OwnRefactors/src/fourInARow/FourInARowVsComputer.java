@@ -29,7 +29,7 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		setStatusText(moveInfo);
 		setTitle("Four In A Row (against Computer). Developed by Stefan Moser.");
 		arrayManager = new ArrayManager(this, nbHorzCells, nbVertCells - 1);
-		computerPlayer = new MiniMaxBot(arrayManager, 1); // menu for choosing?
+		computerPlayer = new DBot(arrayManager, 1); // menu for choosing?
 	}
 
 	public void reset() {
@@ -55,7 +55,6 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 
 	@Override
 	public boolean mouseEvent(GGMouse mouse) {
-
 		Location mouseLoc = toLocation(mouse.getX(), mouse.getY());
 		if (mouse.getEvent() == GGMouse.move) { // move active Token with mouse
 			if (!finished && activeToken.getX() != mouseLoc.x)
@@ -67,11 +66,8 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 			reset();
 			return true;
 		}
-
-		if (getOneActorAt(new Location(mouseLoc.x, 1)) == null) { // drop Token
-																	// if column
-																	// isn't
-																	// full
+		
+		if (isColumnNotFull(mouseLoc)) { 
 			activeToken.setActEnabled(true);
 			setMouseEnabled(false);
 			currentPlayer = (currentPlayer + 1) % 2;
@@ -80,6 +76,10 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		}
 
 		return true;
+	}
+
+	private boolean isColumnNotFull(Location mouseLoc) {
+		return getOneActorAt(new Location(mouseLoc.x, 1)) == null;
 	}
 
 	public int getPlayerOfTokenAt(int x, int y) {

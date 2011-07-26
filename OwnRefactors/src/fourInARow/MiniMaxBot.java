@@ -28,7 +28,7 @@ public class MiniMaxBot extends ComputerPlayer {
 		if (depth <= 0)
 			return evaluateSituation(player);
 		for (int x = 0; x < xMax; x++) {
-			if (insertStone(player, x)) {
+			if (insertToken(player, x)) {
 				if (!isBoardFull())
 					currentValue = minValueAB(otherPlayer, depth - 1, alpha, beta);
 				else
@@ -53,7 +53,7 @@ public class MiniMaxBot extends ComputerPlayer {
 		if (depth <= 0)
 			return evaluateSituation(player);
 		for (int x = 0; x < xMax; x++) {
-			if (insertStone(player, x)) {
+			if (insertToken(player, x)) {
 				if (!isBoardFull())
 					currentValue = maxValueAB(otherPlayer, depth - 1, alpha,beta);
 				else
@@ -74,7 +74,7 @@ public class MiniMaxBot extends ComputerPlayer {
 		int currentValue;
 
 		for (int x = 0; x < xMax; x++) {
-			if (insertStone(player, x)) {
+			if (insertToken(player, x)) {
 				if (depth <= 0)
 					currentValue = evaluateSituation(player);
 				else
@@ -97,7 +97,7 @@ public class MiniMaxBot extends ComputerPlayer {
 		int currentValue;
 
 		for (int x = 0; x < xMax; x++) {
-			if (insertStone(player, x)) {
+			if (insertToken(player, x)) {
 				if (depth <= 0)
 					currentValue = evaluateSituation(player);
 				else

@@ -25,6 +25,7 @@ public class ArrayManager {
 	}
 	
 	public void addToken(int x, int y, int player) {
+		assert (player == 1 || player == 0);
 		this.boardArray[x][y] = player;
 	}
 	

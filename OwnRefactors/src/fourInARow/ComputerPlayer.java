@@ -1,10 +1,8 @@
 package fourInARow;
 
-import ch.aplu.jgamegrid.Actor;
-import ch.aplu.jgamegrid.Location;
-
 public abstract class ComputerPlayer {
 
+	private final  boolean debug = true;
 	protected int thisPlayer;
 	private int[][] board;
 	protected int xMax, yMax;
@@ -104,12 +102,19 @@ public abstract class ComputerPlayer {
 				return false;
 		return false;
 	}
+	
+	protected boolean isBoardEmpty() {
+		for (int x = 0; x < xMax; x++)
+			if (board[x][0] != am.getNoTokenRepresentation())
+				return false;
+		return true;
+	}
 
-	protected boolean insertStone(int player, int x) {
+	protected boolean insertToken(int player, int x) {
 		int y = 0;
 		while (y < yMax) {
 			if (board[x][y] == am.getNoTokenRepresentation()) {
-				board[x][y] = player;
+				am.addToken(x, y, player);
 				return true;
 			}
 			y++;
@@ -126,6 +131,10 @@ public abstract class ComputerPlayer {
 			}
 			y--;
 		}
+	}
+	
+   	protected void debugInfo(String info) {
+		if (debug) System.out.println(info);		
 	}
 
 }
