@@ -29,7 +29,7 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		setStatusText(moveInfo);
 		setTitle("Four In A Row (against Computer). Developed by Stefan Moser.");
 		arrayManager = new ArrayManager(this, nbHorzCells, nbVertCells - 1);
-		computerPlayer = new ComputerPlayer(arrayManager, 1); // menu for choosing?
+		computerPlayer = new MiniMaxBot(arrayManager, 1); // menu for choosing?
 	}
 
 	public void reset() {
