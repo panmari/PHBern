@@ -8,7 +8,8 @@ public class ComputerPlayer {
 	private int thisPlayer;
 	private int[][] board;
 	private int xMax, yMax;
-	private final int minValue = -10000, maxValue = 10000;
+	//private final int minValue = -10000, maxValue = 10000;
+	private final int minValue = Integer.MIN_VALUE, maxValue = Integer.MAX_VALUE;
 	private int solution;
 	private final int searchDepth = 6;
 	private final int VALUE_QUAD = 1000, VALUE_TRIPPLE = 10, VALUE_PAIR = 2;
@@ -24,9 +25,8 @@ public class ComputerPlayer {
 	}
 
 	public int getColumn() {
-		maxValueAB(thisPlayer, searchDepth, minValue, maxValue);
+		System.out.println("value of solution: " + maxValueAB(thisPlayer, searchDepth, minValue, maxValue));
 		//maxValue(thisPlayer, searchDepth);
-		System.out.println(solutionValue);
 		am.printBoard();
 		return solution;
 	}
@@ -35,13 +35,12 @@ public class ComputerPlayer {
 		int otherPlayer = (player + 1) % 2;
 		int currentValue;
 		
-		if (depth == 0)
+		if (depth <= 0)
 			return evaluateSituation(player);
 		for (int x = 0; x < xMax; x++) {
 			if (insertStone(player, x)) {
 				if (!isBoardFull())
-					currentValue = minValueAB(otherPlayer, depth - 1, alpha,
-							beta);
+					currentValue = minValueAB(otherPlayer, depth - 1, alpha, beta);
 				else
 					currentValue = minValueAB(otherPlayer, 0, alpha, beta);
 				removeTopmostToken(x);
@@ -50,7 +49,7 @@ public class ComputerPlayer {
 				if (currentValue > alpha) {
 					if (depth == this.searchDepth) {
 						this.solution = x;
-						solutionValue = alpha; //debug
+						solutionValue = currentValue; //debug
 					}
 					alpha = currentValue;
 				}
@@ -62,7 +61,7 @@ public class ComputerPlayer {
 	private int minValueAB(int player, int depth, int alpha, int beta) {
 		int otherPlayer = (player + 1) % 2;
 		int currentValue;
-		if (depth == 0)
+		if (depth <= 0)
 			return evaluateSituation(player);
 		for (int x = 0; x < xMax; x++) {
 			if (insertStone(player, x)) {
