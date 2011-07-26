@@ -5,7 +5,7 @@ package fourInARow;
  * by a computerplayer to compute it's next move. Does nothing else but managing the board.
  * All game or strategic related data has to be computed in the computerPlayer!
  * 
- * TODO: should only give a copy of the board to the computerplayer, not the real one.
+ * TODO: should only give a copy of the board to the computer player, not the real one.
  * @author mazzzy
  *
  */
@@ -55,8 +55,11 @@ public class ArrayManager {
 	public void printBoard() {
 		String boardString = "";
 		for (int y = yMax - 1; y >= 0; y--) {
+			boardString += "|";
 			for (int x = 0; x < xMax; x++) {
-				boardString += "|" + boardArray[x][y] + "|";
+				if (boardArray[x][y] == noToken)
+					boardString += " |";
+				else boardString += boardArray[x][y] + "|";
 			}
 			boardString += "\n";
 		}
