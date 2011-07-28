@@ -30,23 +30,8 @@ public class Token extends Actor {
 			nb++;
 		} else { // token has arrived
 			setActEnabled(false);
+			gg.tokenArrived(getLocation(), player);
 			gg.updateArray(getX(), getY(), this);
-			if (gg.check4Win(getLocation())) {
-				gg.setStatusText((player == 0 ? "You won!" : "You lost!")
-						+ " Click on the board to play again.");
-				gg.getBg().drawText("Game Over", new Point(10, 55));
-				gg.finished = true;
-				gg.refresh();
-				Monitor.putSleep(2000); // wait for 2 seconds
-			} else {
-				// make new Token:
-				gg.activeToken = new Token((player + 1) % 2, gg);
-				gg.addActor(gg.activeToken, new Location(getX(), 0),
-						Location.SOUTH);
-			}
-			gg.setMouseEnabled(true);
-			if (this.player == 0 && !gg.finished) 
-				gg.computerMove();
 		}
 	}
 

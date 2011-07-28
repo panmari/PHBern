@@ -13,6 +13,5 @@ public class BG extends Actor
   public void reset()
   {
     this.setLocationOffset(new java.awt.Point(0, 4 * 70));
-    this.setOnTop();
   }
 }

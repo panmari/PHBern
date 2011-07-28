@@ -15,8 +15,8 @@ public class MiniMaxBot extends ComputerPlayer {
 
 	@Override
 	public int getColumn() {
-		System.out.println("value of solution: " + maxValueAB(thisPlayer, searchDepth, minValue, maxValue));
-		//maxValue(thisPlayer, searchDepth);
+		//System.out.println("value of solution: " + maxValueAB(thisPlayer, searchDepth, minValue, maxValue));
+		maxValue(thisPlayer, searchDepth);
 		am.printBoard();
 		return solution;
 	}
@@ -75,7 +75,7 @@ public class MiniMaxBot extends ComputerPlayer {
 
 		for (int x = 0; x < xMax; x++) {
 			if (insertToken(player, x)) {
-				if (depth <= 0)
+				if (depth <= 0 || isBoardFull() || getLines(4, otherPlayer) > 0)
 					currentValue = evaluateSituation(player);
 				else
 					currentValue = minValue(otherPlayer, depth - 1);
@@ -98,7 +98,7 @@ public class MiniMaxBot extends ComputerPlayer {
 
 		for (int x = 0; x < xMax; x++) {
 			if (insertToken(player, x)) {
-				if (depth <= 0)
+				if (depth <= 0 || isBoardFull() || getLines(4, otherPlayer) > 0)
 					currentValue = evaluateSituation(player);
 				else
 					currentValue = maxValue(otherPlayer, depth - 1);

@@ -1,6 +1,8 @@
 package fourInARow;
 
 import ch.aplu.jgamegrid.*;
+import ch.aplu.util.Monitor;
+
 import java.awt.*;
 import java.util.Arrays;
 
@@ -67,7 +69,7 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 			return true;
 		}
 		
-		if (isColumnNotFull(mouseLoc)) { 
+		if (isColumnNotFull(mouseLoc.x)) { 
 			activeToken.setActEnabled(true);
 			setMouseEnabled(false);
 			currentPlayer = (currentPlayer + 1) % 2;
@@ -78,8 +80,8 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		return true;
 	}
 
-	private boolean isColumnNotFull(Location mouseLoc) {
-		return getOneActorAt(new Location(mouseLoc.x, 1)) == null;
+	private boolean isColumnNotFull(int x) {
+		return getOneActorAt(new Location(x, 1)) == null;
 	}
 
 	public int getPlayerOfTokenAt(int x, int y) {
@@ -185,5 +187,37 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 
 	public void printBoard() {
 		arrayManager.printBoard();
+	}
+
+	public void tokenArrived(Location tokLoc, int player) {
+		if (check4Win(tokLoc)) {
+			gameOver((player == 0 ? "You won!" : "You lost!")
+				+ " Click on the board to play again.");
+		} else if (isBoardFull()){
+			gameOver("Tie! Click on the board to play again");
+		} else {
+			// make new Token:
+			activeToken = new Token((player + 1) % 2, this);
+			addActor(activeToken, new Location(getX(), 0),
+					Location.SOUTH);
+		}
+		setMouseEnabled(true);
+		if (player == 0 && !finished) 
+			computerMove();
+	}
+
+	private void gameOver(String reason) {
+		setStatusText(reason);
+		getBg().drawText("Game Over", new Point(10, 55));
+		finished = true;
+		refresh();
+		Monitor.putSleep(2000); // wait for 2 seconds
+	}
+	
+	private boolean isBoardFull() {
+		for (int x = 0; x < nbHorzCells; x++)
+			if (isColumnNotFull(x))
+				return false;
+		return true;
 	}
 }

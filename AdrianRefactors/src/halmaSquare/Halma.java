@@ -26,10 +26,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 		setTitle(players[currentPlayer] + " starts!"); 
 		show();
 	}
-	/* TASK:
-	 * this stuff is kinda tricky, but we can maybe single
-	 * out an easy task somewhere...
-	 */
+
 	public boolean mouseEvent(GGMouse mouse) {
 		Location clickLoc = toLocationInGrid(mouse.getX(), mouse.getY());
 
@@ -117,8 +114,6 @@ public class Halma extends GameGrid implements GGMouseListener {
 	 * Is especially easy on a square shaped board, because one players
 	 * startingLocations are the others endLocations
 	 * 
-	 * TODO: refactor, so the starting corner is defined by an Enum 
-	 * (or the game Color itself)
 	 */
 	private void initializePlayers() {
 		ArrayList<Location>[] startLocations = new ArrayList[nbPlayers];
@@ -126,14 +121,12 @@ public class Halma extends GameGrid implements GGMouseListener {
 		for (int i = 0; i < nbPlayers; i++)
 			startLocations[i] = new ArrayList<Location>();
 		
-		//----------TASK: this could be programmed by students ----------
 		for (int y = 0; y < 6; y++)
 			for (int x = 0; x < 6; x++)
 				if (x + y < 6 && !(x == 0 && y == 5) && !(x == 5 && y == 0)) {
 					startLocations[0].add(new Location(x, y));
 					startLocations[1].add(new Location(nbHorzCells - x - 1, nbHorzCells - y - 1));
 				}
-		// ------------------------------------------------------------
 		
 		this.players[0] = new HalmaPlayer(this, HalmaColor.Blue,
 				startLocations[0], startLocations[1]);
@@ -155,16 +148,16 @@ public class Halma extends GameGrid implements GGMouseListener {
 	}
 
 	/**
-	 *  Get all Locations between loc1 and loc2
+	 *  Get all Locations between loc1 and loc2 (without loc1 and loc2)
 	 *  
 	 *  This method only works properly if loc1 and loc2 have the same
 	 *  x or y coordinate, meaning they're orthogonally situated.
 	 */
 	private ArrayList<Location> getInterjacent(Location loc1, Location loc2) {
+		assert loc1.x == loc2.x || loc1.y == loc2.y;
+		
 		ArrayList<Location> interjacentLocs = new ArrayList<Location>();
 		
-		//---------- TASK: this could be programmed by students ----------
-
 		double dir = loc1.getDirectionTo(loc2);
 		Location tempLoc = loc1.getNeighbourLocation(dir);
 		
@@ -173,7 +166,6 @@ public class Halma extends GameGrid implements GGMouseListener {
 			interjacentLocs.add(tempLoc);
 			tempLoc = tempLoc.getNeighbourLocation(dir);
 		}
-		// ------------------------------------------------------------
 		
 		return interjacentLocs;
 	}
@@ -183,7 +175,6 @@ public class Halma extends GameGrid implements GGMouseListener {
 	 * Stops the game if so.
 	 */
 	private void checkGameOver() {
-		//TASK: quite a boring task... doesn't need much thinking
 		if(players[currentPlayer].isWinner()) {
 			 addActor(new Actor("sprites/you_win.gif"), new Location(10,11));
 		     setTitle(players[currentPlayer] + " wins!!!");

@@ -133,6 +133,10 @@ public abstract class ComputerPlayer {
 		}
 	}
 	
+	protected int other(int player) {
+		return (player + 1) % 2;
+	}
+	
    	protected void debugInfo(String info) {
 		if (debug) System.out.println(info);		
 	}

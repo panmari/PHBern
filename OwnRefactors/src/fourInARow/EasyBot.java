@@ -30,18 +30,7 @@ public class EasyBot extends ComputerPlayer {
 	    	
 	    }
 
-	    // Can enemy win in his next turn?
-	    for (int column = 0; column < xMax; column++)
-		{
-	    	if(insertToken(enemyPlayer, column)) {
-	    		if (getLines(4, enemyPlayer) > 0) {
-			        debugInfo("Found something that makes enemy win: " + column);
-			        removeTopmostToken(column);
-			        return column;
-	    		}
-	    	removeTopmostToken(column);
-	    	}
-	    }
+	    
 		return getRandomNotFullColumn();
 	}
 
