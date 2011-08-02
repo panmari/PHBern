@@ -2,7 +2,7 @@ package fourInARow;
 
 public class MMBot extends ComputerPlayer {
 
-	private final int searchDepth = 6;
+	private final int searchDepth = 8;
 	private final int VALUE_QUAD = 10000, VALUE_TRIPPLE = 100, VALUE_PAIR = 20;
 	private int solution;
 	private int VALUE_MIDDLE = 1;
@@ -14,45 +14,46 @@ public class MMBot extends ComputerPlayer {
 	@Override
 	public int getColumn() {
 		debugInfo("Start: \n" + am.getStringBoard(board));
-		int value = maxValue(searchDepth);
+		int value = maxValue(searchDepth, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		debugInfo(solution + " is worth: " + value);
 		return solution;
 	}
 
-	private int maxValue(int depth) {
-		int value, bestValue;
-		bestValue = Integer.MIN_VALUE;
+	private int maxValue(int depth, int alpha, int beta) {
+		int newAlpha;
 		for (int x = 0; x < xMax; x++) {
 			if (insertToken(thisPlayer, x)) {
 				if (depth <= 0 || isGameOver()) {
-					value = evaluateSituation(thisPlayer);
-				} else value = minValue(depth - 1);
+					newAlpha = evaluateSituation(thisPlayer);
+				} else newAlpha = minValue(depth - 1, alpha, beta);
 				removeTopmostToken(x);
-				if (value > bestValue) {
-					bestValue = value;
-					if (depth == searchDepth) {
+				if (newAlpha > alpha) { //maximizing
+					alpha = newAlpha;
+					if (depth == searchDepth)
 						solution = x;
-					}
 				}
+				if (newAlpha >= beta) //beta cut-off
+					return beta;
 			}
 		}
-		return bestValue;
+		return alpha;
 	}
 	
-	private int minValue(int depth) {
-		int value, bestValue;
-		bestValue = Integer.MAX_VALUE;
+	private int minValue(int depth, int alpha, int beta) {
+		int newBeta;
 		for (int x = 0; x < xMax; x++) {
 			if(insertToken(other(thisPlayer), x)){
 				if (depth <= 0 || isGameOver())
-					value = evaluateSituation(thisPlayer);
-				else value = maxValue(depth - 1);
+					newBeta = evaluateSituation(thisPlayer);
+				else newBeta = maxValue(depth - 1, alpha, beta);
 				removeTopmostToken(x);
-				if (value < bestValue)
-					bestValue = value;
+				if (newBeta < beta) //minimizing
+					beta = newBeta;
+				if (newBeta <= alpha) //alpha cut-off
+					return alpha; 
 			}
 		}
-		return bestValue;
+		return beta;
 	}
 	
 	private boolean isGameOver() {
