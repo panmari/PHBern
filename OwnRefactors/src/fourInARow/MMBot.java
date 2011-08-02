@@ -2,10 +2,11 @@ package fourInARow;
 
 public class MMBot extends ComputerPlayer {
 
-	private final int searchDepth = 8;
+	private final int searchDepth = 9;
 	private final int VALUE_QUAD = 10000, VALUE_TRIPPLE = 100, VALUE_PAIR = 20;
 	private int solution;
 	private int VALUE_MIDDLE = 1;
+	private long nrEvaluatedSituations;
 
 	public MMBot(ArrayManager am, int nbPlayer) {
 		super(am, nbPlayer);
@@ -15,7 +16,9 @@ public class MMBot extends ComputerPlayer {
 	public int getColumn() {
 		debugInfo("Start: \n" + am.getStringBoard(board));
 		int value = maxValue(searchDepth, Integer.MIN_VALUE, Integer.MAX_VALUE);
-		debugInfo(solution + " is worth: " + value);
+		debugInfo("Evaluated " + nrEvaluatedSituations + 
+				" best is: " + solution + " with worth: " + value);
+		nrEvaluatedSituations = 0;
 		return solution;
 	}
 
@@ -62,7 +65,8 @@ public class MMBot extends ComputerPlayer {
 
 	private int evaluateSituation(int player) {
 		int result = 0;
-
+		nrEvaluatedSituations++;
+		
 		if (getLines(4, other(player)) > 0)
 			return (-1) * VALUE_QUAD;
 
@@ -81,7 +85,6 @@ public class MMBot extends ComputerPlayer {
 
 		result -= VALUE_TRIPPLE * getLines(3, other(player));
 		result -= VALUE_PAIR * getLines(2, other(player));
-		
 		//debugInfo(am.getStringBoard(board) + player + " <-- player | value --> " + result);
 		return result;
 	}

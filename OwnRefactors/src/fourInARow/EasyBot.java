@@ -8,10 +8,8 @@ import java.util.Random;
  */
 public class EasyBot extends ComputerPlayer {
 
-	private int enemyPlayer;
 	public EasyBot(ArrayManager am, int nbPlayer) {
 		super(am, nbPlayer);
-		enemyPlayer = (thisPlayer + 1) % 2;
 	}
 
 	@Override
