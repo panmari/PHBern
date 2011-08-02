@@ -182,6 +182,7 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 	 */
 	public void updateArray(int x, int y, Token token) {
 		arrayManager.addToken(x, (nbVertCells - 1) - y, token.getPlayer());
+		computerPlayer.updateBoard();
 	}
 
 	public void printBoard() {

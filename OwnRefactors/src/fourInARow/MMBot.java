@@ -12,6 +12,7 @@ public class MMBot extends ComputerPlayer {
 
 	@Override
 	public int getColumn() {
+		updateBoard();
 		int value = alphabeta(searchDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, thisPlayer);
 		debugInfo(solution + " is worth: " + value);
 		am.printBoard();

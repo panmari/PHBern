@@ -11,14 +11,22 @@ public abstract class ComputerPlayer {
 	public ComputerPlayer(ArrayManager am, int nbPlayer) {
 		this.am = am;
 		this.thisPlayer = nbPlayer;
-		this.board = am.getBoardArray();
 		this.xMax = am.getxMax();
 		this.yMax = am.getyMax();
 	}
-
+	
+	/**
+	 * @return the column the token is placed
+	 */
 	abstract public int getColumn();
 	
-	protected int getLines(int length, int player) {
+	@ForTestingOnly
+	public void updateBoard() {
+		board = am.getBoardCopy();
+	}
+	
+	@ForTestingOnly
+	public int getLines(int length, int player) {
 		return (getHorizontalLines(length, player) + 
 				getVerticalLines(length, player) + 
 				getDiagonalLines(length, player));
