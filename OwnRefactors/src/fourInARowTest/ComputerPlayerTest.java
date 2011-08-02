@@ -45,6 +45,7 @@ public class ComputerPlayerTest {
 	public void shouldNotGet4InRow() {
 		am.addToken(0, 1, 0);
 		am.addToken(1, 2, 0);
+		cp.updateBoard();
 		am.addToken(2, 3, 1);
 		am.addToken(3, 4, 0);
 		cp.updateBoard();
@@ -57,6 +58,7 @@ public class ComputerPlayerTest {
 	public void shouldGet4InRowVertically() {
 		am.addToken(1, 1, 0);
 		am.addToken(1, 2, 0);
+		cp.updateBoard();
 		am.addToken(1, 3, 0);
 		am.addToken(1, 4, 0);
 		cp.updateBoard();

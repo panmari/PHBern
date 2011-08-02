@@ -54,18 +54,18 @@ public class ArrayManager {
 	 * Prints the given array in the console
 	 * @param board
 	 */
-	public void printBoard() {
+	public String getStringBoard(int[][] board) {
 		String boardString = "";
 		for (int y = yMax - 1; y >= 0; y--) {
 			boardString += "|";
 			for (int x = 0; x < xMax; x++) {
-				if (boardArray[x][y] == noToken)
+				if (board[x][y] == noToken)
 					boardString += " |";
-				else boardString += boardArray[x][y] + "|";
+				else boardString += board[x][y] + "|";
 			}
 			boardString += "\n";
 		}
-		System.out.println(boardString);
+		return boardString;
 	}
 
 	public void reset() {
@@ -87,9 +87,9 @@ public class ArrayManager {
 	@ForTestingOnly
 	public int[][] getBoardCopy() {
 		int[][] boardCopy = new int [xMax][yMax];
-		for (int x = 0; x < xMax; x++) {
-			boardCopy[x] = Arrays.copyOf(boardArray[x], yMax);
-		}
+		for (int x = 0; x < xMax; x++)
+			for (int y = 0; y < yMax; y++)
+				boardCopy[x][y] = boardArray[x][y];
 		return boardCopy;
 	}
 

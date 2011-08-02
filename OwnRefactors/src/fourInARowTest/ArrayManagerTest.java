@@ -59,5 +59,18 @@ public class ArrayManagerTest {
 			for (int pos : x)
 				assertEquals(am.getNoTokenRepresentation(), pos);
 	}
-
+	
+	@Test
+	public void copyStringShouldBeSameAsRealDeal() {
+		assertEquals(am.getStringBoard(am.getBoardCopy()), 
+				am.getStringBoard(am.getBoardArray()));
+		
+		am.addToken(1, 1, 1);
+		am.addToken(2, 1, 1);
+		am.addToken(3, 1, 1);
+		am.addToken(4, 1, 1);
+		
+		assertEquals(am.getStringBoard(am.getBoardCopy()), 
+				am.getStringBoard(am.getBoardArray()));
+	}
 }

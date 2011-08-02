@@ -31,7 +31,6 @@ public class Token extends Actor {
 		} else { // token has arrived
 			setActEnabled(false);
 			gg.tokenArrived(getLocation(), player);
-			gg.updateArray(getX(), getY(), this);
 		}
 	}
 

@@ -4,7 +4,7 @@ public abstract class ComputerPlayer {
 
 	private final  boolean debug = true;
 	protected int thisPlayer;
-	private int[][] board;
+	protected int[][] board;
 	protected int xMax, yMax;
 	protected ArrayManager am;
 
@@ -122,7 +122,7 @@ public abstract class ComputerPlayer {
 		int y = 0;
 		while (y < yMax) {
 			if (board[x][y] == am.getNoTokenRepresentation()) {
-				am.addToken(x, y, player);
+				board[x][y] = player;
 				return true;
 			}
 			y++;

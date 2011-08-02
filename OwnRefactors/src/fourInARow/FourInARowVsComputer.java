@@ -1,10 +1,14 @@
 package fourInARow;
 
-import ch.aplu.jgamegrid.*;
-import ch.aplu.util.Monitor;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Point;
 
-import java.awt.*;
-import java.util.Arrays;
+import ch.aplu.jgamegrid.GGMouse;
+import ch.aplu.jgamegrid.GGMouseListener;
+import ch.aplu.jgamegrid.GameGrid;
+import ch.aplu.jgamegrid.Location;
+import ch.aplu.util.Monitor;
 
 public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 	private int currentPlayer = 0;
@@ -178,18 +182,15 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 	 * 
 	 * @param x in the GameGrid
 	 * @param y in the GameGrid
-	 * @param token
+	 * @param player the owning player
 	 */
-	public void updateArray(int x, int y, Token token) {
-		arrayManager.addToken(x, (nbVertCells - 1) - y, token.getPlayer());
+	public void updateArray(int x, int y, int player) {
+		arrayManager.addToken(x, (nbVertCells - 1) - y, player);
 		computerPlayer.updateBoard();
 	}
 
-	public void printBoard() {
-		arrayManager.printBoard();
-	}
-
 	public void tokenArrived(Location tokLoc, int player) {
+		updateArray(tokLoc.x, tokLoc.y, player);
 		if (check4Win(tokLoc)) {
 			gameOver((player == 0 ? "You won!" : "You lost!")
 				+ " Click on the board to play again.");
