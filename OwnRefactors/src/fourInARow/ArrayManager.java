@@ -1,5 +1,7 @@
 package fourInARow;
 
+import java.util.Arrays;
+
 /**
  * Is responsible for the correct transition of the GameGrid into an Array which can be used
  * by a computerplayer to compute it's next move. Does nothing else but managing the board.
@@ -80,6 +82,15 @@ public class ArrayManager {
 	
 	public int getyMax() {
 		return yMax;
+	}
+	
+	@ForTestingOnly
+	public int[][] getBoardCopy() {
+		int[][] boardCopy = new int [xMax][yMax];
+		for (int x = 0; x < xMax; x++) {
+			boardCopy[x] = Arrays.copyOf(boardArray[x], yMax);
+		}
+		return boardCopy;
 	}
 
 }

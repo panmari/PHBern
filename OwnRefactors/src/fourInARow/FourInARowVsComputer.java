@@ -98,7 +98,6 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		return (checkVertically(col, row, 4) || checkHorizontally(col, row, 4)
 				|| checkDiagonally1(col, row, 4) || checkDiagonally2(col, row,
 				4));
-
 	}
 
 	private boolean checkDiagonally2(int col, int row, int nrOfTokens) {
