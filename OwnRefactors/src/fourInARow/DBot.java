@@ -122,4 +122,9 @@ public class DBot extends ComputerPlayer {
 		return -1; // this shouldn't happen
 	}
 
+	@Override
+	public String getName() {
+		return "DBot";
+	}
+
 }

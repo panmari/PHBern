@@ -1,16 +1,14 @@
 package fourInARow;
 
-public class MMBot extends ComputerPlayer {
+public class ImprovedMMBot extends ComputerPlayer {
 
 	private final int searchDepth = 9;
-	private final int VALUE_QUAD = 10000, VALUE_TRIPPLE = 100, 
-			VALUE_PAIR = 20, VALUE_MIDDLE = 1;
-	//columns left of the array get evaluated first:
-	private final int[] columnPreference = {3, 2, 4, 5, 1, 0, 6};
+	private final int VALUE_QUAD = 10000, VALUE_TRIPPLE = 100, VALUE_PAIR = 20;
 	private int solution;
+	private int VALUE_MIDDLE = 1;
 	private long nrEvaluatedSituations;
 
-	public MMBot(ArrayManager am, int nbPlayer) {
+	public ImprovedMMBot(ArrayManager am, int nbPlayer) {
 		super(am, nbPlayer);
 	}
 
@@ -36,7 +34,7 @@ public class MMBot extends ComputerPlayer {
 
 	private int maxValue(int depth, int alpha, int beta) {
 		int newAlpha;
-		for (int x: columnPreference) {
+		for (int x = 0; x < xMax; x++) {
 			if (insertToken(thisPlayer, x)) {
 				if (depth <= 0 || isGameOver()) {
 					newAlpha = evaluateSituation(thisPlayer);
@@ -56,7 +54,7 @@ public class MMBot extends ComputerPlayer {
 	
 	private int minValue(int depth, int alpha, int beta) {
 		int newBeta;
-		for (int x: columnPreference) {
+		for (int x = 0; x < xMax; x++) {
 			if(insertToken(other(thisPlayer), x)){
 				if (depth <= 0 || isGameOver())
 					newBeta = evaluateSituation(thisPlayer);
@@ -72,7 +70,7 @@ public class MMBot extends ComputerPlayer {
 	}
 	
 	private boolean isGameOver() {
-		return getLines(4, thisPlayer) > 0 || getLines(4, other(thisPlayer)) > 0 || isBoardFull();
+		return getLines(4, thisPlayer) + getLines(4, other(thisPlayer)) > 0 || isBoardFull();
 	}
 
 	private int evaluateSituation(int player) {
@@ -97,12 +95,29 @@ public class MMBot extends ComputerPlayer {
 
 		result -= VALUE_TRIPPLE * getLines(3, other(player));
 		result -= VALUE_PAIR * getLines(2, other(player));
-		//debugInfo(am.getStringBoard(board) + player + " <-- player | value --> " + result);
 		return result;
 	}
 	
-	@Override
-	public String getName() {
-		return "MMBot";
+	private boolean isWinPossibleWithThisToken(int player, int length, int x, int y) {
+		for (int j = 0; j < length; j++) {
+			int adjacentSameTokens = 1;
+			for (int i = 0; i < length; i++) {
+				if (isInBoard(x - i + j, y + i - j)
+						&& isOccupiedByPlayerOrEmpty(player, x - i + j, y + i -j)) {
+					adjacentSameTokens++;
+				}
+			}
+			if (adjacentSameTokens == length)
+				return true;
+		}
+		return false;
+	}
+
+	private boolean isInBoard(int x, int y) {
+		return x < xMax && x >= 0 && y < yMax && y > 0;
+	}
+	
+	private boolean isOccupiedByPlayerOrEmpty(int player, int x, int y) {
+		return board[x][y] == player || board[x][y] == am.getNoTokenRepresentation();
 	}
 }

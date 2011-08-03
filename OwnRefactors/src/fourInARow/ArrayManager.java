@@ -1,25 +1,17 @@
 package fourInARow;
 
-import java.util.Arrays;
-
 /**
  * Is responsible for the correct transition of the GameGrid into an Array which can be used
  * by a computerplayer to compute it's next move. Does nothing else but managing the board.
  * All game or strategic related data has to be computed in the computerPlayer!
- * 
- * TODO: should only give a copy of the board to the computer player, not the real one.
- * @author mazzzy
- *
  */
 public class ArrayManager {
 	
 	private final int noToken = 2;
 	private int[][] boardArray;
 	private int xMax, yMax;
-	private FourInARowVsComputer gg;
 	
-	public ArrayManager(FourInARowVsComputer gg, int xMax, int yMax) {
-		this.gg = gg;
+	public ArrayManager(int xMax, int yMax) {
 		this.xMax = xMax;
 		this.yMax = yMax;
 		boardArray = new int[xMax][yMax];

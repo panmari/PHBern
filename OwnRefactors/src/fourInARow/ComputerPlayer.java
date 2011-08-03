@@ -3,6 +3,7 @@ package fourInARow;
 public abstract class ComputerPlayer {
 
 	private final  boolean debug = true;
+	protected boolean firstMove = true;
 	protected int thisPlayer;
 	protected int[][] board;
 	protected int xMax, yMax;
@@ -148,5 +149,11 @@ public abstract class ComputerPlayer {
    	protected void debugInfo(String info) {
 		if (debug) System.out.println(info);		
 	}
+   	
+   	protected void reset() {
+   		firstMove = true;
+   	}
+
+	public abstract String getName();
 
 }

@@ -6,6 +6,8 @@ import java.awt.Point;
 
 import ch.aplu.jgamegrid.GGMouse;
 import ch.aplu.jgamegrid.GGMouseListener;
+import ch.aplu.jgamegrid.GGRadioButton;
+import ch.aplu.jgamegrid.GGRadioButtonGroup;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.util.Monitor;
@@ -33,9 +35,9 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		doRun();
 		addStatusBar(30);
 		setStatusText(moveInfo);
-		setTitle("Four In A Row (against Computer). Developed by Stefan Moser.");
-		arrayManager = new ArrayManager(this, nbHorzCells, nbVertCells - 1);
-		computerPlayer = new MMBot(arrayManager, 1); // menu for choosing?
+		setTitle("Four In A Row (against Computer)");
+		arrayManager = new ArrayManager(nbHorzCells, nbVertCells - 1);
+		new ComputerPlayerSelector(this, arrayManager, 1);
 	}
 
 	public void reset() {
@@ -47,10 +49,16 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		activeToken = new Token(currentPlayer, this);
 		addActor(activeToken, new Location(0, 0), Location.SOUTH);
 		arrayManager.reset();
+		computerPlayer.reset();
 		finished = false;
 	}
 
+	public void setComputerPlayer(ComputerPlayer cp) {
+		computerPlayer = cp;
+	}
+	
 	public void computerMove() {
+		setStatusText("Computer is loading.");
 		setMouseEnabled(false);
 		int col = computerPlayer.getColumn();
 		activeToken.setX(col);
