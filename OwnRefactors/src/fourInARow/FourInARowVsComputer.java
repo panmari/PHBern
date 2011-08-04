@@ -30,7 +30,6 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		addActor(new BG(), new Location(3, -1));
 		getBg().setFont(new Font("SansSerif", Font.BOLD, 48));
 		getBg().setPaintColor(Color.red);
-		show();
 		setSimulationPeriod(30);
 		doRun();
 		addStatusBar(30);
@@ -55,10 +54,11 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 
 	public void setComputerPlayer(ComputerPlayer cp) {
 		computerPlayer = cp;
+		show();
 	}
 	
 	public void computerMove() {
-		setStatusText("Computer is loading.");
+		setStatusText("Computer is loading...");
 		setMouseEnabled(false);
 		int col = computerPlayer.getColumn();
 		activeToken.setX(col);

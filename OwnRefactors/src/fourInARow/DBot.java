@@ -123,8 +123,8 @@ public class DBot extends ComputerPlayer {
 	}
 
 	@Override
-	public String getName() {
-		return "DBot";
+	public String getNameAndDescription() {
+		return "DBot - simple algorithm for determining good and bad columns";
 	}
 
 }

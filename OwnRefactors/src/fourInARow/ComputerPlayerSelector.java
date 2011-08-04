@@ -14,8 +14,9 @@ public class ComputerPlayerSelector extends GameGrid implements GGButtonListener
 	
 	public ComputerPlayerSelector(FourInARowVsComputer gg, 
 			ArrayManager am, int player) {
-		super(5, 5, 40, null, false);
+		super(15, 5, 30, null, false);
 		this.gg = gg;
+		setTitle("Select computer player");
 		availableCP.add(new EasyBot(am, player));
 		availableCP.add(new DBot(am, player));
 		availableCP.add(new MMBot(am, player));
@@ -28,14 +29,15 @@ public class ComputerPlayerSelector extends GameGrid implements GGButtonListener
 		rbGroup = new GGRadioButtonGroup();
 		int y = 0;
 		for (ComputerPlayer cp: availableCP) {
-			GGRadioButton rb = new GGRadioButton(cp.getName());
+			GGRadioButton rb = new GGRadioButton(cp.getNameAndDescription());
 			addActor(rb, new Location(0, y));
 			rbGroup.add(rb);
 			y++;
 		}
 		GGButton okBtn = new GGButton("sprites/ok.gif", true);
 		okBtn.addButtonListener(this);
-		addActor(okBtn, new Location(3, y));
+		addActor(okBtn, new Location(nbHorzCells - 2, y));
+		setNbVertCells(y + 2); //leaves black 
 	}
 	@Override
 	public void buttonClicked(GGButton button) {

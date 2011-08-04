@@ -47,7 +47,7 @@ public class EasyBot extends ComputerPlayer {
 	}
 
 	@Override
-	public String getName() {
-		return "EasyBot";
+	public String getNameAndDescription() {
+		return "EasyBot - plays completely random";
 	}
 }

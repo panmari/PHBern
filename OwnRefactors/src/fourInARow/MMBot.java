@@ -102,7 +102,7 @@ public class MMBot extends ComputerPlayer {
 	}
 	
 	@Override
-	public String getName() {
-		return "MMBot";
+	public String getNameAndDescription() {
+		return "MMBot - computes best outcome with minmax-algorithm.";
 	}
 }

@@ -154,6 +154,6 @@ public abstract class ComputerPlayer {
    		firstMove = true;
    	}
 
-	public abstract String getName();
+	public abstract String getNameAndDescription();
 
 }
