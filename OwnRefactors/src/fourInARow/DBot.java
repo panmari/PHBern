@@ -78,7 +78,7 @@ public class DBot extends ComputerPlayer {
 				if (insertToken(enemyPlayer, possibleColumn)) {
 					if (getLines(4, enemyPlayer) > 0) {
 						posSolu.remove();
-						lastResort.remove(possibleColumn);
+						lastResort.remove(new Integer(possibleColumn));
 						debugInfo("removed solutionzzz, left is: " + possibleSolutions);
 					}
 					removeTopmostToken(possibleColumn);

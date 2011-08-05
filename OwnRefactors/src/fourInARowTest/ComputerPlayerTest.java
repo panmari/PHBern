@@ -1,5 +1,6 @@
 package fourInARowTest;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -15,8 +16,9 @@ public class ComputerPlayerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		am = new ArrayManager(null, 7, 6);
+		am = new ArrayManager(7, 6);
 		cp = new MMBot(am, 0);
+		cp.updateBoard();
 	}
 
 	@Test
@@ -77,5 +79,10 @@ public class ComputerPlayerTest {
 		assertEquals(1, cp.getLines(4, 1));
 		assertEquals(2, cp.getLines(3, 1));
 		assertEquals(3, cp.getLines(2, 1));
+	}
+	
+	@Test
+	public void initializedBoardShouldBeEmpty() {
+		assertTrue(cp.isBoardEmpty());
 	}
 }

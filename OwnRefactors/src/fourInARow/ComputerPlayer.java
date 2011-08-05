@@ -112,7 +112,8 @@ public abstract class ComputerPlayer {
 		return false;
 	}
 	
-	protected boolean isBoardEmpty() {
+	@ForTestingOnly
+	public boolean isBoardEmpty() {
 		for (int x = 0; x < xMax; x++)
 			if (board[x][0] != am.getNoTokenRepresentation())
 				return false;

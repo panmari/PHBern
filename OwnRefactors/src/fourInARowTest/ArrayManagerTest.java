@@ -14,7 +14,7 @@ public class ArrayManagerTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		am = new ArrayManager(null, 7, 6);
+		am = new ArrayManager(7, 6);
 		board = am.getBoardArray();
 	}
 
