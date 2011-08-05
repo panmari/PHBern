@@ -21,6 +21,8 @@ public abstract class ComputerPlayer {
 	 */
 	abstract public int getColumn();
 	
+	public abstract String getNameAndDescription();
+
 	@ForTestingOnly
 	public void updateBoard() {
 		board = am.getBoardCopy();
@@ -154,7 +156,5 @@ public abstract class ComputerPlayer {
    	protected void reset() {
    		firstMove = true;
    	}
-
-	public abstract String getNameAndDescription();
 
 }

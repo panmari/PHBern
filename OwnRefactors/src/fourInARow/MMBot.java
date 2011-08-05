@@ -30,10 +30,6 @@ public class MMBot extends ComputerPlayer {
 		}
 	}
 
-	private int randomMiddleColumn() {
-		return (int) (Math.random()*3) - 1 + (int) (xMax/2);
-	}
-
 	private int maxValue(int depth, int alpha, int beta) {
 		int newAlpha;
 		for (int x: columnPreference) {
@@ -71,10 +67,6 @@ public class MMBot extends ComputerPlayer {
 		return beta;
 	}
 	
-	private boolean isGameOver() {
-		return getLines(4, thisPlayer) > 0 || getLines(4, other(thisPlayer)) > 0 || isBoardFull();
-	}
-
 	private int evaluateSituation(int player) {
 		int result = 0;
 		nrEvaluatedSituations++;
@@ -101,6 +93,14 @@ public class MMBot extends ComputerPlayer {
 		return result;
 	}
 	
+	private boolean isGameOver() {
+		return getLines(4, thisPlayer) > 0 || getLines(4, other(thisPlayer)) > 0 || isBoardFull();
+	}
+
+	private int randomMiddleColumn() {
+		return (int) (Math.random()*3) - 1 + (int) (xMax/2);
+	}
+
 	@Override
 	public String getNameAndDescription() {
 		return "MMBot - computes best outcome with minmax-algorithm.";

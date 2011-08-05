@@ -39,34 +39,11 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		new ComputerPlayerSelector(this, arrayManager, 1);
 	}
 
-	public void reset() {
-		getBg().clear();
-		removeActors(Token.class);
-		currentPlayer = 0; // Human player always starts (bc i'm lazy)
-		setStatusText("Game reset! " + (currentPlayer == 0 ? "Yellow" : "Red")
-				+ " player begins.");
-		activeToken = new Token(currentPlayer, this);
-		addActor(activeToken, new Location(0, 0), Location.SOUTH);
-		arrayManager.reset();
-		computerPlayer.reset();
-		finished = false;
-	}
-
 	public void setComputerPlayer(ComputerPlayer cp) {
 		computerPlayer = cp;
 		show();
 	}
 	
-	public void computerMove() {
-		setStatusText("Computer is loading...");
-		setMouseEnabled(false);
-		int col = computerPlayer.getColumn();
-		activeToken.setX(col);
-		activeToken.setActEnabled(true);
-		currentPlayer = (currentPlayer + 1) % 2; // change Player
-		setStatusText(moveInfo);
-	}
-
 	@Override
 	public boolean mouseEvent(GGMouse mouse) {
 		Location mouseLoc = toLocation(mouse.getX(), mouse.getY());
@@ -92,11 +69,7 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		return true;
 	}
 
-	private boolean isColumnNotFull(int x) {
-		return getOneActorAt(new Location(x, 1)) == null;
-	}
-
-	public int getPlayerOfTokenAt(int x, int y) {
+	private int getPlayerOfTokenAt(int x, int y) {
 		Location loc = new Location(x, y);
 		if (getOneActorAt(loc) == null)
 			return arrayManager.getNoTokenRepresentation();
@@ -104,7 +77,7 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 			return ((Token) getOneActorAt(loc)).getPlayer();
 	}
 
-	public boolean check4Win(Location loc) {
+	private boolean check4Win(Location loc) {
 		int col = loc.x;
 		int row = loc.y;
 		return (checkVertically(col, row, 4) || checkHorizontally(col, row, 4)
@@ -181,8 +154,32 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		return (adjacentSameTokens >= nrOfTokens);
 	}
 
+	private boolean isColumnNotFull(int x) {
+		return getOneActorAt(new Location(x, 1)) == null;
+	}
+
+	private boolean isBoardFull() {
+		for (int x = 0; x < nbHorzCells; x++)
+			if (isColumnNotFull(x))
+				return false;
+		return true;
+	}
+
 	public static void main(String[] args) {
 		new FourInARowVsComputer();
+	}
+
+	public void reset() {
+		getBg().clear();
+		removeActors(Token.class);
+		currentPlayer = 0; // Human player always starts (bc i'm lazy)
+		setStatusText("Game reset! " + (currentPlayer == 0 ? "Yellow" : "Red")
+				+ " player begins.");
+		activeToken = new Token(currentPlayer, this);
+		addActor(activeToken, new Location(0, 0), Location.SOUTH);
+		arrayManager.reset();
+		computerPlayer.reset();
+		finished = false;
 	}
 
 	/**
@@ -215,18 +212,21 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 			computerMove();
 	}
 
+	private void computerMove() {
+		setStatusText("Computer is loading...");
+		setMouseEnabled(false);
+		int col = computerPlayer.getColumn();
+		activeToken.setX(col);
+		activeToken.setActEnabled(true);
+		currentPlayer = (currentPlayer + 1) % 2; // change Player
+		setStatusText(moveInfo);
+	}
+
 	private void gameOver(String reason) {
 		setStatusText(reason);
 		getBg().drawText("Game Over", new Point(10, 55));
 		finished = true;
 		refresh();
 		Monitor.putSleep(2000); // wait for 2 seconds
-	}
-	
-	private boolean isBoardFull() {
-		for (int x = 0; x < nbHorzCells; x++)
-			if (isColumnNotFull(x))
-				return false;
-		return true;
 	}
 }
