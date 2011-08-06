@@ -26,7 +26,7 @@ public class CardTable extends CardGame
   protected static Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
   private Card uglyCard = new Card(deck, Suit.SPADES, Rank.JACK);
   private Card uglyCardTwin = new Card(deck, Suit.HEARTS, Rank.JACK);
-  private final int nbPlayers = SchwarzPeter.nbPlayers;
+  private final int nbPlayers = BauernKriegTcpMain.nbPlayers;
   private final int handWidth = 300;
   private final Location textLocation = new Location(300, 350);
   private final Location[] handLocations =
@@ -67,8 +67,7 @@ public class CardTable extends CardGame
     for (int i = 0; i < nbPlayers; i++)
       this.playerNames[i] = playerNames[i];
     this.myPlayerId = myPlayerId;
-    setTitle("My player's name: " + playerNames[myPlayerId]);
-    // TODO: add blinkingNames
+    setTitle("TCP Bauernkrieg ");
     for (int i = 0; i < playerNames.length; i++)
       blinkingNames[i] = new BlinkingName(playerNames[i]);
   }

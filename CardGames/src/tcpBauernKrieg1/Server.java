@@ -16,13 +16,13 @@ public class Server extends TcpBridge implements TcpBridgeListener
   private ArrayList<String> playerList = new ArrayList<String>();
   private ArrayList<Integer> droppedOutList = new ArrayList<Integer>();
   private int clientCount = 0;
-  private int nbPlayers = SchwarzPeter.nbPlayers;
+  private int nbPlayers = BauernKriegTcpMain.nbPlayers;
   private int nbReady = 0;
   private int currentPlayerId = nbPlayers - 1;
 
   public Server()
   {
-    super(SchwarzPeter.sessionID, SchwarzPeter.serverName);
+    super(BauernKriegTcpMain.sessionID, BauernKriegTcpMain.serverName);
     addTcpBridgeListener(this);
     ArrayList<String> connectList = connectToRelay(6000);
     if (connectList.isEmpty())
@@ -31,7 +31,7 @@ public class Server extends TcpBridge implements TcpBridgeListener
       System.out.println("Connection to relay failed");
       return;
     }
-    if (!connectList.get(0).equals(SchwarzPeter.serverName))
+    if (!connectList.get(0).equals(BauernKriegTcpMain.serverName))
     {
       System.out.println("A server instance is already running.");
       disconnect();
@@ -148,7 +148,7 @@ public class Server extends TcpBridge implements TcpBridgeListener
 
   private void sendDeck()
   {
-    Hand fullHand = CardTable.deck.toHand(!SchwarzPeter.debug);
+    Hand fullHand = CardTable.deck.toHand(!BauernKriegTcpMain.debug);
     int[] cardNumbers = new int[fullHand.getNumberOfCards()];
     for (int i = 0; i < fullHand.getNumberOfCards(); i++)
       cardNumbers[i] = fullHand.get(i).getCardNumber();

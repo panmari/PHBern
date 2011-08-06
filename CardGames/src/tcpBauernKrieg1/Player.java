@@ -11,7 +11,7 @@ import java.util.*;
 
 public class Player extends TcpAgent
 {
-  private int nbPlayers = SchwarzPeter.nbPlayers;
+  private int nbPlayers = BauernKriegTcpMain.nbPlayers;
   private Server cardServer;
   private CardTable cardTable;
   private String[] playerNames = null;
@@ -94,14 +94,14 @@ public class Player extends TcpAgent
 
   public Player()
   {
-    super(SchwarzPeter.sessionID, SchwarzPeter.serverName);
+    super(BauernKriegTcpMain.sessionID, BauernKriegTcpMain.serverName);
     this.nbPlayers = nbPlayers;
     addTcpAgentListener(new MyTcpAgentAdapter());
     ModelessOptionPane mop = new ModelessOptionPane("Trying to connect to relay...");
     cardServer = new Server();
     TcpTools.delay(2000); // Let server come-up
 
-    ArrayList<String> connectList = connectToRelay(SchwarzPeter.playerName, 6000);
+    ArrayList<String> connectList = connectToRelay(BauernKriegTcpMain.playerName, 6000);
     if (connectList.isEmpty())
     {
       mop.setText("Connection to relay failed. Terminating now...");

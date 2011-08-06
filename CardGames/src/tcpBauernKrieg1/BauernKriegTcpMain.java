@@ -6,20 +6,18 @@ package tcpBauernKrieg1;
 
 import javax.swing.JOptionPane;
 
-public class SchwarzPeter
+public class BauernKriegTcpMain
 {
   protected static final boolean debug = true;
 
-  private static final String sessionPrefix = "BackPeter &4-;>**&/**??==";
+  private static final String sessionPrefix = "hyakujounosensou++";
   protected static final String serverName = "CardServer";
   protected static String sessionID;
   protected static String playerName;
-  protected static int nbPlayers;
+  protected static final int nbPlayers = 2;
 
   public static void main(String[] args)
   {
-    nbPlayers = debug ? 4
-      : requestNumber("Enter number of players (2..4):");
     String roomName = debug ? "123"
       : requestEntry("Enter a unique room name (ASCII 3..15 chars):");
     sessionID = sessionPrefix + roomName;
@@ -38,24 +36,5 @@ public class SchwarzPeter
         System.exit(0);
     }
     return entry.trim();
-  }
-
-  private static int requestNumber(String prompt)
-  {
-    while (true)
-    {
-      String entry = JOptionPane.showInputDialog(null, prompt, "");
-      if (entry == null)
-        System.exit(0);
-      try
-      {
-        int nb = Integer.parseInt(entry);
-        if (nb >= 2 && nb <= 4)
-          return nb;
-      }
-      catch (NumberFormatException ex)
-      {
-      }
-    }
   }
 }
