@@ -2,9 +2,8 @@ package fourInARow;
 
 // Token.java
 
-import java.awt.Point;
-import ch.aplu.jgamegrid.*;
-import ch.aplu.util.Monitor;
+import ch.aplu.jgamegrid.Actor;
+import ch.aplu.jgamegrid.Location;
 
 public class Token extends Actor {
 	private int player, nb;

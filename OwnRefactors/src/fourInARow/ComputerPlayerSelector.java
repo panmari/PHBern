@@ -17,12 +17,16 @@ public class ComputerPlayerSelector extends GameGrid implements GGButtonListener
 		super(15, 5, 30, null, false);
 		this.gg = gg;
 		setTitle("Select computer player");
-		availableCP.add(new EasyBot(am, player));
-		availableCP.add(new DBot(am, player));
-		availableCP.add(new MMBot(am, player));
+		createComputerPlayers(am, player);
 		createRadioButtons();
 		setBgColor(Color.white);
 		show();
+	}
+
+	private void createComputerPlayers(ArrayManager am, int player) {
+		availableCP.add(new EasyBot(am, player));
+		availableCP.add(new DBot(am, player));
+		availableCP.add(new MMBot(am, player));
 	}
 	
 	private void createRadioButtons() {
@@ -46,7 +50,8 @@ public class ComputerPlayerSelector extends GameGrid implements GGButtonListener
 		for (GGRadioButton rb: rbGroup.getButtons()) {
 			if (rb == rbGroup.getSelectedButton()) {
 				gg.setComputerPlayer(availableCP.get(counter));
-				hide();
+				gg.show();
+				this.hide();
 			}
 			counter++;
 		}

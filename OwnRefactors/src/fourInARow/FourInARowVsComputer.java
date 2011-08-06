@@ -41,7 +41,6 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 
 	public void setComputerPlayer(ComputerPlayer cp) {
 		computerPlayer = cp;
-		show();
 	}
 	
 	@Override

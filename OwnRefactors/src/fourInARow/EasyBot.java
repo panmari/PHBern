@@ -3,8 +3,7 @@ package fourInARow;
 import java.util.Random;
 
 /**
- * Plays randomly apart from the two obvious cases.
- *
+ * Plays randomly apart from the obvious.
  */
 public class EasyBot extends ComputerPlayer {
 
@@ -27,8 +26,6 @@ public class EasyBot extends ComputerPlayer {
 	    	}
 	    	
 	    }
-
-	    
 		return getRandomNotFullColumn();
 	}
 
