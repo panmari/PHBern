@@ -43,11 +43,11 @@ public class Player extends TcpAgent
           cardTable.initHands(cardNumbers);
           break;
 
-        case Command.TRANSFER_TO_PLAYER:
+        case Command.TRANSFER_TO_BID_OF_PLAYER:
           int sourceId = data[1];
           int destId = data[2];
           int cardNb = data[3];
-          cardTable.transferToPlayer(sourceId, destId, cardNb);
+          cardTable.transferToBidOfPlayer(sourceId, destId, cardNb);
           if (cardTable.getMyNumberOfCards() == 0)
           {
             sendCommand("", Command.DROP_OUT, myPlayerId);

@@ -114,12 +114,12 @@ public class Server extends TcpBridge implements TcpBridgeListener
         }
         break;
 
-      case Command.TRANSFER_TO_PLAYER:
+      case Command.TRANSFER_TO_BID_OF_PLAYER:
         for (String player : playerList)
         {
           if (!player.equals(source))
           {
-            sendCommand("", player, Command.TRANSFER_TO_PLAYER,
+            sendCommand("", player, Command.TRANSFER_TO_BID_OF_PLAYER,
               indata[1], indata[2], indata[3]);
             System.out.println("Sent TRANSFER_TO_PLAYER to " + player);
           }

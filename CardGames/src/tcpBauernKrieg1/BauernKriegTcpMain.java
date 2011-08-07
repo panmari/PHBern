@@ -10,7 +10,7 @@ public class BauernKriegTcpMain
 {
   protected static final boolean debug = true;
 
-  private static final String sessionPrefix = "hyakujounosensou++";
+  private static final String sessionPrefix = "hyakushou no sensou++";
   protected static final String serverName = "CardServer";
   protected static String sessionID;
   protected static String playerName;

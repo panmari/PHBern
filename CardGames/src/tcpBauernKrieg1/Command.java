@@ -11,7 +11,7 @@ public interface Command
   int DISCONNECT = 2;
   int DECK_DATA = 3;
   int READY_TO_PLAY = 4;
-  int TRANSFER_TO_PLAYER = 5;
+  int TRANSFER_TO_BID_OF_PLAYER = 5;
   int TRANSFER_TO_STOCK = 6;
   int MY_TURN = 7;
   int OTHER_TURN = 8;

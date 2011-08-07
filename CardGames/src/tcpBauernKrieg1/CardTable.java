@@ -13,50 +13,44 @@ import java.awt.*;
 
 public class CardTable extends CardGame
 {
-  public static enum Suit
-  {
-    SPADES, HEARTS
-  }
+	public enum Suit {
+		KREUZ, HERZ, KARO, PIK
+	}
 
-  public static enum Rank
-  {
-    ACE, KING, QUEEN, JACK, TEN, NINE, EIGHT, SEVEN, SIX
-  }
+	public enum Rank {
+		ASS, KOENIG, DAME, BAUER, ZEHN, NEUN, ACHT, SIEBEN, SECHS
+	}
   //
   protected static Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
-  private Card uglyCard = new Card(deck, Suit.SPADES, Rank.JACK);
-  private Card uglyCardTwin = new Card(deck, Suit.HEARTS, Rank.JACK);
   private final int nbPlayers = BauernKriegTcpMain.nbPlayers;
   private final int handWidth = 300;
   private final Location textLocation = new Location(300, 350);
   private final Location[] handLocations =
   {
     new Location(300, 520),
-    new Location(75, 300),
-    new Location(300, 80),
-    new Location(525, 300)
+    new Location(300, 80)
+  };
+  private final Location[] bidLocations = {
+		  new Location(300, 400),
+		  new Location(300, 200)
   };
   private final Location[] stockLocations =
   {
     new Location(520, 540),
-    new Location(60, 520),
     new Location(80, 50),
-    new Location(540, 80),
   };
   private final Location[] nameLocations =
   {
     new Location(300, 440),
-    new Location(150, 300),
-    new Location(300, 160),
-    new Location(450, 300)
+    new Location(300, 160)
   };
   private Hand[] hands = new Hand[nbPlayers];
+  private Hand[] bids = new Hand[nbPlayers];
   private Hand[] stocks = new Hand[nbPlayers];
   private String[] playerNames;
   private TcpAgent agent;
   private int myPlayerId;
   private boolean isMyTurn = false;
-  // TODO: add blinkingNames
   private BlinkingName[] blinkingNames = new BlinkingName[nbPlayers];
 
   public CardTable(TcpAgent agent, String[] playerNames, int myPlayerId)
@@ -77,13 +71,15 @@ public class CardTable extends CardGame
     for (int i = 0; i < nbPlayers; i++)
     {
       stocks[i] = new Hand(deck);
+      bids[i] = new Hand(deck);
       hands[i] = new Hand(deck);
       hands[i].setTouchEnabled(true);
       RowLayout handLayout = new RowLayout(handLocations[i], handWidth);
-      handLayout.setRotationAngle(90 * i);
+      handLayout.setRotationAngle(180 * i);
       hands[i].setView(this, handLayout);
+      bids[i].setView(this, handLayout);
       StackLayout stockLayout = new StackLayout(stockLocations[i]);
-      stockLayout.setRotationAngle(90 * i);
+      stockLayout.setRotationAngle(180 * i);
       stocks[i].setView(this, stockLayout);
       addActor(blinkingNames[toPlayerId(i)], nameLocations[i]);
       // TODO: add blinkingNames
@@ -99,38 +95,49 @@ public class CardTable extends CardGame
         {
           public void leftDoubleClicked(Card card)
           {
-            // Search anti-clockwise the id of the first hand that is not empty
-            int rightHandId = nbPlayers - 1;
-            while (hands[rightHandId].getNumberOfCards() == 0)
-              rightHandId--;
-
-            // Quit if not the hand of the clicked card
-            if (rightHandId != toHandId(getPlayerId(card)))
+            // Quit if not clicked on own cards
+            if (myPlayerId != getPlayerId(card))
               return;
 
             if (!isMyTurn)
               return;
             isMyTurn = false;
 
-            agent.sendCommand("", Command.TRANSFER_TO_PLAYER,
+            agent.sendCommand("", Command.TRANSFER_TO_BID_OF_PLAYER,
               getPlayerId(card), myPlayerId, card.getCardNumber());
 
-            // Transfer double-clicked card to own hand
+            // Transfer double-clicked card to own bid
             card.setVerso(false);
-            card.getHand().setTargetArea(new TargetArea(handLocations[0]));
-            card.transfer(hands[0], true);
+            card.getHand().setTargetArea(new TargetArea(bidLocations[0]));
+            card.transfer(bids[0], true);
 
-            // Search and transfer pairs to stock
-            for (Card c : searchPairs(hands[0]))
-            {
-              agent.sendCommand("", Command.TRANSFER_TO_STOCK, myPlayerId,
-                c.getCardNumber());
-
-              hands[0].setTargetArea(new TargetArea(stockLocations[0]));
-              c.transfer(stocks[0], false);
-            }
-            hands[0].draw();
-            agent.sendCommand("", Command.TRANSFER_TO_STOCK, myPlayerId, -1);
+            //dispose of cards if it applies:
+            if ((bids[0].getNumberOfCards() + bids[1].getNumberOfCards()) % 2 == 0) {
+				if (isSameRank() && !hands[1].isEmpty()) {
+					for (int i = 0; i < nbPlayers; i++) {
+						Card c = hands[i].getLast();
+						//impossible it works that easily >.<
+						c.transfer(bids[i], true);
+						/* 
+						 * actually, it doesn't matter who puts his card 
+						 * first onto the bid, As long as both player do it. 
+						 * It could work like that!
+						 */
+						agent.sendCommand("", Command.TRANSFER_TO_BID_OF_PLAYER,
+								getPlayerId(card), myPlayerId, card.getCardNumber());
+					}
+				} else {
+					setStatusText("Evaluating round...");
+					agent.sendCommand("", Command.CARDS_TO_WINNER);
+					transferToWinner();
+				}
+			} else agent.sendCommand("", CardPlayer.Command.READY_TO_PLAY);
+				
+				
+			if (hands[currentPlayerIndex].isEmpty()) {
+				//gameOver();
+				System.out.println("game over");
+			}
             if (hands[0].getNumberOfCards() == 0)
             {
               agent.sendCommand("", Command.DROP_OUT, myPlayerId);
@@ -140,6 +147,14 @@ public class CardTable extends CardGame
             }
             agent.sendCommand("", Command.READY_TO_PLAY);
             checkOver();
+          }
+          
+          private boolean isSameRank() {
+				if (bids[0].getLast() == null || bids[1].getLast() == null)
+					return false;
+				else
+					return bids[0].getLast().getRank() == bids[1].getLast()
+							.getRank();
           }
         });
       }
@@ -151,8 +166,8 @@ public class CardTable extends CardGame
     for (int i = 0; i < cardNumbers.length; i++)
     {
       Card card = new Card(deck, cardNumbers[i]);
-      if (card.equals(uglyCardTwin))
-        continue;
+//      if (card.equals(uglyCardTwin))
+//        continue;
       if (toHandId(playerId) != 0)
         card.setVerso(true);
       hands[toHandId(playerId)].insert(card, true);
@@ -201,13 +216,13 @@ public class CardTable extends CardGame
     }
     return list;
   }
-
-  protected void transferToPlayer(int sourceId, int destId, int cardNb)
+  
+  protected void transferToBidOfPlayer(int sourceId, int destId, int cardNb)
   {
     Hand src = hands[toHandId(sourceId)];
-    Hand dst = hands[toHandId(destId)];
+    Hand dst = bids[toHandId(destId)];
     Card card = src.getCard(cardNb);
-    src.setTargetArea(new TargetArea(handLocations[toHandId(destId)]));
+    src.setTargetArea(new TargetArea(bidLocations[toHandId(destId)]));
     card.transfer(dst, true);
     card.setVerso(true);
   }
@@ -242,6 +257,10 @@ public class CardTable extends CardGame
     return hands[toHandId(myPlayerId)].getNumberOfCards();
   }
 
+  /**
+   * TODO: rewrite this!
+   * @return
+   */
   protected boolean checkOver()
   {
     for (int i = 0; i < nbPlayers; i++)

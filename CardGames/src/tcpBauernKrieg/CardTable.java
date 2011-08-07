@@ -5,7 +5,6 @@ package tcpBauernKrieg;
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
 import ch.aplu.tcp.*;
-import ch.aplu.util.Monitor;
 
 public class CardTable extends CardGame {
 	public enum Suit {
