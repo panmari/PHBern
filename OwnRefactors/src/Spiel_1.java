@@ -23,7 +23,7 @@ public class Spiel_1 extends GameGrid implements GGActorCollisionListener, GGKey
 		black.addActorCollisionListener(this);
 		white.addCollisionActor(green);
 		white.addActorCollisionListener(this);
-
+		addKeyListener(this);
 		show();
 
 		int nbPunkte = 0;
@@ -35,7 +35,6 @@ public class Spiel_1 extends GameGrid implements GGActorCollisionListener, GGKey
 	public int collide(Actor actor1, Actor actor2) { // Kolisionsverhalten
 		actor1.setDirection(actor1.getDirection() + 180);
 		actor2.setDirection(actor2.getDirection() + 180);
-		playSound(this, GGSound.DUMMY);
 		return (10);
 	}
 
@@ -62,11 +61,12 @@ public class Spiel_1 extends GameGrid implements GGActorCollisionListener, GGKey
 			break;
 		case KeyEvent.VK_DOWN:
 			white.setY(white.getY() + 15);
+			break;
 		case KeyEvent.VK_W:
-			black.setY(white.getY() - 15);
+			black.setY(black.getY() - 15);
 			break;
 		case KeyEvent.VK_S:
-			black.setY(white.getY() + 15);
+			black.setY(black.getY() + 15);
 			break;
 		}
 		return true; // Consume
