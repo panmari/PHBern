@@ -12,6 +12,7 @@ public class Spiel_1 extends GameGrid implements GGActorCollisionListener, GGKey
 
 	private Black black = new Black();
 	private White white = new White();
+	private int nbPunkte = 0;
 
 	public Spiel_1() {
 		super(820, 450, 1); // Spielfeld
@@ -25,16 +26,14 @@ public class Spiel_1 extends GameGrid implements GGActorCollisionListener, GGKey
 		white.addActorCollisionListener(this);
 		addKeyListener(this);
 		show();
-
-		int nbPunkte = 0;
 		setTitle("Ping-Pong Punkte  " + nbPunkte);
-		nbPunkte++;
-
 	}
 
 	public int collide(Actor actor1, Actor actor2) { // Kolisionsverhalten
 		actor1.setDirection(actor1.getDirection() + 180);
 		actor2.setDirection(actor2.getDirection() + 180);
+		nbPunkte++;
+		setTitle("Ping-Pong Punkte  " + nbPunkte);
 		return (10);
 	}
 
@@ -57,19 +56,25 @@ public class Spiel_1 extends GameGrid implements GGActorCollisionListener, GGKey
 		int keyCode = evt.getKeyCode();
 		switch (keyCode) {
 		case KeyEvent.VK_UP:
-			white.setY(white.getY() - 15);
+			setNewLocation(white, -15);
 			break;
 		case KeyEvent.VK_DOWN:
-			white.setY(white.getY() + 15);
+			setNewLocation(white, +15);
 			break;
 		case KeyEvent.VK_W:
-			black.setY(black.getY() - 15);
+			setNewLocation(black, -15);
 			break;
 		case KeyEvent.VK_S:
-			black.setY(black.getY() + 15);
+			setNewLocation(black, +15);
 			break;
 		}
 		return true; // Consume
+	}
+
+	private void setNewLocation(Actor movingPad, int movement) {
+		Location newLoc = new Location(movingPad.getX(), movingPad.getY() + movement);
+		if (isInGrid(newLoc))
+			movingPad.setLocation(newLoc);
 	}
 }
 

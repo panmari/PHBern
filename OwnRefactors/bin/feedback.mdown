@@ -1,0 +1,27 @@
+#Feedback für die 2 Typen
+
+Hallo zusammen!
+
+Ist zwar schon ein etwas älterer Thread, aber vielleicht schaut ja noch mal wer vorbei...
+
+Gute Sache, dass ihr es mit GameGrid versucht! Da es eine etwas spezielle Bibliothek ist, gibt es dazu 
+sogar ein eigenes Forum: http://www.aplu.ch/home/forum.jsp
+
+Ich habe selbst auch schon einige Dinge mit GameGrid gemacht und mir euren Code mal angeschaut. Schön,
+dass ihr es mit Multithreading versucht, aber die GameGrid-Bibliothek nimmt uns all diese Arbeit ab. 
+Ich würde also eher von der Idee abkommen, für die Pads eigene Threads zu starten. 
+
+Ihr könnt auch nicht zwei Keylistener gleichzeitig registriert haben, der eine überschreibt dann den
+anderen. Versucht doch, den Keylistener in der GameGrid-Klasse zu implementieren und dann von dort aus die
+beiden Pads zu steuern (die ihr als Instanzvariablen abgespeichert habt).
+
+Auch die run()-Methode in den beiden Pads scheint ihr nicht zu benutzen, 
+könntet ihr sie nicht auch löschen?
+
+Und damit die sich nicht ausserhalb des Grids bewegen, müsst ihr an einem geeigneten Ort
+eine kleine if-Abfrage einbauen. 
+
+Falls meine Tipps nicht helfen, kann ich euch sonst einen kleinen Umriss schicken...
+
+greetz panmari
+
