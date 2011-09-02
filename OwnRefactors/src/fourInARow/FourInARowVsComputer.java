@@ -203,7 +203,10 @@ public class FourInARowVsComputer extends GameGrid implements GGMouseListener {
 		} else {
 			// make new Token:
 			activeToken = new Token((player + 1) % 2, this);
-			addActor(activeToken, new Location(getMouseLocation().x, 0),
+			int newTokenX = 0;
+			if (getMouseLocation() != null)
+				newTokenX = getMouseLocation().x;
+			addActor(activeToken, new Location(newTokenX, 0),
 					Location.SOUTH);
 		}
 		setMouseEnabled(true);
