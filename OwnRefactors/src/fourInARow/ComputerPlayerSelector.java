@@ -6,22 +6,27 @@ import java.util.List;
 
 import ch.aplu.jgamegrid.*;
 
-public class ComputerPlayerSelector extends GameGrid implements GGButtonListener{
+public class ComputerPlayerSelector implements GGButtonListener{
 
+	private GameGrid dlg;
 	private List<ComputerPlayer> availableCP = new LinkedList<ComputerPlayer>();
 	private GGRadioButtonGroup rbGroup;
 	private FourInARowVsComputer gg;
 	
 	public ComputerPlayerSelector(FourInARowVsComputer gg, 
 			ArrayManager am, int player) {
-		super(15, 5, 30, null, false);
 		this.gg = gg;
-		setTitle("Select computer player");
 		createComputerPlayers(am, player);
 		createRadioButtons();
-		setBgColor(Color.white);
-		show();
 	}
+	
+	  private void showDialog()
+	  {
+	    dlg = new GameGrid(15, availableCP.size() + 2, 30, null, false);
+	    dlg.setTitle("Select computer player");
+	    dlg.setBgColor(Color.white);
+	    dlg.show();
+	  }
 
 	private void createComputerPlayers(ArrayManager am, int player) {
 		availableCP.add(new EasyBot(am, player));
@@ -34,14 +39,13 @@ public class ComputerPlayerSelector extends GameGrid implements GGButtonListener
 		int y = 0;
 		for (ComputerPlayer cp: availableCP) {
 			GGRadioButton rb = new GGRadioButton(cp.getNameAndDescription());
-			addActor(rb, new Location(0, y));
+			dlg.addActor(rb, new Location(0, y));
 			rbGroup.add(rb);
 			y++;
 		}
 		GGButton okBtn = new GGButton("sprites/ok.gif", true);
 		okBtn.addButtonListener(this);
-		addActor(okBtn, new Location(nbHorzCells - 2, y));
-		setNbVertCells(y + 2); //leaves black 
+		dlg.addActor(okBtn, new Location(dlg.nbHorzCells - 2, y));
 	}
 	@Override
 	public void buttonClicked(GGButton button) {
@@ -51,7 +55,7 @@ public class ComputerPlayerSelector extends GameGrid implements GGButtonListener
 			if (rb == rbGroup.getSelectedButton()) {
 				gg.setComputerPlayer(availableCP.get(counter));
 				gg.show();
-				this.hide();
+				dlg.hide();
 			}
 			counter++;
 		}
