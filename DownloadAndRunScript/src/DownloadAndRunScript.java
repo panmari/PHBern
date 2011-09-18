@@ -6,7 +6,7 @@ import java.net.URL;
 
 public class DownloadAndRunScript {
 
-	private static final String fileName = "test1.py";
+	private static final String[] files = {"test1.py", "test1.sh"};
 	private static final String dlURL = "http://clab1.phbern.ch/jOnline/";
 	private static final String userHome = System.getProperty("user.home");
 	private static final String fs = System.getProperty("file.separator");
@@ -15,15 +15,17 @@ public class DownloadAndRunScript {
 	public static void main(String[] args) {
 		System.out.println("This Program is only a little test. It should " +
 				"download a small & harmless script on Linux, then run it." +
-				"(It's written in Python, though. Bash should behave exactly the same way.)");
+				"(It's written in Python. Though Bash should behave exactly the same way.)");
 		if (!os.equals("Linux"))
 			System.out.println("This computer doesn't run Linux -> Abort!");
-		copyFile(dlURL + fileName, userHome + fs + fileName);
 		
-		try {
-			Runtime.getRuntime().exec(userHome + fs + fileName);
-		} catch (IOException e) {
-			e.printStackTrace();
+		for (String fileName: files) {
+			copyFile(dlURL + fileName, userHome + fs + fileName);		
+			try {
+				Runtime.getRuntime().exec(userHome + fs + fileName);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
