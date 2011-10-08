@@ -31,7 +31,6 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 	}
 
 	public void init() {
-		nbTakenPearl = 0;
 		int nb = 6;
 		cp.reset();
 		bg.clear();
@@ -44,7 +43,7 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 			}
 			nb--;
 		}
-		activeRow = 0;
+		prepareNextHumanMove(); // human starts
 		okBtn.show();
 		newBtn.hide();
 		refresh();
@@ -54,15 +53,15 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 
 	public boolean mouseEvent(GGMouse mouse) {
 		Location loc = toLocationInGrid(mouse.getX(), mouse.getY());
-		Actor actor = getOneActorAt(new Location(loc), Pearl.class);
-		if (actor != null) {
-			int y = actor.getY();
+		Actor pearlAtClick = getOneActorAt(new Location(loc), Pearl.class);
+		if (pearlAtClick != null) {
+			int y = pearlAtClick.getY();
 
 			if (activeRow != 0 && activeRow != y)
 				setTitle("You must remove pearls from the same row.");
 			else {
 				activeRow = y;
-				actor.removeSelf();
+				pearlAtClick.removeSelf();
 				nbPearl--;
 				setTitle(nbPearl + " Pearls remaining. Click 'OK' to continue.");
 				nbTakenPearl++;
@@ -73,7 +72,7 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 				refresh();
 			}
 		}
-		return false;
+		return true;
 	}
 
 	public void gameOver(String msg) {
@@ -83,6 +82,7 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 		bg.drawText(msg, new Point(toPoint(new Location(2, 5))));
 		okBtn.hide();
 		newBtn.show();
+		refresh();
 	}
 	
 	public void buttonClicked(GGButton button) {
@@ -115,7 +115,9 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 	public void buttonReleased(GGButton button) {
 	}
 
-
+	public void reset() {
+		
+	}
 
 	public static void main(String[] args) {
 		new PearlG2();
