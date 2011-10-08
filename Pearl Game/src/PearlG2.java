@@ -12,7 +12,7 @@ public class PearlG2 extends GameGrid
   private int nbTakenPearl;
   private int nbRows = 4;
   private int activeRow;
-  private int[] igPearl;
+  private int[] igPearls;
   private final int dualMax = 4;
   private GGBackground bg;
   private GGButton okBtn = new GGButton("sprites/ok.gif", true);
@@ -37,13 +37,15 @@ public class PearlG2 extends GameGrid
     nbTakenPearl = 0;
     int nb = 6;
     bg.clear();
+    igPearls = new int[nbRows];
     for (int k = 0; k < nbRows; k++)
     {
-      nbPearl = nbPearl + nb;
       for (int i = 0; i < nb; i++)
       {
         Pearl pearl = new Pearl();
         addActor(pearl, new Location(1 + i, 1 + k));
+        igPearls[k] = igPearls[k] + 1;
+        nbPearl++;
       }
       nb--;
     }
@@ -57,11 +59,11 @@ public class PearlG2 extends GameGrid
   public boolean mouseEvent(GGMouse mouse)
   {
     Location loc = toLocationInGrid(mouse.getX(), mouse.getY());
-    Actor actor = null;
-    actor = getOneActorAt(new Location(loc), Pearl.class);
-    int y = actor.getY();
+    Actor actor = getOneActorAt(new Location(loc), Pearl.class);
     if (actor != null)
     {
+      int y = actor.getY();
+
       if (activeRow != 0 && activeRow != y)
         setTitle("You must remove pearls from the same row.");
       else
@@ -88,7 +90,7 @@ public class PearlG2 extends GameGrid
 
   public void buttonClicked(GGButton button)
   {
-    /*if (nbPearl == 0)
+    if (nbPearl == 0)
         init();
       else
       {
@@ -100,8 +102,7 @@ public class PearlG2 extends GameGrid
           computerMove();
           okBtn.setEnabled(false);
         }
-      }*/
-      setTitle("Hallo");
+      }
   }
 
 	public void buttonPressed(GGButton button)
@@ -117,29 +118,29 @@ public class PearlG2 extends GameGrid
     int row1 = 0;
     int nbToRemoveMatches = 0;
     // if optimal Strategy is not possible, do something random.
-    if (!isUSituation(igPearl))
+    if (!isUSituation(igPearls))
     {
       ArrayList<Actor> matches = getActors(Pearl.class);
       // from a random (not empty!) row
       Collections.shuffle(matches);
       row1 = matches.get(0).getY();
       // take a random amount
-      nbToRemoveMatches = (int)((igPearl[row1] - 1) * Math.random() + 1);
+      nbToRemoveMatches = (int)((igPearls[row1] - 1) * Math.random() + 1);
     }
     else
     {
       // list for saving all possible solutions
       List<int[]> solutions = new ArrayList<int[]>();
-      int[] tgMatches = new int[6];
+      int[] tgPearls = new int[6];
       // Try all possible situations and add them to "solutions if they're good.
       for (int y = 0; y < 6; y++)
       {
-        System.arraycopy(igPearl, 0, tgMatches, 0, 6);
+        System.arraycopy(igPearls, 0, tgPearls, 0, 6);
         row1 = y;
-        for (int i = 0; i < igPearl[y]; i++)
+        for (int i = 0; i < igPearls[y]; i++)
         {
-          tgMatches = makeSituation(tgMatches, y);
-          if (isUSituation(tgMatches) == false)
+          tgPearls = makeSituation(tgPearls, y);
+          if (isUSituation(tgPearls) == false)
           {
             solutions.add((new int[]
             {
@@ -164,7 +165,7 @@ public class PearlG2 extends GameGrid
       if (matches.get(x).getY() == row1)
       {
         matches.get(x).removeSelf();
-        igPearl[row1] = igPearl[row1] - 1;
+        igPearls[row1] = igPearls[row1] - 1;
         nbToRemoveMatches--;
       }
       x++;
