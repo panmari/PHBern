@@ -15,6 +15,7 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 	private GGButton okBtn = new GGButton("sprites/ok.gif", true);
 	private GGButton newBtn = new GGButton("sprites/new.gif", true);
 	private ComputerPlayer cp;
+	private final boolean misereMode = true;
 
 	public PearlG2() {
 		super(8, 6, 60, false);
@@ -92,7 +93,7 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 			if (nbTakenPearl == 0)
 				setTitle("You have to remove at least 1 Pearl!");
 			else {
-				cp.makeMove();
+				cp.makeMove(misereMode);
 				refresh();
 				nbPearl = getNumberOfActors(Pearl.class);
 				if (nbPearl == 0) 

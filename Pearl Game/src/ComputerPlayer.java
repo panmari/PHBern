@@ -18,7 +18,7 @@ public class ComputerPlayer {
 	}
 	/**
 	 * updates the Pearl Arrangement. Only the row taken from
-	 * and the amount (+1/-1) is necessary.
+	 * and the amount (+1/-1 usually) is necessary.
 	 * 
 	 * The Position in the array
 	 * corresponds to the getY of the Pearls.
@@ -30,15 +30,15 @@ public class ComputerPlayer {
 		System.out.println(toString(pearlArrangement));
 	}
 	
-	public void makeMove() {
+	public void makeMove(boolean misere) {
 		int removeRow = 0;
 		int nbToRemoveMatches = 0;
 		// if optimal Strategy is not possible, do something random.
 		if (!isUSituation(pearlArrangement)) {
-			ArrayList<Actor> matches = gg.getActors(Pearl.class);
+			ArrayList<Actor> pearls = gg.getActors(Pearl.class);
 			// from a random (not empty!) row
-			Collections.shuffle(matches);
-			removeRow = matches.get(0).getY();
+			Collections.shuffle(pearls);
+			removeRow = pearls.get(0).getY();
 			// take a random amount (at least 1)
 			nbToRemoveMatches = (int) ((pearlArrangement[removeRow] - 1) * Math.random() + 1);
 		} else {
@@ -62,7 +62,14 @@ public class ComputerPlayer {
 			nbToRemoveMatches = solutions.get(0)[1];
 			System.out.println("Number of solutions: " + solutions.size());
 		}
-
+		removePearls(removeRow, nbToRemoveMatches);
+	}
+	
+	private void miserify() {
+		for (int i: )
+	}
+	
+	private void removePearls(int removeRow, int nbToRemoveMatches) {
 		updatePearlArrangement(removeRow, -nbToRemoveMatches);
 
 		List<Actor> removeCandidates = new ArrayList<Actor>();
@@ -77,11 +84,9 @@ public class ComputerPlayer {
 			removedPearl.removeSelf();
 			nbToRemoveMatches--;
 		}
-
 	}
 
 	// for debugging only
-
 	private String toString(int[] k) {
 		String output = "";
 		for (int i = 0; i < k.length; i++)
