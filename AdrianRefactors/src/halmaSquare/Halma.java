@@ -186,6 +186,7 @@ public class Halma extends GameGrid implements GGMouseListener {
 		delay(5000);
 		removeAllActors();
 		jumpModeOn = false;
+		setTitle("Game reset!");
 		setUpBoard();
 	}
 
