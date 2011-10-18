@@ -65,10 +65,6 @@ public class ComputerPlayer {
 		removePearls(removeRow, nbToRemoveMatches);
 	}
 	
-	private void miserify() {
-		for (int i: )
-	}
-	
 	private void removePearls(int removeRow, int nbToRemoveMatches) {
 		updatePearlArrangement(removeRow, -nbToRemoveMatches);
 

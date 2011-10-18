@@ -125,9 +125,3 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 	}
 
 }
-
-class Pearl extends Actor {
-	public Pearl() {
-		super("sprites/pearl.gif");
-	}
-}
