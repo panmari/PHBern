@@ -34,11 +34,19 @@ public class ComputerPlayer {
 	}
 	
 	public void makeMove() {
-		int removeRow = 0;
 		int nbToRemoveMatches = 0;
-		shouldIChangeStrat();
+		int[] tgPearls = new int[vertCells];
+		
+		int removeRow = shouldIChangeStrat();
+		if (removeRow != -1){
+			System.arraycopy(pearlArrangement, 0, tgPearls, 0, vertCells);
+			tgPearls[removeRow] = 0;
+			if (isUSituation(tgPearls)) 
+				nbToRemoveMatches = pearlArrangement[removeRow];
+			else nbToRemoveMatches = pearlArrangement[removeRow] - 1;
+		}
 		// if optimal Strategy is not possible, do something random.
-		if (!isUSituation(pearlArrangement) && !changeStrat) {
+		else if (!isUSituation(pearlArrangement)) {
 			ArrayList<Actor> pearls = gg.getActors(Pearl.class);
 			System.out.println("Doing something random");
 			// from a random (not empty!) row
@@ -49,14 +57,13 @@ public class ComputerPlayer {
 		} else {
 			// list for saving all possible solutions
 			List<int[]> solutions = new ArrayList<int[]>();
-			int[] tgPearls = new int[vertCells];
 			// Try all possible situations and add them to "solutions if they're
 			// good.
 			for (int y = 0; y < vertCells; y++) {
 				System.arraycopy(pearlArrangement, 0, tgPearls, 0, vertCells);
 				for (int i = 0; i < pearlArrangement[y]; i++) {
 					tgPearls = makeSituation(tgPearls, y);
-					if (isUSituation(tgPearls) == changeStrat) {
+					if (isUSituation(tgPearls) == false) {
 						solutions.add((new int[] { y, i + 1 }));
 					}
 				}
@@ -70,19 +77,22 @@ public class ComputerPlayer {
 		removePearls(removeRow, nbToRemoveMatches);
 	}
 	
-	private void shouldIChangeStrat() {
+	private int shouldIChangeStrat() {
 		if (changeStrat || !misere)
-			return;
-		boolean oneHeapBigger2 = false;
-		for (int heap: pearlArrangement) {
-			if (heap > 1) {
-				if (oneHeapBigger2)
-					return;
-				oneHeapBigger2 = true;
+			return -1;
+		boolean oneHeapBiggerTwo = false;
+		int bigHeap = -1;
+		for (int heap = 0; heap < vertCells; heap++) {
+			if (pearlArrangement[heap] > 1) {
+				bigHeap = heap;
+				if (oneHeapBiggerTwo)
+					return -1;
+				oneHeapBiggerTwo = true;
 			}
 		}
 		System.out.println("changing strategy for misere!");
 		changeStrat = true;
+		return bigHeap;
 	}
 	
 	private void miserify(int[] sit) {

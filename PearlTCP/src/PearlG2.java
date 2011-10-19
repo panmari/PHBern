@@ -68,7 +68,9 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 				nbTakenPearl++;
 				cp.updatePearlArrangement(y, -1);
 				if (nbPearl == 0) {
-					gameOver("You win!");
+					if (misereMode)
+						gameOver("You lose!");
+					else gameOver("You win!");
 				}
 				refresh();
 			}
@@ -96,8 +98,11 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 				cp.makeMove();
 				refresh();
 				nbPearl = getNumberOfActors(Pearl.class);
-				if (nbPearl == 0) 
-					gameOver("You Lost!");
+				if (nbPearl == 0) {
+					if (misereMode)
+						gameOver("You win!");
+					else gameOver("You lose!");
+				}
 				else prepareNextHumanMove();
 			}
 		}
