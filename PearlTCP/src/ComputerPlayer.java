@@ -95,18 +95,6 @@ public class ComputerPlayer {
 		return bigHeap;
 	}
 	
-	private void miserify(int[] sit) {
-		if (!misere)
-			return;
-		else {
-			for (int heap: sit) {
-				if (heap > 1)
-					return;
-			}
-			changeStrat = true;
-		}
-	}
-	
 	private void removePearls(int removeRow, int nbToRemoveMatches) {
 		updatePearlArrangement(removeRow, -nbToRemoveMatches);
 
