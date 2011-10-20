@@ -20,45 +20,51 @@ public class ComputerPlayer {
 		this.vertCells = gg.getNbVertCells();
 		this.misere = misere;
 	}
+	
 	/**
 	 * updates the Pearl Arrangement. Only the row taken from
 	 * and the amount (+1/-1 usually) is necessary.
 	 * 
 	 * The Position in the array
 	 * corresponds to the getY of the Pearls.
-	 * @param row
-	 * @param amount
+	 * @param row getY() of the removed Pearls
+	 * @param amount Amount of Pearls removed there
 	 */
 	public void updatePearlArrangement(int row, int amount) {
 		pearlArrangement[row] += amount;
 	}
 	
+	
+	/**
+	 * Initiates a computer move. The int[] pearlArrangement has 
+	 * to represent the board exactly when calling this method. 
+	 * If not, this algorithm may cause an exception.
+	 */
 	public void makeMove() {
-		int nbToRemoveMatches = 0;
+		int nbToRemove = 0;
 		int[] tgPearls = new int[vertCells];
 		
-		int removeRow = shouldIChangeStrat();
-		if (removeRow != -1){
+		int removeRow = adaptToMisere();
+		if (removeRow != -1) {
+			//this part is needed for adapting to misère mode
 			System.arraycopy(pearlArrangement, 0, tgPearls, 0, vertCells);
 			tgPearls[removeRow] = 0;
 			if (isUSituation(tgPearls)) 
-				nbToRemoveMatches = pearlArrangement[removeRow];
-			else nbToRemoveMatches = pearlArrangement[removeRow] - 1;
-		}
-		// if optimal Strategy is not possible, do something random.
-		else if (!isUSituation(pearlArrangement)) {
+				nbToRemove = pearlArrangement[removeRow];
+			else nbToRemove = pearlArrangement[removeRow] - 1;
+		} else if (!isUSituation(pearlArrangement)) {
+			// if optimal Strategy is not possible, do something random.
 			ArrayList<Actor> pearls = gg.getActors(Pearl.class);
 			System.out.println("Doing something random");
 			// from a random (not empty!) row
 			Collections.shuffle(pearls);
 			removeRow = pearls.get(0).getY();
 			// take a random amount (at least 1)
-			nbToRemoveMatches = (int) ((pearlArrangement[removeRow] - 1) * Math.random() + 1);
+			nbToRemove = (int) ((pearlArrangement[removeRow] - 1) * Math.random() + 1);
 		} else {
 			// list for saving all possible solutions
 			List<int[]> solutions = new ArrayList<int[]>();
-			// Try all possible situations and add them to "solutions if they're
-			// good.
+			// Try all possible situations and add them to solutions if they're good.
 			for (int y = 0; y < vertCells; y++) {
 				System.arraycopy(pearlArrangement, 0, tgPearls, 0, vertCells);
 				for (int i = 0; i < pearlArrangement[y]; i++) {
@@ -71,13 +77,20 @@ public class ComputerPlayer {
 			// choose a random solution
 			Collections.shuffle(solutions);
 			removeRow = solutions.get(0)[0];
-			nbToRemoveMatches = solutions.get(0)[1];
+			nbToRemove = solutions.get(0)[1];
 			System.out.println("Number of solutions: " + solutions.size());
 		}
-		removePearls(removeRow, nbToRemoveMatches);
+		removePearls(removeRow, nbToRemove);
 	}
 	
-	private int shouldIChangeStrat() {
+	/**
+	 * 
+	 * @return -1 if the strategy doesn't change or 
+	 * 			the row of the column you have to remove pearls from
+	 * 			if you have to change strategy.
+	 * 			
+	 */
+	private int adaptToMisere() {
 		if (changeStrat || !misere)
 			return -1;
 		boolean oneHeapBiggerTwo = false;
@@ -95,8 +108,14 @@ public class ComputerPlayer {
 		return bigHeap;
 	}
 	
-	private void removePearls(int removeRow, int nbToRemoveMatches) {
-		updatePearlArrangement(removeRow, -nbToRemoveMatches);
+	/**
+	 * Removes pearls on the board for real. Also updates the
+	 * Array representation of the board itself.
+	 * @param removeRow The row pearls are removed from
+	 * @param nbToRemove The number of pearls removed
+	 */
+	private void removePearls(int removeRow, int nbToRemove) {
+		updatePearlArrangement(removeRow, -nbToRemove);
 
 		List<Actor> removeCandidates = new ArrayList<Actor>();
 
@@ -105,14 +124,18 @@ public class ComputerPlayer {
 				removeCandidates.add(p);
 		}
 		Collections.shuffle(removeCandidates);
-		while (nbToRemoveMatches > 0) {
+		while (nbToRemove > 0) {
 			Actor removedPearl = removeCandidates.remove(0);
 			removedPearl.removeSelf();
-			nbToRemoveMatches--;
+			nbToRemove--;
 		}
 	}
 
-	// for debugging only
+	/**
+	 *  For debugging only
+	 *  Gives a pretty string representation of the given int array
+	 * @return A string containing all values of k in order
+	 */
 	private String toString(int[] k) {
 		String output = "";
 		for (int i = 0; i < k.length; i++)
@@ -120,18 +143,23 @@ public class ComputerPlayer {
 		return output;
 	}
 
-	/*
-	 * removes a match from a situation given the: "sit", the original situation
-	 * "row" the row where a match should be removed from
+	/**
+	 *  Removes a match from a situation given and returns the same
+	 *  int array. Beware, the situation
+	 *  @param sit The original situation
+	 * 	@param row The row where a match should be removed from
 	 */
-
 	private int[] makeSituation(int[] sit, int row) {
 		sit[row] = sit[row] - 1;
 		return sit;
 	}
 
-	// Check if its a U-Situation
-
+	/**
+	 * Check out http://de.wikipedia.org/wiki/Nim-Spiel to see what 
+	 * a U-situation is (called "C-Stellung" there).
+	 * @param sit A game situation
+	 * @return true, if this situation is u.
+	 */
 	private Boolean isUSituation(int[] sit) {
 		int[] allDuals = new int[dualMax];
 		int[] oneDual = new int[dualMax];
@@ -149,10 +177,11 @@ public class ComputerPlayer {
 	}
 
 	/**
-	 * gives an integer back as binary (as array of integer) only works for
+	 * Gives an integer back as binary (as array of integer) only works for
 	 * input < 16, or arraylength "dualMax" must be changed
 	 */
 	private int[] toDual(int input) {
+		assert(input < 16);
 		int[] output = new int[dualMax]; // 4 dualstellen
 		int x = 0;
 		while (input != 0) {

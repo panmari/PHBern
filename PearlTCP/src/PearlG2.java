@@ -71,8 +71,8 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 				cp.updatePearlArrangement(y, -1);
 				if (nbPearl == 0) {
 					if (misereMode)
-						gameOver("You lose!");
-					else gameOver("You win!");
+						gameOver("You lost!");
+					else gameOver("You won!");
 				}
 				refresh();
 			}
@@ -82,7 +82,7 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 
 	public void gameOver(String msg) {
 		setTitle("Press 'new Game' to play again.");
-		bg.setPaintColor(Color.red);
+		bg.setPaintColor(Color.yellow);
 		bg.setFont(new Font("Arial", Font.BOLD, 32));
 		bg.drawText(msg, new Point(toPoint(new Location(2, 5))));
 		okBtn.hide();
@@ -101,8 +101,8 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 				nbPearl = getNumberOfActors(Pearl.class);
 				if (nbPearl == 0) {
 					if (misereMode)
-						gameOver("You win!");
-					else gameOver("You lose!");
+						gameOver("You won!");
+					else gameOver("You lost!");
 				}
 				else prepareNextHumanMove();
 			}
@@ -119,10 +119,6 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 	}
 
 	public void buttonReleased(GGButton button) {
-	}
-
-	public void reset() {
-		
 	}
 
 	public static void main(String[] args) {
