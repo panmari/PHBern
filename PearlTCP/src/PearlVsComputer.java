@@ -1,11 +1,19 @@
 // PearlG2.java
 
-import ch.aplu.jgamegrid.*;
-import java.awt.*;
-import java.util.*;
-import java.util.List;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Point;
 
-public class PearlG2 extends GameGrid implements GGMouseListener,
+import ch.aplu.jgamegrid.Actor;
+import ch.aplu.jgamegrid.GGBackground;
+import ch.aplu.jgamegrid.GGButton;
+import ch.aplu.jgamegrid.GGButtonListener;
+import ch.aplu.jgamegrid.GGMouse;
+import ch.aplu.jgamegrid.GGMouseListener;
+import ch.aplu.jgamegrid.GameGrid;
+import ch.aplu.jgamegrid.Location;
+
+public class PearlVsComputer extends GameGrid implements GGMouseListener,
 		GGButtonListener {
 	private int nbPearl = 0;
 	private int nbTakenPearl;
@@ -17,7 +25,7 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 	private ComputerPlayer cp;
 	private final boolean misereMode = true;
 
-	public PearlG2() {
+	public PearlVsComputer() {
 		//size decides how many pearls are placed
 		super(8, 7, 60, false);
 		setBgColor(new Color(80, 15, 247));
@@ -35,9 +43,30 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 	public void init() {
 		nbPearl = 0;
 		removeActors(Pearl.class);
-		int nb = nbHorzCells - 2;
 		cp.reset();
 		bg.clear();
+		makeRandomLevel();
+		prepareNextHumanMove(); // human starts
+		okBtn.show();
+		refresh();
+		setTitle(nbPearl
+				+ " Pearls. Remove any number of pearls from same row and press OK.");
+	}
+	
+	private void makeRandomLevel() {
+		for (int k = 0; k < nbRows; k++) {
+			int nb = (int) (Math.random()*(nbHorzCells-2)) + 1;
+			for (int i = 0; i < nb; i++) {
+				Pearl pearl = new Pearl();
+				addActor(pearl, new Location(1 + i, 1 + k));
+				cp.updatePearlArrangement(k + 1, +1);
+				nbPearl++;
+			}
+		}
+	}
+
+	private void makeStandardLevel() {
+		int nb = nbHorzCells - 2;
 		for (int k = 0; k < nbRows; k++) {
 			for (int i = 0; i < nb; i++) {
 				Pearl pearl = new Pearl();
@@ -47,13 +76,7 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 			}
 			nb--;
 		}
-		prepareNextHumanMove(); // human starts
-		okBtn.show();
-		refresh();
-		setTitle(nbPearl
-				+ " Pearls. Remove any number of pearls from same row and press OK.");
 	}
-
 	public boolean mouseEvent(GGMouse mouse) {
 		Location loc = toLocationInGrid(mouse.getX(), mouse.getY());
 		Actor pearlAtClick = getOneActorAt(new Location(loc), Pearl.class);
@@ -122,7 +145,7 @@ public class PearlG2 extends GameGrid implements GGMouseListener,
 	}
 
 	public static void main(String[] args) {
-		new PearlG2();
+		new PearlVsComputer();
 	}
 
 }
