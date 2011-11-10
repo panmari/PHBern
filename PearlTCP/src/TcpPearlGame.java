@@ -20,7 +20,7 @@ public class TcpPearlGame extends GameGrid
     char terminate = 't'; // terminate game
   }
 
-  private String sessionID = "PearlGame: &41*()";
+  private String sessionID = "PearlGameTCP12";
   private final String nickname = "tic";
   private TcpNode tcpNode = new TcpNode();
   private boolean isMyMove;
