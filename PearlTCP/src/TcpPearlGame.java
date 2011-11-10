@@ -1,5 +1,7 @@
 // TcpPearlGame.java
-
+/**
+ * Version on Clab2 -> Download source
+ */
 import ch.aplu.jgamegrid.*;
 import ch.aplu.tcp.*;
 import javax.swing.JOptionPane;
@@ -18,7 +20,7 @@ public class TcpPearlGame extends GameGrid
     char terminate = 't'; // terminate game
   }
 
-  private String sessionID = "PearlGame: &4**()";
+  private String sessionID = "PearlGame: &41*()";
   private final String nickname = "tic";
   private TcpNode tcpNode = new TcpNode();
   private boolean isMyMove;
@@ -28,7 +30,7 @@ public class TcpPearlGame extends GameGrid
   private GGButton newBtn = new GGButton("sprites/new.gif", true);
   private int activeRow;
   private int nbRows = 4;
-  private String moveInfo =
+  private final String moveInfo =
     "Click to remove any number of pearls from same row and press OK.";
 
   public TcpPearlGame()
@@ -99,13 +101,16 @@ public class TcpPearlGame extends GameGrid
 
   public void buttonClicked(GGButton button)
   {
-    if (nbPearl == 0)
+    if (button == newBtn)
     {
       init();
-      if (isMyMove)
+      if (isMyMove) {
         setStatusText("Game started. " + moveInfo);
-      else
+        okBtn.setEnabled(true);
+      } else {
         setStatusText("Game started. Wait for the partner's move.");
+        okBtn.setEnabled(false);
+      }
       tcpNode.sendMessage("" + Command.start);
     }
     else
@@ -144,10 +149,13 @@ public class TcpPearlGame extends GameGrid
     {
       case Command.start:
         init();
-        if (isMyMove)
+        if (isMyMove) {
           setStatusText("Game started. " + moveInfo);
-        else
+          okBtn.setEnabled(true);
+        } else {
           setStatusText("Game started. Wait for the partner's move.");
+          okBtn.setEnabled(false);
+        }
         break;
       case Command.terminate:
         setStatusText("Partner exited game room. Terminating now...");
