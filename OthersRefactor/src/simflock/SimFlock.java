@@ -74,12 +74,11 @@ public class SimFlock extends GameGrid
 /**
  * An abstract class, that should be extended any kind of bird in the simulation.
  * Supplies many torus related methods.
- * By overwriting the method <code> setAcceleration() </code> you can change
+ * By overwriting the method <code> getNewAcceleration() </code> you can change
  * the moving behavior of the child bird.
  */
 abstract class Bird extends Actor 
 {
-  protected Location oldLocation = new Location(-1, -1);
   protected GGVector startVelocity;
   protected GGVector velocity;
   protected GGVector position;
@@ -91,11 +90,10 @@ abstract class Bird extends Actor
     super(true, sprite); 
 	this.startVelocity = startVelocity;
 	this.velocity=startVelocity;
-	this.borderCrossed=false;
 	this.velocityMagnitude = velocityMagnitude;
   }
   
-  protected abstract GGVector setAcceleration();
+  protected abstract GGVector getNewAcceleration();
   protected abstract Color getColor();
   protected abstract void tryToEat();
   
@@ -104,7 +102,6 @@ abstract class Bird extends Actor
 	position = toPosition(getLocationStart());
 	velocity = startVelocity;
     setDirection(Math.toDegrees(startVelocity.getDirection()));
-    oldLocation.x = -1; oldLocation.y = -1;
   }
   
   public GGVector getPosition()
@@ -129,15 +126,15 @@ abstract class Bird extends Actor
 
   protected GGVector toTorusPosition(GGVector position)
   {
-    double x=position.x; double y=position.y;  borderCrossed=false;
+    double x=position.x; double y=position.y;
 	if (x < 0) 
-		{ x = x + getNbHorzCells(); borderCrossed=true;}
+		x = x + getNbHorzCells();
 	else if (x > getNbHorzCells()-1) 
-		{ x = x - getNbHorzCells(); borderCrossed=true;}
+		x = x - getNbHorzCells();
 	if (y < 0) 
-		{y = y + getNbVertCells(); borderCrossed=true;}
+		y = y + getNbVertCells(); 
 	else if (y > getNbVertCells()-1) 
-		{y = y - getNbVertCells(); borderCrossed=true;}
+		y = y - getNbVertCells();
     return new GGVector(x,y);
   }
   
@@ -161,27 +158,27 @@ abstract class Bird extends Actor
   
   public void act()
   {
-	  GGVector acceleration = setAcceleration();
+	  GGVector acceleration = getNewAcceleration();
 	  velocity = velocity.add(acceleration.mult(SimFlock.timeFactor));
 	  velocity.normalize();
 	  velocity = velocity.mult(velocityMagnitude);
 	  position = position.add(velocity.mult(SimFlock.timeFactor));
 	  position = toTorusPosition(position);
 	  Location location = toLocation(position);
-	  if (borderCrossed) {oldLocation.x = -1; oldLocation.y = -1;}
 	  setDirection(Math.toDegrees(velocity.getDirection()));
 	  setLocation(location);
 	  
 	  tryToEat();
-	  
-	  if (SimFlock.drawTrace)
-	    {
-		  getBackground().setPaintColor(getColor());
-	      if (oldLocation.x != -1)
-	        getBackground().drawLine(oldLocation.x, oldLocation.y, location.x, location.y);
-	        oldLocation.x = location.x; oldLocation.y = location.y;
-	    }
+	  drawTrace();
   }
+
+private void drawTrace() {
+  if (SimFlock.drawTrace)
+    {
+	  getBackground().setPaintColor(getColor());
+	  getBackground().drawPoint(getPixelLocation());
+    }
+}
 }
 
 //////////////////////////////////////CLASS FlockBird ///////////////////////////////////////////////////////
@@ -194,7 +191,7 @@ class FlockBird extends Bird
   }
   
   @Override
-  protected GGVector setAcceleration()  //Behavior of the bird: acceleration
+  protected GGVector getNewAcceleration()  //Behavior of the bird: acceleration
   {
 	  GGVector distVec = new GGVector();
 	  GGVector cohDistSumVec = new GGVector(0,0);
@@ -206,9 +203,9 @@ class FlockBird extends Bird
 	  GGVector accSeparation = new GGVector(0,0);
 	  GGVector accAlignment = new GGVector(0,0);
 	  GGVector accEscape = new GGVector(0,0);
-	  int ccounter = 0; int scounter = 0; int acounter = 0; int rcounter = 0;
+	  int cohCounter = 0; int sepCounter = 0; int aligCounter = 0; int raptCounter = 0;
 	  ArrayList<Actor> neighbourBirds = gameGrid.getActors(FlockBird.class);
-	  neighbourBirds.remove(this);  // Remove self
+	  neighbourBirds.remove(this);  // Remove self of list
 	  ArrayList<Actor> neighbourRaptors = gameGrid.getActors(Raptor.class);
 	  
 	  for (Actor neighbour : neighbourBirds)
@@ -217,11 +214,11 @@ class FlockBird extends Bird
 	   distVec = getPositionVecDiffOnTorus(bird);
 	  
 	   if ((distVec.magnitude() <= SimFlock.roFb) && (distVec.magnitude() > SimFlock.rcrit))
-	      {cohDistSumVec.x+=distVec.x;cohDistSumVec.y+=distVec.y; ccounter++;}
+	      {cohDistSumVec.x+=distVec.x;cohDistSumVec.y+=distVec.y; cohCounter++;}
 	   if (distVec.magnitude() <= SimFlock.rcrit) 
-	      {sepDistSumVec.x+=distVec.x;sepDistSumVec.y+=distVec.y; scounter++;}
+	      {sepDistSumVec.x+=distVec.x;sepDistSumVec.y+=distVec.y; sepCounter++;}
 	   if (distVec.magnitude() <= SimFlock.roFb) 
-	      {aligVelSumVec.x+=bird.velocity.x; aligVelSumVec.y+=bird.velocity.y; acounter++;}
+	      {aligVelSumVec.x+=bird.velocity.x; aligVelSumVec.y+=bird.velocity.y; aligCounter++;}
 	  }
 	  
 	  for (Actor neighbour : neighbourRaptors)
@@ -229,20 +226,23 @@ class FlockBird extends Bird
 	   Raptor raptor = (Raptor)neighbour;
 	   distVec = getPositionVecDiffOnTorus(raptor);
 	   if (distVec.magnitude() <= SimFlock.roFb) 
-	      {escDistSumVec.x+=distVec.x;escDistSumVec.y+=distVec.y; rcounter++;}
+	      {escDistSumVec.x+=distVec.x;escDistSumVec.y+=distVec.y; raptCounter++;}
 	  }
 	  
-	  if (ccounter != 0) {cohDistSumVec.mult(1/ccounter);}
-	  if (scounter != 0) {sepDistSumVec.mult(1/scounter);}
-	  if (rcounter != 0) {escDistSumVec.mult(1/rcounter);}
-	  if (acounter != 0) {aligVelSumVec.mult(1/acounter);}
+	  if (cohCounter != 0) {cohDistSumVec.mult(1/cohCounter);}
+	  if (sepCounter != 0) {sepDistSumVec.mult(1/sepCounter);}
+	  if (raptCounter != 0) {escDistSumVec.mult(1/raptCounter);}
+	  if (aligCounter != 0) {aligVelSumVec.mult(1/aligCounter);}
 	  accCohesion = cohDistSumVec.mult(-SimFlock.cohesionFactor);
 	  accSeparation = sepDistSumVec.mult(SimFlock.separationFactor);
 	  accAlignment =  velocity.sub(aligVelSumVec).mult(-SimFlock.alignmentFactor);
 	  accEscape = escDistSumVec.mult(SimFlock.escapeFactor);
-	  acceleration.x = accCohesion.x + accSeparation.x + accAlignment.x;
-	  acceleration.y = accCohesion.y + accSeparation.y + accAlignment.y;
-	  if (rcounter > 0) {acceleration.x = accEscape.x; acceleration.y = accEscape.y;}
+	  if (raptCounter > 0) { //fleeing is most important!
+		  acceleration.x = accEscape.x; acceleration.y = accEscape.y;
+	  } else {
+		  acceleration.x = accCohesion.x + accSeparation.x + accAlignment.x;
+		  acceleration.y = accCohesion.y + accSeparation.y + accAlignment.y;
+	  }
 	return acceleration;
   }
 
@@ -268,7 +268,7 @@ class Raptor extends Bird
   }
   
   @Override 
-  protected GGVector setAcceleration()  //Behavior of the RAPTOR: acceleration
+  protected GGVector getNewAcceleration()  //Behavior of the RAPTOR: acceleration
   {
 	  GGVector distVec = new GGVector();
 	  GGVector nearestDistVecBird = new GGVector(0,0);
