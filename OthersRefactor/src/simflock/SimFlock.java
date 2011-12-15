@@ -1,6 +1,7 @@
 package simflock;
 
 import ch.aplu.jgamegrid.*;
+
 import java.awt.Color;
 import java.util.*;
 import java.lang.Math;
@@ -11,55 +12,57 @@ import java.lang.Math;
 * Based on the JGameGrid-Framework from Aegidius Plüss (http://www.aplu.ch)
 * @author Martin Schellenberg (baal@gmx.net) 2011
 */
+@SuppressWarnings("serial")
 public class SimFlock extends GameGrid
-{ private static final long serialVersionUID = -1113582265865921787L; // avoids warning in Eclipse: The serializable class...
+{ 
 // Change game parameters /////////////////////////////////////////
-  protected static final int nh = 600;                // Number of cells: Height of playground
-  protected static final int nw = 1000;               // Number of cells: Width of playground;
-  private static final int nb = 100;                  // Number of birds
-  private static final int nr = 1;                    // Number of raptors
-  protected static final double rom = Math.sqrt(nw*nw+nh*nh);   // Maximum Radius of observation
-  private static final int rseed=123;               // Random Seed
-  protected static final  boolean drawTrace = true;  // Draw traces of birds/raptors
+  private static final int height = 600;                // Number of cells: Height of playground
+  private static final int width = 1000;               // Number of cells: Width of playground;
+  private static final int nbFlockBirds = 100;         // Number of FlockBirds
+  private static final int nbRaptors = 1;                    // Number of raptors
+  protected static final double maxro = Math.sqrt(width*width+height*height);   // Maximum Radius of observation
+  private static final int randomSeed=123;               // For initializing birds locations
+  protected static final  boolean drawTrace = true;  // Draw traces of FlockBirds/raptors
   protected static final  double  timeFactor = 4;     // Descrete Timestep for calculation of acc/vel/pos
   // Change behavior of birds /////////////////////////////////////////
-  protected static final double vbird = 1;            // Magnitude of velocity: birds
-  protected static final double rob = 50;//50;             // Radius of observation: birds
-  protected static final double rcrit = 20;//20;           // Critical Radius: birds
+  protected static final double magnBird = 1;            // Magnitude of velocity: FlockBirds
+  protected static final double roFb = 50;//50;             // Radius of observation: FlockBirds
+  protected static final double rcrit = 20;//20;           // Critical Radius: FlockBirds
   protected static final double cohesionFactor = 0.001;//0.001; 
   protected static final double separationFactor = 0.1;//0.05;
   protected static final double alignmentFactor = 0.05;//0.05;
   protected static final double escapeFactor = 0.001; //0.001;
   // Change behavior of raptors ////////////////////////////////////////
-  protected static final double vraptor = 1.1;  //1.1          // Magnitude of velocity: raptors
-  protected static final double ror = rom;              // Radius of observation: raptors
+  protected static final double magnRaptor = 1.1;  //1.1          // Magnitude of velocity: raptors
+  protected static final double roR = maxro;              // Radius of observation: raptors
   protected static final double aggressionFactor = 0.001;
-  /////////////////////////////////////////////////////////////////////
-  protected final FlockBird[] birds = new FlockBird[nb];
-  protected final Raptor[] raptors = new Raptor[nr];
-  
+  ///////////////////////////////////////////////////////////////////// 
 
   public SimFlock()
   { 
-    super(nw,nh, 1, null, true);
+    super(width, height, 1, null, true);
     setSimulationPeriod(50);
-    Random rand = new Random(rseed);   // use Random(rseed) for testing: change value of static final rseed
+    Random rand = new Random(randomSeed);
     
-    for (int i = 0; i < nb; i++)  // Generate birds
+    for (int i = 0; i < nbFlockBirds; i++)  // Generate FlockBirds
     {
-      GGVector startVelocity = new GGVector(vbird,0);
+      GGVector startVelocity = new GGVector(magnBird,0);
       startVelocity.rotate(rand.nextInt(360));  
-      birds[i] = new FlockBird(startVelocity, vbird);
-      addActor(birds[i], new Location(rand.nextInt(nw), rand.nextInt(nh)));
+      FlockBird fb = new FlockBird(startVelocity, magnBird);
+      addActor(fb, new Location(rand.nextInt(width), rand.nextInt(height)));
     }
-    for (int i = 0; i < nr; i++)  // Generate birds
+    for (int i = 0; i < nbRaptors; i++)  // Generate Raptors
     {
-      GGVector startVelocity = new GGVector(vraptor,0);
+      GGVector startVelocity = new GGVector(magnRaptor,0);
       startVelocity.rotate(rand.nextInt(360));  
-      raptors[i] = new Raptor(startVelocity, vraptor);
-      addActor(raptors[i], new Location(rand.nextInt(nw), rand.nextInt(nh)));
+      Raptor raptor = new Raptor(startVelocity, magnRaptor);
+      addActor(raptor, new Location(rand.nextInt(width), rand.nextInt(height)));
     }
     show();
+  }
+  
+  public void reset() {
+	  getBg().clear();
   }
 
   public static void main(String[] args)
@@ -68,7 +71,12 @@ public class SimFlock extends GameGrid
   }
 }
 
-//////////////////////////////////////CLASS Bird ///////////////////////////////////////////////////////
+/**
+ * An abstract class, that should be extended any kind of bird in the simulation.
+ * Supplies many torus related methods.
+ * By overwriting the method <code> setAcceleration() </code> you can change
+ * the moving behavior of the child bird.
+ */
 abstract class Bird extends Actor 
 {
   protected Location oldLocation = new Location(-1, -1);
@@ -89,12 +97,7 @@ abstract class Bird extends Actor
   
   protected abstract GGVector setAcceleration();
   protected abstract Color getColor();
-  
-  @Deprecated
-  protected GGVector setAccelerationToZero()
-  {
-	return new GGVector(0,0);
-  }
+  protected abstract void tryToEat();
   
   public void reset()
   {
@@ -128,31 +131,31 @@ abstract class Bird extends Actor
   {
     double x=position.x; double y=position.y;  borderCrossed=false;
 	if (x < 0) 
-		{ x = x + SimFlock.nw; borderCrossed=true;}
-	else if (x>SimFlock.nw-1) 
-		{ x = x - SimFlock.nw; borderCrossed=true;}
+		{ x = x + getNbHorzCells(); borderCrossed=true;}
+	else if (x > getNbHorzCells()-1) 
+		{ x = x - getNbHorzCells(); borderCrossed=true;}
 	if (y < 0) 
-		{y = y + SimFlock.nh; borderCrossed=true;}
-	else if (y > SimFlock.nh-1) 
-		{y = y - SimFlock.nh; borderCrossed=true;}
+		{y = y + getNbVertCells(); borderCrossed=true;}
+	else if (y > getNbVertCells()-1) 
+		{y = y - getNbVertCells(); borderCrossed=true;}
     return new GGVector(x,y);
   }
   
   protected GGVector getPositionVecDiffOnTorus(Bird bird)
   {   GGVector delta = new GGVector();
-	  double mag; double magmin = SimFlock.rom;
+	  double mag; double magmin = SimFlock.maxro;
       int imin = 0; int jmin = 0;
       
 	  for (int i = -1; i < 2; i++)
 	  {
 		  for (int j = -1; j < 2; j++)
 		  {
-			delta.x = i*SimFlock.nw; delta.y =j*SimFlock.nh;
+			delta.x = i*getNbHorzCells(); delta.y =j*getNbVertCells();
 			mag = position.sub(bird.getPosition().add(delta)).magnitude();
 			if (mag<magmin) {magmin = mag; imin = i; jmin=j;}
 		  }
 	  }	  
-	  delta.x = imin*SimFlock.nw; delta.y =jmin*SimFlock.nh;
+	  delta.x = imin*getNbHorzCells(); delta.y =jmin*getNbVertCells();
 	  return position.sub(bird.getPosition().add(delta)); 
   }
   
@@ -168,6 +171,8 @@ abstract class Bird extends Actor
 	  if (borderCrossed) {oldLocation.x = -1; oldLocation.y = -1;}
 	  setDirection(Math.toDegrees(velocity.getDirection()));
 	  setLocation(location);
+	  
+	  tryToEat();
 	  
 	  if (SimFlock.drawTrace)
 	    {
@@ -211,11 +216,11 @@ class FlockBird extends Bird
 	   FlockBird bird = (FlockBird)neighbour;
 	   distVec = getPositionVecDiffOnTorus(bird);
 	  
-	   if ((distVec.magnitude() <= SimFlock.rob) && (distVec.magnitude() > SimFlock.rcrit))
+	   if ((distVec.magnitude() <= SimFlock.roFb) && (distVec.magnitude() > SimFlock.rcrit))
 	      {cohDistSumVec.x+=distVec.x;cohDistSumVec.y+=distVec.y; ccounter++;}
 	   if (distVec.magnitude() <= SimFlock.rcrit) 
 	      {sepDistSumVec.x+=distVec.x;sepDistSumVec.y+=distVec.y; scounter++;}
-	   if (distVec.magnitude() <= SimFlock.rob) 
+	   if (distVec.magnitude() <= SimFlock.roFb) 
 	      {aligVelSumVec.x+=bird.velocity.x; aligVelSumVec.y+=bird.velocity.y; acounter++;}
 	  }
 	  
@@ -223,7 +228,7 @@ class FlockBird extends Bird
 	  {
 	   Raptor raptor = (Raptor)neighbour;
 	   distVec = getPositionVecDiffOnTorus(raptor);
-	   if (distVec.magnitude() <= SimFlock.rob) 
+	   if (distVec.magnitude() <= SimFlock.roFb) 
 	      {escDistSumVec.x+=distVec.x;escDistSumVec.y+=distVec.y; rcounter++;}
 	  }
 	  
@@ -245,6 +250,11 @@ class FlockBird extends Bird
 protected Color getColor() {
 	return Color.BLUE;
 }
+
+@Override
+protected void tryToEat() {
+	//A Flockbird doesn't need to eat
+}
 }
 
 ////////////////////////////////////// CLASS RAPTOR ///////////////////////////////////////////////////////
@@ -264,7 +274,7 @@ class Raptor extends Bird
 	  GGVector nearestDistVecBird = new GGVector(0,0);
 	  GGVector accAggression = new GGVector(0,0);
 	  GGVector acceleration = new GGVector();
-	  double mag; double minmag = SimFlock.rom;
+	  double mag; double minmag = SimFlock.maxro;
 	  ArrayList<Actor> neighbourBirds = gameGrid.getActors(FlockBird.class);
 	  
 	  for (Actor neighbour : neighbourBirds)
@@ -272,7 +282,7 @@ class Raptor extends Bird
 	   FlockBird bird = (FlockBird)neighbour;
 	   distVec = getPositionVecDiffOnTorus(bird);
 	   mag = distVec.magnitude();
-	   if (mag <= SimFlock.ror) 
+	   if (mag <= SimFlock.roR) 
 	      {if (mag<minmag) {minmag = mag; nearestDistVecBird = distVec.clone();}}
 	  }
 	  accAggression = nearestDistVecBird.mult(-SimFlock.aggressionFactor);
@@ -284,6 +294,14 @@ class Raptor extends Bird
   @Override
   protected Color getColor() {
   	return Color.RED;
+  }
+  
+  @Override
+  protected void tryToEat() {
+	ArrayList<Actor> victim = getNeighbours(2, FlockBird.class);
+  	if (!victim.isEmpty()) {
+  		victim.get(0).removeSelf();
+  }
   }
 }
 
