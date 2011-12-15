@@ -35,7 +35,7 @@ public class SimFlock extends GameGrid
   protected static final double ror = rom;              // Radius of observation: raptors
   protected static final double aggressionFactor = 0.001;
   /////////////////////////////////////////////////////////////////////
-  protected final Bird[] birds = new Bird[nb];
+  protected final FlockBird[] birds = new FlockBird[nb];
   protected final Raptor[] raptors = new Raptor[nr];
   
 
@@ -49,7 +49,7 @@ public class SimFlock extends GameGrid
     {
       GGVector startVelocity = new GGVector(vbird,0);
       startVelocity.rotate(rand.nextInt(360));  
-      birds[i] = new Bird(startVelocity);
+      birds[i] = new FlockBird(startVelocity);
       addActor(birds[i], new Location(rand.nextInt(nw), rand.nextInt(nh)));
     }
     for (int i = 0; i < nr; i++)  // Generate birds
@@ -69,22 +69,26 @@ public class SimFlock extends GameGrid
 }
 
 //////////////////////////////////////CLASS Bird ///////////////////////////////////////////////////////
-
-class Bird extends Actor
+class Bird extends Actor 
 {
-  private Location oldLocation = new Location(-1, -1);
-  private GGVector startVelocity;
-  public  Location location;
-  public  GGVector position;
-  public  GGVector velocity;
-  private GGVector acceleration;
-  private boolean  borderCrossed;
-	  
-  public Bird(GGVector startVelocity)
+  protected Location oldLocation = new Location(-1, -1);
+  protected GGVector startVelocity;
+  protected GGVector velocity;
+  protected GGVector position;
+  protected boolean  borderCrossed;
+
+  public Bird(GGVector startVelocity, String sprite)
   {
-    super(true,"sprites/bird.gif"); //NEU MarS
+    super(true, sprite); 
 	this.startVelocity = startVelocity;
 	this.velocity=startVelocity;
+	this.borderCrossed=false;
+  }
+  
+  @Deprecated
+  protected GGVector setAccelerationToZero()
+  {
+	return new GGVector(0,0);
   }
   
   public void reset()
@@ -93,26 +97,6 @@ class Bird extends Actor
 	velocity = startVelocity;
     setDirection(Math.toDegrees(startVelocity.getDirection()));
     oldLocation.x = -1; oldLocation.y = -1;
-  }
-  
-  private GGVector toPosition(Location location)
-  {
-    return new GGVector(location.x, location.y);
-  }
-
-  private Location toLocation(GGVector position)
-  {
-    return new Location((int)(position.x), (int)(position.y));
-  }
-  
-  private GGVector toTorusPosition(GGVector position)
-  {
-	double x=position.x; double y=position.y;  borderCrossed=false;
-	if (x<0) {x = x + SimFlock.nw; borderCrossed=true;}
-	if (x>SimFlock.nw-1) {x = x - SimFlock.nw; borderCrossed=true;}
-	if (y<0) {y = y + SimFlock.nh; borderCrossed=true;}
-	if (y>SimFlock.nh-1) {y = y - SimFlock.nh; borderCrossed=true;}
-    return new GGVector(x,y);
   }
   
   public GGVector getPosition()
@@ -125,6 +109,42 @@ class Bird extends Actor
     return velocity.clone();
   }
   
+  private GGVector toPosition(Location location)
+  {
+    return new GGVector(location.x, location.y);
+  }
+
+  protected Location toLocation(GGVector position)
+  {
+    return new Location((int)(position.x), (int)(position.y));
+  }
+
+  protected GGVector toTorusPosition(GGVector position)
+  {
+    double x=position.x; double y=position.y;  borderCrossed=false;
+	if (x < 0) 
+		{ x = x + SimFlock.nw; borderCrossed=true;}
+	else if (x>SimFlock.nw-1) 
+		{ x = x - SimFlock.nw; borderCrossed=true;}
+	if (y < 0) 
+		{y = y + SimFlock.nh; borderCrossed=true;}
+	else if (y > SimFlock.nh-1) 
+		{y = y - SimFlock.nh; borderCrossed=true;}
+    return new GGVector(x,y);
+  }
+}
+
+//////////////////////////////////////CLASS FlockBird ///////////////////////////////////////////////////////
+
+class FlockBird extends Bird
+{
+  public  Location location;
+  private GGVector acceleration;
+	  
+  public FlockBird(GGVector startVelocity)
+  {
+    super(startVelocity,"sprites/bird.gif");
+  }
   
   private GGVector getPositionVecDiffOnTorusRaptor(Raptor raptor)
   {   GGVector delta = new GGVector();
@@ -145,7 +165,7 @@ class Bird extends Actor
 	  return position.sub(raptor.getPosition().add(delta)); 
   }
   
-  private GGVector getPositionVecDiffOnTorusBird(Bird bird)
+  private GGVector getPositionVecDiffOnTorusBird(FlockBird bird)
   {   GGVector delta = new GGVector();
 	  double mag; double magmin = SimFlock.rom;
       int imin = 0; int jmin = 0;
@@ -164,12 +184,6 @@ class Bird extends Actor
 	  return position.sub(bird.getPosition().add(delta)); 
   }
   
-  private GGVector setAccelerationToZero()  //Behavior of the bird: no acceleration
-  {
-	return new GGVector(0,0);
-  }
-  
-  
   private GGVector setAcceleration()  //Behavior of the bird: acceleration
   {
 	  GGVector distVec = new GGVector();
@@ -183,13 +197,13 @@ class Bird extends Actor
 	  GGVector accAlignment = new GGVector(0,0);
 	  GGVector accEscape = new GGVector(0,0);
 	  int ccounter = 0; int scounter = 0; int acounter = 0; int rcounter = 0;
-	  ArrayList<Actor> neighbourBirds = gameGrid.getActors(Bird.class);
+	  ArrayList<Actor> neighbourBirds = gameGrid.getActors(FlockBird.class);
 	  neighbourBirds.remove(this);  // Remove self
 	  ArrayList<Actor> neighbourRaptors = gameGrid.getActors(Raptor.class);
 	  
 	  for (Actor neighbour : neighbourBirds)
 	  {
-	   Bird bird = (Bird)neighbour;
+	   FlockBird bird = (FlockBird)neighbour;
 	   distVec = getPositionVecDiffOnTorusBird(bird);
 	  
 	   if ((distVec.magnitude() <= SimFlock.rob) && (distVec.magnitude() > SimFlock.rcrit))
@@ -216,7 +230,7 @@ class Bird extends Actor
 	  accSeparation = sepDistSumVec.mult(SimFlock.separationFactor);
 	  accAlignment =  velocity.sub(aligVelSumVec).mult(-SimFlock.alignmentFactor);
 	  accEscape = escDistSumVec.mult(SimFlock.escapeFactor);
-	  acceleration.x = accCohesion.x + accSeparation.x + accAlignment.x; 
+	  acceleration.x = accCohesion.x + accSeparation.x + accAlignment.x;
 	  acceleration.y = accCohesion.y + accSeparation.y + accAlignment.y;
 	  if (rcounter>0) {acceleration.x = accEscape.x; acceleration.y = accEscape.y;}
 	return acceleration;
@@ -247,63 +261,17 @@ class Bird extends Actor
 
 ////////////////////////////////////// CLASS RAPTOR ///////////////////////////////////////////////////////
 
-class Raptor extends Actor
+class Raptor extends Bird
 {
-  private Location oldLocation = new Location(-1, -1);
-  private GGVector startVelocity;
   public  Location location;
-  public  GGVector position;
-  public  GGVector velocity;
   private GGVector acceleration;
-  private boolean  borderCrossed;
 	  
   public Raptor(GGVector startVelocity)
   {
-    super(true,"sprites/raptor.gif"); 
-	this.startVelocity = startVelocity;
-	this.velocity=startVelocity;
+    super(startVelocity,"sprites/raptor.gif"); 
   }
   
-  public void reset()
-  {
-	position = toPosition(getLocationStart());
-	velocity = startVelocity;
-    setDirection(Math.toDegrees(startVelocity.getDirection()));
-    oldLocation.x = -1; oldLocation.y = -1;
-  }
-  
-  private GGVector toPosition(Location location)
-  {
-    return new GGVector(location.x, location.y);
-  }
-
-  private Location toLocation(GGVector position)
-  {
-    return new Location((int)(position.x), (int)(position.y));
-  }
-  
-  private GGVector toTorusPosition(GGVector position)
-  {
-	double x=position.x; double y=position.y;  borderCrossed=false;
-	if (x<0) {x = x + SimFlock.nw; borderCrossed=true;}
-	if (x>SimFlock.nw-1) {x = x - SimFlock.nw; borderCrossed=true;}
-	if (y<0) {y = y + SimFlock.nh; borderCrossed=true;}
-	if (y>SimFlock.nh-1) {y = y - SimFlock.nh; borderCrossed=true;}
-    return new GGVector(x,y);
-  }
-  
-  public GGVector getPosition()
-  {
-    return position.clone();
-  }
-
-  public GGVector getVelocity()
-  {
-    return velocity.clone();
-  }
-  
-  
-  private GGVector getPositionVecDiffOnTorus(Bird bird)
+  private GGVector getPositionVecDiffOnTorus(FlockBird bird)
   {   GGVector delta = new GGVector();
 	  double mag; double magmin = SimFlock.rom;
       int imin = 0; int jmin = 0;
@@ -322,12 +290,6 @@ class Raptor extends Actor
 	  return position.sub(bird.getPosition().add(delta)); 
   }
   
-  private GGVector setAccelerationToZero()  //Behavior of the RAPTOR: no acceleration
-  {
-	return new GGVector(0,0);
-  }
-  
-  
   private GGVector setAcceleration()  //Behavior of the RAPTOR: acceleration
   {
 	  GGVector distVec = new GGVector();
@@ -335,11 +297,11 @@ class Raptor extends Actor
 	  GGVector accAggression = new GGVector(0,0);
 	  GGVector acceleration = new GGVector();
 	  double mag; double minmag = SimFlock.rom;
-	  ArrayList<Actor> neighbourBirds = gameGrid.getActors(Bird.class);
+	  ArrayList<Actor> neighbourBirds = gameGrid.getActors(FlockBird.class);
 	  
 	  for (Actor neighbour : neighbourBirds)
 	  {
-	   Bird bird = (Bird)neighbour;
+	   FlockBird bird = (FlockBird)neighbour;
 	   distVec = getPositionVecDiffOnTorus(bird);
 	   mag = distVec.magnitude();
 	   if (mag <= SimFlock.ror) 
