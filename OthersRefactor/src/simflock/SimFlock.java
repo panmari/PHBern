@@ -20,7 +20,7 @@ public class SimFlock extends GameGrid
   private static final int nr = 1;                    // Number of raptors
   protected static final double rom = Math.sqrt(nw*nw+nh*nh);   // Maximum Radius of observation
   private static final int rseed=123;               // Random Seed
-  protected static final  boolean drawTrace = false;  // Draw traces of birds/raptors
+  protected static final  boolean drawTrace = true;  // Draw traces of birds/raptors
   protected static final  double  timeFactor = 4;     // Descrete Timestep for calculation of acc/vel/pos
   // Change behavior of birds /////////////////////////////////////////
   protected static final double vbird = 1;            // Magnitude of velocity: birds
@@ -49,14 +49,14 @@ public class SimFlock extends GameGrid
     {
       GGVector startVelocity = new GGVector(vbird,0);
       startVelocity.rotate(rand.nextInt(360));  
-      birds[i] = new FlockBird(startVelocity);
+      birds[i] = new FlockBird(startVelocity, vbird);
       addActor(birds[i], new Location(rand.nextInt(nw), rand.nextInt(nh)));
     }
     for (int i = 0; i < nr; i++)  // Generate birds
     {
       GGVector startVelocity = new GGVector(vraptor,0);
       startVelocity.rotate(rand.nextInt(360));  
-      raptors[i] = new Raptor(startVelocity);
+      raptors[i] = new Raptor(startVelocity, vraptor);
       addActor(raptors[i], new Location(rand.nextInt(nw), rand.nextInt(nh)));
     }
     show();
@@ -69,21 +69,26 @@ public class SimFlock extends GameGrid
 }
 
 //////////////////////////////////////CLASS Bird ///////////////////////////////////////////////////////
-class Bird extends Actor 
+abstract class Bird extends Actor 
 {
   protected Location oldLocation = new Location(-1, -1);
   protected GGVector startVelocity;
   protected GGVector velocity;
   protected GGVector position;
   protected boolean  borderCrossed;
+  protected double velocityMagnitude;
 
-  public Bird(GGVector startVelocity, String sprite)
+  public Bird(GGVector startVelocity, String sprite, double velocityMagnitude)
   {
     super(true, sprite); 
 	this.startVelocity = startVelocity;
 	this.velocity=startVelocity;
 	this.borderCrossed=false;
+	this.velocityMagnitude = velocityMagnitude;
   }
+  
+  protected abstract GGVector setAcceleration();
+  protected abstract Color getColor();
   
   @Deprecated
   protected GGVector setAccelerationToZero()
@@ -150,18 +155,41 @@ class Bird extends Actor
 	  delta.x = imin*SimFlock.nw; delta.y =jmin*SimFlock.nh;
 	  return position.sub(bird.getPosition().add(delta)); 
   }
+  
+  public void act()
+  {
+	  GGVector acceleration = setAcceleration();
+	  velocity = velocity.add(acceleration.mult(SimFlock.timeFactor));
+	  velocity.normalize();
+	  velocity = velocity.mult(velocityMagnitude);
+	  position = position.add(velocity.mult(SimFlock.timeFactor));
+	  position = toTorusPosition(position);
+	  Location location = toLocation(position);
+	  if (borderCrossed) {oldLocation.x = -1; oldLocation.y = -1;}
+	  setDirection(Math.toDegrees(velocity.getDirection()));
+	  setLocation(location);
+	  
+	  if (SimFlock.drawTrace)
+	    {
+		  getBackground().setPaintColor(getColor());
+	      if (oldLocation.x != -1)
+	        getBackground().drawLine(oldLocation.x, oldLocation.y, location.x, location.y);
+	        oldLocation.x = location.x; oldLocation.y = location.y;
+	    }
+  }
 }
 
 //////////////////////////////////////CLASS FlockBird ///////////////////////////////////////////////////////
 
 class FlockBird extends Bird
 {	  
-  public FlockBird(GGVector startVelocity)
+  public FlockBird(GGVector startVelocity, double vbird)
   {
-    super(startVelocity,"sprites/bird.gif");
+    super(startVelocity,"sprites/bird.gif", vbird);
   }
   
-  private GGVector setAcceleration()  //Behavior of the bird: acceleration
+  @Override
+  protected GGVector setAcceleration()  //Behavior of the bird: acceleration
   {
 	  GGVector distVec = new GGVector();
 	  GGVector cohDistSumVec = new GGVector(0,0);
@@ -212,28 +240,11 @@ class FlockBird extends Bird
 	  if (rcounter > 0) {acceleration.x = accEscape.x; acceleration.y = accEscape.y;}
 	return acceleration;
   }
-  
-  public void act()
-  {
-	  GGVector acceleration = setAcceleration();
-	  velocity = velocity.add(acceleration.mult(SimFlock.timeFactor));
-	  velocity.normalize();
-	  velocity = velocity.mult(SimFlock.vbird);
-	  position = position.add(velocity.mult(SimFlock.timeFactor));
-	  position = toTorusPosition(position);
-	  Location location = toLocation(position);
-	  if (borderCrossed) {oldLocation.x = -1; oldLocation.y = -1;}
-	  setDirection(Math.toDegrees(velocity.getDirection()));
-	  setLocation(location);
-	  
-	  if (SimFlock.drawTrace)
-	    {
-		  getBackground().setPaintColor(Color.blue);
-	      if (oldLocation.x != -1)
-	        getBackground().drawLine(oldLocation.x, oldLocation.y, location.x, location.y);
-	        oldLocation.x = location.x; oldLocation.y = location.y;
-	    }
-  }
+
+@Override
+protected Color getColor() {
+	return Color.BLUE;
+}
 }
 
 ////////////////////////////////////// CLASS RAPTOR ///////////////////////////////////////////////////////
@@ -241,12 +252,13 @@ class FlockBird extends Bird
 class Raptor extends Bird
 {
 	  
-  public Raptor(GGVector startVelocity)
+  public Raptor(GGVector startVelocity, double vraptor)
   {
-    super(startVelocity,"sprites/raptor.gif"); 
+    super(startVelocity,"sprites/raptor.gif", vraptor); 
   }
   
-  private GGVector setAcceleration()  //Behavior of the RAPTOR: acceleration
+  @Override 
+  protected GGVector setAcceleration()  //Behavior of the RAPTOR: acceleration
   {
 	  GGVector distVec = new GGVector();
 	  GGVector nearestDistVecBird = new GGVector(0,0);
@@ -269,26 +281,9 @@ class Raptor extends Bird
 	return acceleration;
   }
   
-  public void act()
-  {
-	  GGVector acceleration = setAcceleration();
-	  velocity = velocity.add(acceleration.mult(SimFlock.timeFactor));
-	  velocity.normalize();
-	  velocity = velocity.mult(SimFlock.vraptor);
-	  position = position.add(velocity.mult(SimFlock.timeFactor));
-	  position = toTorusPosition(position);
-	  Location location = toLocation(position);
-	  if (borderCrossed) {oldLocation.x = -1; oldLocation.y = -1;}
-	  setDirection(Math.toDegrees(velocity.getDirection()));
-	  setLocation(location);
-	  
-	  if (SimFlock.drawTrace)
-	    {
-		  getBackground().setPaintColor(Color.blue);
-	      if (oldLocation.x != -1)
-	        getBackground().drawLine(oldLocation.x, oldLocation.y, location.x, location.y);
-	        oldLocation.x = location.x; oldLocation.y = location.y;
-	    }
+  @Override
+  protected Color getColor() {
+  	return Color.RED;
   }
 }
 
