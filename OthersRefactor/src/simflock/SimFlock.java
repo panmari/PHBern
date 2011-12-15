@@ -19,7 +19,7 @@ public class SimFlock extends GameGrid
   private static final int height = 600;                // Number of cells: Height of playground
   private static final int width = 1000;               // Number of cells: Width of playground;
   private static final int nbFlockBirds = 100;         // Number of FlockBirds
-  private static final int nbRaptors = 1;                    // Number of raptors
+  private static final int nbRaptors = 3;                    // Number of raptors
   protected static final double maxro = Math.sqrt(width*width+height*height);   // Maximum Radius of observation
   private static final int randomSeed=123;               // For initializing birds locations
   protected static final  boolean drawTrace = true;  // Draw traces of FlockBirds/raptors
@@ -99,7 +99,7 @@ abstract class Bird extends Actor
   
   public void reset()
   {
-	position = toPosition(getLocationStart());
+	position = new GGVector (getLocationStart().x, getLocationStart().y);
 	velocity = startVelocity;
     setDirection(Math.toDegrees(startVelocity.getDirection()));
   }
@@ -112,16 +112,6 @@ abstract class Bird extends Actor
   public GGVector getVelocity()
   {
     return velocity.clone();
-  }
-  
-  private GGVector toPosition(Location location)
-  {
-    return new GGVector(location.x, location.y);
-  }
-
-  protected Location toLocation(GGVector position)
-  {
-    return new Location((int)(position.x), (int)(position.y));
   }
 
   protected GGVector toTorusPosition(GGVector position)
@@ -164,7 +154,7 @@ abstract class Bird extends Actor
 	  velocity = velocity.mult(velocityMagnitude);
 	  position = position.add(velocity.mult(SimFlock.timeFactor));
 	  position = toTorusPosition(position);
-	  Location location = toLocation(position);
+	  Location location = new Location((int)position.x, (int)position.y);
 	  setDirection(Math.toDegrees(velocity.getDirection()));
 	  setLocation(location);
 	  
@@ -205,7 +195,7 @@ class FlockBird extends Bird
 	  GGVector accEscape = new GGVector(0,0);
 	  int cohCounter = 0; int sepCounter = 0; int aligCounter = 0; int raptCounter = 0;
 	  ArrayList<Actor> neighbourBirds = gameGrid.getActors(FlockBird.class);
-	  neighbourBirds.remove(this);  // Remove self of list
+	  neighbourBirds.remove(this);  // Remove self from list
 	  ArrayList<Actor> neighbourRaptors = gameGrid.getActors(Raptor.class);
 	  
 	  for (Actor neighbour : neighbourBirds)
