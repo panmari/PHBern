@@ -7,6 +7,8 @@
  - Bewegt sich in mitte und Schaufel 6 kommet nach oben
  */
 
+import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -15,9 +17,12 @@ import java.util.List;
 
 import ch.aplu.jcardgame.*;
 import ch.aplu.jcardgame.Hand.SortType;
+import ch.aplu.jgamegrid.GGButton;
+import ch.aplu.jgamegrid.GGButtonListener;
 import ch.aplu.jgamegrid.Location;
+import ch.aplu.jgamegrid.TextActor;
 
-public class PokerApr16 extends CardGame {
+public class PokerApr16 extends CardGame implements GGButtonListener {
 	public enum ComboType {
 		SingleCard, Pair, Trips, Straight, FullHouse, Flush, Quads, StraightFlush, 
 	}
@@ -41,6 +46,8 @@ public class PokerApr16 extends CardGame {
 	private final int nbCards = 5;
 	private Location[] handLocations = { new Location(300, 100),
 			new Location(300, 500), };
+	private GGButton okBtn = new GGButton("sprites/ok.gif", true);
+
 
 	public PokerApr16() {
 		super(660, 660);
@@ -50,6 +57,8 @@ public class PokerApr16 extends CardGame {
 		stock.setVerso(true);
 		stock.setView(this, new StackLayout(new Location(300, 300)));
 		stock.draw();
+		addActor(okBtn, new Location(600, 575));
+		okBtn.addButtonListener(this);
 	}
 
 	private void initBurntCards() {
@@ -59,23 +68,9 @@ public class PokerApr16 extends CardGame {
 
 	private void initHands() {
 		hands = deck.dealingOut(nbPlayers, nbCards, true);
+		hands[0].setVerso(true);
+		
 		for (int i = 0; i < nbPlayers; i++) {
-			final int k = i;
-			hands[i].addCardListener(new CardAdapter() {
-				public void leftDoubleClicked(Card card) {
-					card.setVerso(true);
-					card.transfer(burntCards, true);
-					Card newCard = stock.getLast();
-					newCard.transfer(hands[k], true);
-					// Modified AP
-					newCard.setVerso(false);
-					hands[k].sort(SortType.RANKPRIORITY, true);;
-					System.out.println("Highest Value Hand " + k + "\n"
-							+ getHighestCombo(hands[k]) + "\n");
-					System.out.println("Is player0 (top) winner? "
-							+ isPlayer0Winner());
-				}
-			});
 			hands[i].setTargetArea(new TargetArea(burntCardsLocation));
 			hands[i].setTouchEnabled(true);
 			hands[i].setView(this, new RowLayout(handLocations[i], 450));
@@ -84,6 +79,17 @@ public class PokerApr16 extends CardGame {
 			System.out.println("Highest Value Hand " + i + "\n"
 					+ getHighestCombo(hands[i]) + "\n");
 		}
+		hands[1].addCardListener(new CardAdapter() {
+			public void leftDoubleClicked(Card card) {
+				card.setVerso(true);
+				card.transfer(burntCards, true);
+				Card newCard = stock.getLast();
+				newCard.transfer(hands[1], true);
+				// Modified AP
+				newCard.setVerso(false);
+				//hands[1].sort(SortType.RANKPRIORITY, true);
+			}
+		});
 	}
 
 	/**
@@ -188,6 +194,16 @@ public class PokerApr16 extends CardGame {
 		return fullHouse;
 	}
 	
+	/**
+	 * Represents a combination of cards that can be achieved in poker.
+	 * It only consists of clones of cards, not the real cards used in game.
+	 * That's why you should NEVER insert the hand of a PokerCombo into a game 
+	 * (except you wanna cheat and you know what you're doing) or duplicated
+	 * cards may come into play.
+	 * 
+	 * @author panmari
+	 *
+	 */
 	class PokerCombo {
 		Hand hand;
 		ComboType comboType;
@@ -199,7 +215,7 @@ public class PokerApr16 extends CardGame {
 		}
 		
 		public PokerCombo(Hand hand, ComboType comboType, Hand wholeHand) {
-			//Also transmitts whole hand for computing offCard
+			// Also transmits whole hand for computing offCard
 			// only for pairs, quads & trips
 			this(hand, comboType);
 			ArrayList<Card> leftCards = wholeHand.getCardList();
@@ -215,5 +231,32 @@ public class PokerApr16 extends CardGame {
 			str += hand;
 			return str;
 		}
+	}
+
+	@Override
+	public void buttonClicked(GGButton button) {
+		hands[0].setVerso(false);
+		for (int i = 0; i < nbPlayers; i++) {
+		System.out.println("Highest Value Hand " + i + "\n"
+				+ getHighestCombo(hands[i]) + "\n");
+		}
+		if (isPlayer0Winner())
+			addActor(new TextActor("You lose!", Color.yellow, 
+					getBgColor(), new Font("Arial", Font.BOLD, 30)), new Location(330,330));
+		else addActor(new TextActor("You win!", Color.yellow, 
+				getBgColor(), new Font("Arial", Font.BOLD, 30)), new Location(330,330));
+		refresh();
+	}
+
+	@Override
+	public void buttonPressed(GGButton button) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void buttonReleased(GGButton button) {
+		// TODO Auto-generated method stub
+		
 	}
 }
