@@ -8,4 +8,5 @@ durch Fressen vermehren können.
 
 Kannst du ihm dabei helfen?
 
-Die Klasse AngryFish steht schon bereit.... [to be continued]
+Die Klasse AngryFish steht schon bereit. Natürlich ist es eine Unterklasse von Fish, da er viele Verhaltensweisen
+von den normalen Fischen übernimmt. Verwende die darin deklarierten Konstanten!

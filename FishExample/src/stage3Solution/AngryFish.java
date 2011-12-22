@@ -10,11 +10,16 @@ public class AngryFish extends Fish {
 	
 	public AngryFish(FishPond pond, FishTrap trap) {
 		super(pond, trap);
-		show(1);
+		show(1); //angry sprite
 	}
 	
 	public void tryToMate() {
-		//this fish is angry, he doesn't mate.
+		//this fish is angry, so he has a child once his stomach is full.
+		if (eatenFish > fullStomach) {
+			Location childFishLoc = new Location(getX() + 15, getY() + 15);
+			pond.addActor(new AngryFish(pond, trap), childFishLoc);
+			eatenFish = 0;
+		}
 	}
 
 	public void tryToEat() {
@@ -22,11 +27,6 @@ public class AngryFish extends Fish {
 		if(getNeighbours(eatingDistance, Fish.class).size() != 0) {
 			getNeighbours(eatingDistance, Fish.class).get(0).removeSelf();
 			eatenFish++;
-			if (eatenFish > fullStomach) {
-				Location childFishLoc = new Location(getX() + 15, getY() + 15);
-				pond.addActor(new AngryFish(pond, trap), childFishLoc);
-				eatenFish = 0;
-			}
 		}
 	}
 }
