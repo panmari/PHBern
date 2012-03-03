@@ -1,0 +1,26 @@
+<?xml version= "1.0" encoding="UTF-8" ?>
+<jnlp spec="1.0+" codebase="http://clab1.phbern.ch/jOnline" href="http://clab1.phbern.ch/jOnline/archive/0/BluetoothInstall.jnlp"> 
+  <information>
+    <title>Online execution</title>
+    <vendor>PHBern</vendor>
+    <description>BluetoothInstall Template</description>
+    <homepage href="BluetoothInstall Template"/>
+    <icon href="android.gif"/>
+    <offline-allowed/>
+  </information>
+  <security>
+    <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.5+"/>
+    <jar href="BluetoothInstall.jar"/>
+    <jar href="aplu5.jar"/>
+    <jar href="BtJLib.jar"/>
+    <jar href="bluecove-2.1.0.jar"/>
+    <jar href="bluecove-gpl-2.1.0.jar"/>
+    <jar href="l2fprod-common-all.jar"/>
+  </resources>
+  <application-desc main-class="BluetoothInstall">
+    <argument>http://clab1.phbern.ch/jOnline/archive/0/bin/FourInARow</argument>
+</application-desc>
+</jnlp>

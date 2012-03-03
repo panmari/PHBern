@@ -58,12 +58,13 @@ public class LejosDownload
 	    String dir = userHome + fs + "legoNXT" + fs + "lejosNXJ" + fs;
 	    String[] neededFiles = {"bcel.jar", "commons-cli.jar", "pctools.jar", 
 	    		"pccomm.jar", "jtools.jar", "bluecove.jar", "jlibnxt.dll"};
+	    //TODO: .dll not really needed for linux/mac
 	    String classpath = "";
 	    for (String s: neededFiles) {
-	    	classpath += classpath + dir + s + ";";
+	    	classpath += dir + s + ";";
 	    }
 	    //cut off last semicolon:
-	    classpath = classpath.substring(0, classpath.length() - 1 ); 
+	    classpath = classpath.substring(0, classpath.length() - 1 );
     //get Language from JNLP
     try
     {
@@ -114,7 +115,7 @@ public class LejosDownload
     }
     if (mop == null)
     {
-      mop = new ModelessOptionPane(message, "nxt.gif");
+      mop = new ModelessOptionPane(message);
       mop.setTitle(title);
     }
     else
@@ -303,7 +304,7 @@ public class LejosDownload
         props.setProperty("BluetoothName", btName);
         props.store(new FileOutputStream(pFile), "Used by LejosDownload");
         mop = new ModelessOptionPane(downloadTrial1[language] + btName +
-                                      downloadTrial2[language], "nxt.gif");
+                                      downloadTrial2[language]);
         mop.setTitle(title);
       }
       catch (IOException ex)
@@ -313,14 +314,12 @@ public class LejosDownload
       }
     }
     
-    String message;
     String[] outlist;
     
     if (osName.equals("Mac OS X") || osName.contains("Linux"))
     {
     	String command = nxjHome + fs + "bin" + fs + "nxjupload -r " +
     									(tryUSB ? "-u " : "-n " + btName + " ") + binFile;
-    	
     	if (debug)
       	System.out.println("MAC - command: " + command + ", \nTryUSB = " + tryUSB);
     	
@@ -339,7 +338,7 @@ public class LejosDownload
     {
     	String command = "java \"-Djava.library.path=" + nxjHome + "\"" +
     											" -classpath \"" + classpath +
-    											"\" lejos.pc.tools.NXJUpload " +
+    											"\" lejos.pc.tools.NXJUpload" +
     											" -r " +
     											(tryUSB ? "-u " : "-n " + btName + " ") +
     											"\"" + binFile + "\"";
@@ -423,12 +422,16 @@ public class LejosDownload
 
   public static void main(String[] args)
   {
-    if (args.length != 2)
+	  //TODO DEBUG:
+	  String[] debugArgs = {"http://clab1.phbern.ch/online/archive/0/classes/MotorEx1.nxj","English"};
+	  new LejosDownload(debugArgs);
+   /* if (args.length != 2)
     {
       System.out.println("LejosDownload Version " + version +
                          "\nUsage: LejosDownload <urlbin> <langString>");
       return;
     }
     new LejosDownload(args);
+    */
   }
 }
