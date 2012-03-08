@@ -198,8 +198,9 @@ public class InstallEmul
     }
 
     FileLog.println("Creating virtual sdcard now...");
-    //TODO: changes here
-    String imagePath = userHome + "\\.android\\avd\\Slim-Emulator.avd\\sdcard.img";
+    //sm: more fs, less escaped slashes
+    String imagePath = userHome + fs + ".android" + fs + "avd" + fs + 
+    		"Slim-Emulator.avd" + fs + "sdcard.img";
     String cmd = emulFolder + fs + "tools" + fs + "mksdcard 102400K " + imagePath;
     try
     {
