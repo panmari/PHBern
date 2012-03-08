@@ -8,5 +8,8 @@
 	<classpathentry kind="lib" path="lib/BtJLib.jar"/>
 	<classpathentry kind="lib" path="lib/l2fprod-common-all.jar"/>
 	<classpathentry kind="lib" path="lib/bluecove-2.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jtools.jar"/>
+	<classpathentry kind="lib" path="lib/pccomm.jar"/>
+	<classpathentry kind="lib" path="lib/pctools.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
