@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jnlp
+  spec="1.0+"
+  codebase="http://clab1.phbern.ch/online" href="nxtsetname.jnlp">
+  <information>
+    <title>Nxt Set Bluetooth Name</title>
+    <vendor>PHBern</vendor>
+    <description>Set the NXT Bluetooth friendly name</description>
+    <offline-allowed/>
+  </information>
+  <security>
+    <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.4+"/>
+    <jar href="NXTSetName.jar"/>
+    <jar href="pccomm_085.jar"/>
+  </resources>
+  <resources os="Windows">
+    <nativelib href="jfantom.dll.jar"/>
+  </resources>
+  <resources os="Mac OS X">
+    <nativelib href="libjfantom.dylib.jar"/>
+  </resources>
+  <application-desc main-class="NXTSetName">
+    <argument>None</argument>
+  </application-desc>
+</jnlp>

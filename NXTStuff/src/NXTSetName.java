@@ -115,14 +115,6 @@ public class NXTSetName
       System.out.println("Deutsch");
     }
 
-    osName = System.getProperty("os.name");
-
-    if (osName.equals("Mac OS X"))
-      System.load(nxtHome + "bin" + fs + "libjfantom.dylib");
-    else
-      System.load(nxtHome + "fantom.dll");
-
-
     ModelessOptionPane mop = 
       new ModelessOptionPane(nxtSearching2[language], iconUrl);
     mop.setTitle(nxtSearching1[language]);
@@ -147,12 +139,12 @@ public class NXTSetName
 
     boolean isOpen = false;
     System.out.print("Opening connection...");
-    NXTCommand nxtCommand = new NXTCommand();
+    NXTCommand nxtCommand = null;
     try
     {
       NXTComm nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.USB);
       isOpen = nxtComm.open(nxts[0], NXTComm.LCP);
-      nxtCommand.setNXTComm(nxtComm);
+      nxtCommand = new NXTCommand(nxtComm);
     }
     catch (NXTCommException e)
     {
