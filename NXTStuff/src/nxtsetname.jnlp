@@ -22,6 +22,9 @@
   <resources os="Mac OS X">
     <nativelib href="libjfantom.dylib.jar"/>
   </resources>
+   <resources os="Linux">
+    <nativelib href="**TODO**"/>
+  </resources>
   <application-desc main-class="NXTSetName">
     <argument>None</argument>
   </application-desc>

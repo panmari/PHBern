@@ -78,3 +78,5 @@ Desktop.ini
 
 # Merge #
 *.orig
+
+signed\ libs/

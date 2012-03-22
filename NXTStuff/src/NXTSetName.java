@@ -114,6 +114,20 @@ public class NXTSetName
       language = 0;
       System.out.println("Deutsch");
     }
+    
+    osName = System.getProperty("os.name");
+    
+    if (osName.equals("Mac OS X"))
+    	System.load(nxtHome + "bin" + fs + "libjfantom.dylib");
+    if (osName.contains("Linux")) {
+    	String arch;
+    	if (System.getProperty("os.arch").contains("64"))
+    		arch = "x86_64";
+    	else arch = "x86";
+    	System.load(nxtHome + "lib" + fs + "pc" + fs + "native" + fs + "linux" + fs + arch + fs + "libjlibnxt.so");
+    }
+    else
+    System.load(nxtHome + "fantom.dll");
 
     ModelessOptionPane mop = 
       new ModelessOptionPane(nxtSearching2[language], iconUrl);
