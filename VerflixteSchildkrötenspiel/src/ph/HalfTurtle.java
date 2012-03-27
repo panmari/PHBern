@@ -9,4 +9,8 @@ public class HalfTurtle {
 		this.color = color;
 		this.orientation = orientation;
 	}
+	
+	public String toString() {
+		return "" + color.getCharRepresentation() + orientation.getCharRepresentation();
+	}
 }

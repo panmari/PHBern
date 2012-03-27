@@ -1,5 +1,7 @@
 package tests;
 
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,19 +22,25 @@ public class TurtleCardFactoryTest {
 
 	@Test(expected=CardNotReadyException.class)
 	public void notReadyCardShouldThrowException() {
-		tf.makeNewEmptyCard();
+		tf.prepareEmptyCard();
 		tf.addHalfTurtle(Color.BLUE, Orientation.BACK);
 		tf.getNewCard();
 	}
 	
 	@Test
 	public void shouldReturnCardWhenFourAdded() {
-		tf.makeNewEmptyCard();
+		tf.prepareEmptyCard();
 		tf.addHalfTurtle(Color.BLUE, Orientation.BACK);
 		tf.addHalfTurtle(Color.BLUE, Orientation.BACK);
 		tf.addHalfTurtle(Color.BLUE, Orientation.BACK);
 		tf.addHalfTurtle(Color.BLUE, Orientation.BACK);
 		TurtleCard tc = tf.getNewCard();
+	}
+	
+	@Test
+	public void shouldMakeCardOutOfString() {
+		TurtleCard tc = tf.makeTurtleCard("yf;gb;rb;bf");
+		assertEquals("[yf, gb, rb, bf]" ,tc.toString());
 	}
 
 }

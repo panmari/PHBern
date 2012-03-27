@@ -1,16 +1,14 @@
 package tests;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import ph.Color;
-import ph.HalfTurtle;
-import ph.Orientation;
 import ph.TurtleCard;
+import ph.TurtleCardFactory;
 
 /**
  * @author panmari
@@ -18,7 +16,7 @@ import ph.TurtleCard;
  */
 public class TurtleCardTest {
 
-	private TurtleCard tc;
+	private TurtleCardFactory tf;
 
 	/**
 	 * Creates a card for testing purposes
@@ -26,12 +24,7 @@ public class TurtleCardTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		HalfTurtle[] ta = new HalfTurtle[4];
-		ta[0] = new HalfTurtle(Color.YELLOW, Orientation.BACK);
-		ta[1] = new HalfTurtle(Color.RED, Orientation.BACK);
-		ta[2] = new HalfTurtle(Color.YELLOW, Orientation.FRONT);
-		ta[3] = new HalfTurtle(Color.GREEN, Orientation.FRONT);
-		tc = new TurtleCard(ta);
+		tf = TurtleCardFactory.getInstance();
 	}
 
 	/**
@@ -39,7 +32,16 @@ public class TurtleCardTest {
 	 */
 	@Test
 	public void testRotateCardToRight() {
+		TurtleCard tc = tf.makeTurtleCard("yf;gb;rb;bf");
+		assertEquals("[yf, gb, rb, bf]" ,tc.toString());
 		assertFalse(tc.rotateCardToRight());
+		assertEquals("[gb, rb, bf, yf]", tc.toString());
+		assertFalse(tc.rotateCardToRight());
+		assertEquals("[rb, bf, yf, gb]", tc.toString());
+		assertFalse(tc.rotateCardToRight());
+		assertEquals("[bf, yf, gb, rb]", tc.toString());
+		assertTrue(tc.rotateCardToRight());
+		assertEquals("[yf, gb, rb, bf]", tc.toString());
 	}
 
 }

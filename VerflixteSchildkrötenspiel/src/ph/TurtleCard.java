@@ -1,5 +1,4 @@
 package ph;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 
@@ -8,20 +7,12 @@ public class TurtleCard {
 	private LinkedList<HalfTurtle> cardSetting;
 	
 	/**
-	 * In the order they appear on the card. First HalfTurtle is on the left side.
-	 * The Array must consist of four HalfTurtles!
-	 * @param fourHalfTurtles
+	 * This constructor shouldn't be called directly. Rather create TurtleCards through 
+	 * the TurtleCardFactory.
 	 */
-	public TurtleCard(HalfTurtle[] fourHalfTurtles) {
-		if (fourHalfTurtles.length != 4)
-			throw new IllegalArgumentException();
-		//TODO: check if there are any null objects in array
-		this.cardSetting = new LinkedList<HalfTurtle>(Arrays.asList(fourHalfTurtles));
-		this.rotation = Rotation.LEFT;
-	}
-	
 	public TurtleCard() {
 		cardSetting = new LinkedList<HalfTurtle>();
+		rotation = Rotation.LEFT;
 	}
 
 	/**
@@ -36,5 +27,9 @@ public class TurtleCard {
 
 	public void addHalfTurtle(HalfTurtle addedHalfTurtle) {
 		cardSetting.add(addedHalfTurtle);
+	}
+	
+	public String toString() {
+		return cardSetting.toString();
 	}
 }
