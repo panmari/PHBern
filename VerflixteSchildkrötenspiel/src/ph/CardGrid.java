@@ -21,13 +21,21 @@ public class CardGrid {
 		cardSet.add(tf.makeTurtleCard("yf;bb;rb;bf"));
 	}
 	
-	boolean isThereConflict() {
-		for (TurtleCard[] row: grid) {
-			for (TurtleCard tc: row) {
-				for (Orientation o: Orientation.values()) {
-					checkMatch(tc, o);
-				}
+	boolean isThereConflict(int newlyAddedx, int newlyAddedy) {
+		TurtleCard newCard = grid[newlyAddedx][newlyAddedy];
+		for (CardPosition cp: CardPosition.values()) {
+			try {
+				if (mismatch(newCard, grid[newlyAddedx + cp.x][newlyAddedy + cp.x], cp))
+					return true;
+			} catch (ArrayIndexOutOfBoundsException e) {
+				//it was k, bc there is only border
 			}
 		}
+		return false;
+	}
+
+	private boolean mismatch(TurtleCard newCard, TurtleCard cardInDirection, CardPosition cp) {
+		newCard.getHalfTurtleAt(cp).matches()
+		return false;
 	}
 }

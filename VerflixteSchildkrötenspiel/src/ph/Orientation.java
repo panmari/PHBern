@@ -16,7 +16,7 @@ public enum Orientation {
 				return o;
 		throw new IllegalArgumentException();
 	}
-
+	
 	public char getCharRepresentation() {
 		return charRepresentation;
 	}

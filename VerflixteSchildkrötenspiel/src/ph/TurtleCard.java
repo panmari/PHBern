@@ -3,7 +3,7 @@ import java.util.LinkedList;
 
 
 public class TurtleCard {
-	private Rotation rotation;
+	private CardPosition rotation;
 	private LinkedList<HalfTurtle> cardSetting;
 	
 	/**
@@ -12,7 +12,7 @@ public class TurtleCard {
 	 */
 	public TurtleCard() {
 		cardSetting = new LinkedList<HalfTurtle>();
-		rotation = Rotation.LEFT;
+		rotation = CardPosition.LEFT;
 	}
 
 	/**
@@ -22,7 +22,7 @@ public class TurtleCard {
 		HalfTurtle first = cardSetting.pollFirst();
 		cardSetting.addLast(first);
 		rotation = rotation.getNext();
-		return rotation == Rotation.LEFT;
+		return rotation == CardPosition.LEFT;
 	}
 
 	public void addHalfTurtle(HalfTurtle addedHalfTurtle) {
@@ -31,5 +31,9 @@ public class TurtleCard {
 	
 	public String toString() {
 		return cardSetting.toString();
+	}
+
+	public HalfTurtle getHalfTurtleAt(CardPosition cp) {
+		return cardSetting.get(cp.ordinal());
 	}
 }
