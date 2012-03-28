@@ -1,14 +1,13 @@
 package ph;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 
 public class CardGrid {
-	private List<TurtleCard> cardSet;
+	private LinkedList<TurtleCard> cardSet;
 	private TurtleCard[][] grid = new TurtleCard[3][3];
 			
 	public CardGrid() {
-		cardSet = new ArrayList<TurtleCard>();
+		cardSet = new LinkedList<TurtleCard>();
 		TurtleCardFactory tf = TurtleCardFactory.getInstance();
 		cardSet.add(tf.makeTurtleCard("yf;gb;rb;bf"));
 		cardSet.add(tf.makeTurtleCard("rf;yb;gb;gf"));
@@ -25,17 +24,34 @@ public class CardGrid {
 		TurtleCard newCard = grid[newlyAddedx][newlyAddedy];
 		for (CardPosition cp: CardPosition.values()) {
 			try {
-				if (mismatch(newCard, grid[newlyAddedx + cp.x][newlyAddedy + cp.x], cp))
+				if (mismatch(newCard, grid[newlyAddedx + cp.x][newlyAddedy + cp.y], cp))
 					return true;
 			} catch (ArrayIndexOutOfBoundsException e) {
+				//it was k, bc there is only border
+			} catch (NullPointerException e) {
 				//it was k, bc there is only border
 			}
 		}
 		return false;
 	}
 
+	/**
+	 * This is way too long and needs refactoring
+	 * @param newCard
+	 * @param cardInDirection
+	 * @param cp
+	 * @return
+	 */
 	private boolean mismatch(TurtleCard newCard, TurtleCard cardInDirection, CardPosition cp) {
-		newCard.getHalfTurtleAt(cp).matches()
-		return false;
+		return !newCard.getHalfTurtleAt(cp).matches(cardInDirection.getHalfTurtleAt(cp.getOpposite()));
+	}
+
+	public void putDownNextCard() {
+		TurtleCard nextCard = cardSet.pollFirst();
+		//find first empty slot:
+		for (int y = 0; y < grid.length; y++) 
+			for (int x = 0; x < grid[y].length; x++)
+				if (grid[x][y] == null)
+					grid[x][y] = nextCard;
 	}
 }

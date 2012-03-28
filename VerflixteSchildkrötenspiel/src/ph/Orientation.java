@@ -20,4 +20,8 @@ public enum Orientation {
 	public char getCharRepresentation() {
 		return charRepresentation;
 	}
+
+	public Orientation getOpposite() {
+		return Orientation.values()[(this.ordinal() + 1) % 2];
+	}
 }
