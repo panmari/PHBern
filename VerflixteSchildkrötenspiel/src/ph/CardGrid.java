@@ -1,4 +1,5 @@
 package ph;
+import java.awt.Point;
 import java.util.LinkedList;
 
 
@@ -20,11 +21,13 @@ public class CardGrid {
 		cardSet.add(tf.makeTurtleCard("yf;bb;rb;bf"));
 	}
 	
-	boolean isThereConflict(int newlyAddedx, int newlyAddedy) {
-		TurtleCard newCard = grid[newlyAddedx][newlyAddedy];
+	public boolean isThereConflict(Point newCardPos) {
+		TurtleCard newCard = grid[newCardPos.x][newCardPos.y];
 		for (CardPosition cp: CardPosition.values()) {
 			try {
-				if (mismatch(newCard, grid[newlyAddedx + cp.x][newlyAddedy + cp.y], cp))
+				int newX = newCardPos.x + cp.x;
+				int newY = newCardPos.y + cp.y;
+				if (mismatch(newCard, grid[newX][newY], cp))
 					return true;
 			} catch (ArrayIndexOutOfBoundsException e) {
 				//it was k, bc there is only border
@@ -42,16 +45,52 @@ public class CardGrid {
 	 * @param cp
 	 * @return
 	 */
-	private boolean mismatch(TurtleCard newCard, TurtleCard cardInDirection, CardPosition cp) {
+	public boolean mismatch(TurtleCard newCard, TurtleCard cardInDirection, CardPosition cp) {
 		return !newCard.getHalfTurtleAt(cp).matches(cardInDirection.getHalfTurtleAt(cp.getOpposite()));
 	}
 
-	public void putDownNextCard() {
+	/**
+	 * @return a point with the coordinates of the new card or
+	 * 			null, if there is no empty slot for another card.
+	 */
+	public Point putDownNextCard() {
 		TurtleCard nextCard = cardSet.pollFirst();
 		//find first empty slot:
 		for (int y = 0; y < grid.length; y++) 
 			for (int x = 0; x < grid[y].length; x++)
-				if (grid[x][y] == null)
+				if (grid[x][y] == null) {
 					grid[x][y] = nextCard;
+					return new Point(x, y);
+				}
+		return null;
+	}
+
+	public boolean rotateCardAt(Point p) {
+		return grid[p.x][p.y].rotateCardToRight();
+	}
+
+	/**
+	 * TODO: Where in cardSet should I put this card?
+	 * @param p
+	 * @return
+	 */
+	public Point removeCardAt(Point p) {
+		cardSet.addLast(grid[p.x][p.y]);
+		grid[p.x][p.y] = null;
+		return positionInGridBefore(p);
+	}
+
+	private Point positionInGridBefore(Point p) {
+		if (p.x == 0 && p.y == 0)
+			throw new IllegalArgumentException();
+		int x = (p.x + 2) % 3;
+		int y = p.y;
+		if (p.x == 0) 
+			y = p.y - 1;
+		return new Point(x, y);
+	}
+	
+	public TurtleCard[][] getGrid() {
+		return grid;
 	}
 }

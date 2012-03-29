@@ -35,6 +35,7 @@ public class TurtleCardFactoryTest {
 		tf.addHalfTurtle(Color.BLUE, Orientation.BACK);
 		tf.addHalfTurtle(Color.BLUE, Orientation.BACK);
 		TurtleCard tc = tf.getNewCard();
+		assertEquals("[bb, bb, bb, bb]" ,tc.toString());
 	}
 	
 	@Test
