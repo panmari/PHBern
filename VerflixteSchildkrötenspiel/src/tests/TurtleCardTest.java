@@ -31,15 +31,15 @@ public class TurtleCardTest {
 	 * Test method for {@link TurtleCard#rotateCardToRight()}.
 	 */
 	@Test
-	public void testRotateCardToRight() {
+	public void testRotateCardClockwise() {
 		TurtleCard tc = tf.makeTurtleCard("yf;gb;rb;bf");
 		assertEquals("[yf, gb, rb, bf]" ,tc.toString());
 		assertFalse(tc.rotateCardToRight());
-		assertEquals("[gb, rb, bf, yf]", tc.toString());
+		assertEquals("[bf, yf, gb, rb]", tc.toString());
 		assertFalse(tc.rotateCardToRight());
 		assertEquals("[rb, bf, yf, gb]", tc.toString());
 		assertFalse(tc.rotateCardToRight());
-		assertEquals("[bf, yf, gb, rb]", tc.toString());
+		assertEquals("[gb, rb, bf, yf]", tc.toString());
 		assertTrue(tc.rotateCardToRight());
 		assertEquals("[yf, gb, rb, bf]", tc.toString());
 	}

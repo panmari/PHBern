@@ -1,6 +1,9 @@
 package ph;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 
 public class CardGrid {
@@ -50,11 +53,24 @@ public class CardGrid {
 	}
 
 	/**
+	 * @param deadCards 
 	 * @return a point with the coordinates of the new card or
 	 * 			null, if there is no empty slot for another card.
 	 */
-	public Point putDownNextCard() {
-		TurtleCard nextCard = cardSet.pollFirst();
+	public Point putDownNextAliveCard(ArrayList<TurtleCard> deadCards) {
+		if (cardSet.isEmpty())
+			return null;
+		
+		TurtleCard nextCard = null;
+		for (TurtleCard tc: cardSet) {
+			if (!deadCards.contains(tc)) {
+				nextCard = tc;
+				break;
+			}
+		}
+		if (nextCard == null)
+			throw new NoCardAliveException();
+		else cardSet.remove(nextCard);
 		//find first empty slot:
 		for (int y = 0; y < grid.length; y++) 
 			for (int x = 0; x < grid[y].length; x++)
@@ -92,5 +108,9 @@ public class CardGrid {
 	
 	public TurtleCard[][] getGrid() {
 		return grid;
+	}
+
+	public TurtleCard getCardAt(Point p) {
+		return grid[p.x][p.y];
 	}
 }

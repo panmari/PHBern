@@ -1,6 +1,7 @@
 package ph;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 public class Solver {
 
@@ -8,27 +9,25 @@ public class Solver {
 	
 	public static void main(String[] args) {
 		gg = new CardGrid();
-		Point p = gg.putDownNextCard();
-		solve(p);
-		
+		ArrayList<TurtleCard> deadCards = new ArrayList<TurtleCard>(); //empty to begin with
+		Point p = gg.putDownNextAliveCard(deadCards);
+		solve(p, deadCards);
 	}
 
-	private static void solve(Point p) {
+	private static void solve(Point p, ArrayList<TurtleCard> deadCards) {
 		if (p == null) //=> done!
 			return;
 		if (gg.isThereConflict(p)) {
-			if (gg.rotateCardAt(p)) {
-				solve(p);
+			if (!gg.rotateCardAt(p)) {
+				solve(p, deadCards);
 			} else {
+				deadCards.add(gg.getCardAt(p));
 				Point oneBack = gg.removeCardAt(p);
-				solve(oneBack);
+				solve(oneBack, deadCards);
 			}
 		} else {
-			solve(gg.putDownNextCard());
+			solve(gg.putDownNextAliveCard(deadCards), new ArrayList<TurtleCard>());
 		}
-			
-		
-		
 	}
 
 }

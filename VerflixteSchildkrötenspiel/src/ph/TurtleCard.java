@@ -19,8 +19,8 @@ public class TurtleCard {
 	 * Returns true if it's in the original position again (aka Rotation.LEFT)
 	 */
 	public boolean rotateCardToRight() {
-		HalfTurtle first = cardSetting.pollFirst();
-		cardSetting.addLast(first);
+		HalfTurtle last = cardSetting.pollLast();
+		cardSetting.addFirst(last);
 		rotation = rotation.getNext();
 		return rotation == CardPosition.LEFT;
 	}
