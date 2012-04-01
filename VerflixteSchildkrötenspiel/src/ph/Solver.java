@@ -15,7 +15,7 @@ public class Solver {
 	}
 
 	private static void solve(Point p, ArrayList<TurtleCard> deadCards) {
-		if (p == null) //=> done!
+		if (gg.isSolved()) //=> done!
 			return;
 		if (gg.isThereConflict(p)) {
 			if (!gg.rotateCardAt(p)) {

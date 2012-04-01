@@ -98,7 +98,7 @@ public class CardGrid {
 
 	private Point positionInGridBefore(Point p) {
 		if (p.x == 0 && p.y == 0)
-			throw new IllegalArgumentException();
+			return new Point(0, 0);
 		int x = (p.x + 2) % 3;
 		int y = p.y;
 		if (p.x == 0) 
@@ -112,5 +112,9 @@ public class CardGrid {
 
 	public TurtleCard getCardAt(Point p) {
 		return grid[p.x][p.y];
+	}
+
+	public boolean isSolved() {
+		return cardSet.isEmpty() && !isThereConflict(new Point(3, 3));
 	}
 }

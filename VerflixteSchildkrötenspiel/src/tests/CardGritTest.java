@@ -74,8 +74,8 @@ public class CardGritTest {
 		deadCards.add(gg.getCardAt(gg.putDownNextAliveCard(noDeadCards)));
 		deadCards.add(gg.getCardAt(gg.putDownNextAliveCard(noDeadCards)));
 		deadCards.add(gg.getCardAt(gg.putDownNextAliveCard(noDeadCards)));
-		gg.removeCardAt(new Point (2,0));
-		gg.removeCardAt(new Point (2,0));
+		gg.removeCardAt(new Point (0,0));
+		gg.removeCardAt(new Point (1,0));
 		gg.removeCardAt(new Point (2,0));
 		gg.putDownNextAliveCard(deadCards);
 		gg.putDownNextAliveCard(deadCards);
@@ -90,10 +90,10 @@ public class CardGritTest {
 		//fail("Not yet implemented");
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test
 	public void testRemoveFirstLaidCard() {
 		Point p = gg.putDownNextAliveCard(noDeadCards);
-		gg.removeCardAt(p);
+		assertEquals(new Point(0,0), gg.removeCardAt(p));
 	}
 	
 	@Test
