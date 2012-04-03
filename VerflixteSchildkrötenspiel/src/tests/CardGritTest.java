@@ -82,7 +82,11 @@ public class CardGritTest {
 		gg.putDownNextAliveCard(deadCards);
 		
 		assertThat(deadCards, not(hasItem(gg.getCardAt(new Point(0,0)))));
-		assertThat(deadCards, not(hasItem(gg.getCardAt(new Point(0,1)))));
+		assertFalse(gg.getCardAt(new Point(0,0)) == null);
+		assertThat(deadCards, not(hasItem(gg.getCardAt(new Point(1,0)))));
+		assertFalse(gg.getCardAt(new Point(1,0)) == null);
+		assertThat(deadCards, not(hasItem(gg.getCardAt(new Point(2,0)))));
+		assertFalse(gg.getCardAt(new Point(2,0)) == null);
 	}
 	
 	@Test

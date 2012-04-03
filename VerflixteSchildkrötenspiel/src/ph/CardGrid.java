@@ -117,4 +117,17 @@ public class CardGrid {
 	public boolean isSolved() {
 		return cardSet.isEmpty() && !isThereConflict(new Point(3, 3));
 	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (int y = 0; y < grid.length; y++) {
+			for (int x = 0; x < grid[y].length; x++) {
+				sb.append(" | ");
+				sb.append(grid[x][y]);
+			}
+			sb.append(" | ");
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
 }
