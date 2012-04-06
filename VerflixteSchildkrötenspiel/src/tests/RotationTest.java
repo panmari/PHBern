@@ -1,6 +1,8 @@
-package ph;
+package tests;
 
 import static org.junit.Assert.*;
+
+import gg.CardPosition;
 
 import org.junit.Before;
 import org.junit.Test;

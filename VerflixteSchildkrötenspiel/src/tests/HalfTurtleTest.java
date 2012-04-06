@@ -1,12 +1,12 @@
 package tests;
 
 import static org.junit.Assert.*;
+import gg.Color;
+import gg.HalfTurtle;
+import gg.Orientation;
 
 import org.junit.Test;
 
-import ph.Color;
-import ph.HalfTurtle;
-import ph.Orientation;
 
 
 public class HalfTurtleTest {

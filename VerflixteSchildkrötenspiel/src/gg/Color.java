@@ -1,4 +1,4 @@
-package ph;
+package gg;
 
 public enum Color {
 	YELLOW('y'),

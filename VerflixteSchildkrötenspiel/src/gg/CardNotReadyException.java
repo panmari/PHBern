@@ -1,4 +1,4 @@
-package ph;
+package gg;
 
 public class CardNotReadyException extends RuntimeException {
 

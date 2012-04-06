@@ -3,12 +3,12 @@ package tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import gg.TurtleCard;
+import gg.TurtleCardFactory;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import ph.TurtleCard;
-import ph.TurtleCardFactory;
 
 /**
  * @author panmari

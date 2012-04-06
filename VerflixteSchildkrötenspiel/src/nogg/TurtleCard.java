@@ -1,7 +1,8 @@
-package ph;
-import java.util.LinkedList;
+package nogg;
+import gg.CardPosition;
+import gg.HalfTurtle;
 
-import ch.aplu.jgamegrid.Actor;
+import java.util.LinkedList;
 
 /**
  * Representation of a card. Consists of 4 half turtles. 
@@ -10,7 +11,7 @@ import ch.aplu.jgamegrid.Actor;
  * @author panmari
  *
  */
-public class TurtleCard extends Actor {
+public class TurtleCard {
 	private CardPosition rotation;
 	private LinkedList<HalfTurtle> cardSetting;
 	private static int idCounter = 0;
@@ -21,7 +22,6 @@ public class TurtleCard extends Actor {
 	 * the TurtleCardFactory.
 	 */
 	public TurtleCard(String sprite) {
-		super(true, sprite);
 		cardSetting = new LinkedList<HalfTurtle>();
 		rotation = CardPosition.LEFT;
 		id = idCounter++;
@@ -31,7 +31,6 @@ public class TurtleCard extends Actor {
 	 * Returns true if it's in the original position again (aka Rotation.LEFT)
 	 */
 	public boolean rotateCardClockwise() {
-		turn(90);
 		HalfTurtle last = cardSetting.pollLast();
 		cardSetting.addFirst(last);
 		rotation = rotation.getNext();

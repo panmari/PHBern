@@ -1,17 +1,17 @@
-package ph;
-import java.awt.Point;
+package nogg;
+import gg.CardPosition;
+import gg.HalfTurtle;
+
 import java.util.LinkedList;
-import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.util.Monitor;
 
 
-public class CardGrid extends GameGrid {
+public class CardGrid {
 	private LinkedList<TurtleCard> cardSet;
 	private TurtleCard[][] grid = new TurtleCard[3][3];
 			
 	public CardGrid() {
-		super(3, 3, 200);
 		cardSet = new LinkedList<TurtleCard>();
 		TurtleCardFactory tf = TurtleCardFactory.getInstance();
 		cardSet.add(tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc1.jpg"));
@@ -23,11 +23,10 @@ public class CardGrid extends GameGrid {
 		cardSet.add(tf.makeTurtleCard("rf;bb;yb;gf", "sprites/tc7.jpg"));
 		cardSet.add(tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc8.jpg"));
 		cardSet.add(tf.makeTurtleCard("yf;bb;rb;bf", "sprites/tc9.jpg"));
-		show();
 	}
 	
 	/**
-	 * TODO: make a null turtle for exception-cases?
+	 * TODO: make a null turtle to avert ugly exception-cases?
 	 * @param p
 	 * @return
 	 */
@@ -67,7 +66,6 @@ public class CardGrid extends GameGrid {
 			for (int x = 0; x < grid[y].length; x++)
 				if (grid[x][y] == null) {
 					grid[x][y] = nextCard;
-					addActor(nextCard, new Location(x,y));
 					return new Location(x, y);
 				}
 		return null;
@@ -113,7 +111,6 @@ public class CardGrid extends GameGrid {
 				if (grid[x][y] != null) {
 					cardSet.add(grid[x][y]);
 					grid[x][y] = null;
-					removeActorsAt(new Location(x,y));
 					return;
 				}
 	}

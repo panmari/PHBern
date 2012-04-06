@@ -2,6 +2,9 @@ package tests;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import gg.CardGrid;
+import gg.TurtleCard;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -11,8 +14,6 @@ import org.junit.Test;
 
 import ch.aplu.jgamegrid.Location;
 
-import ph.CardGrid;
-import ph.TurtleCard;
 
 public class CardGritTest {
 

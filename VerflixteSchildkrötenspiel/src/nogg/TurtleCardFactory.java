@@ -1,4 +1,9 @@
-package ph;
+package nogg;
+
+import gg.CardNotReadyException;
+import gg.Color;
+import gg.HalfTurtle;
+import gg.Orientation;
 
 public class TurtleCardFactory {
 	
