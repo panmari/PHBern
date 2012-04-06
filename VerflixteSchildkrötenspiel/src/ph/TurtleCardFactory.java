@@ -12,8 +12,8 @@ public class TurtleCardFactory {
 		return tf;
 	}
 	
-	public void prepareEmptyCard() {
-		card = new TurtleCard();
+	public void prepareEmptyCard(String sprite) {
+		card = new TurtleCard(sprite);
 		halfTurtleCount = 0;
 	}
 	
@@ -43,8 +43,8 @@ public class TurtleCardFactory {
 	 * @param tcString
 	 * @return
 	 */
-	public TurtleCard makeTurtleCard(String tcString) {
-		prepareEmptyCard();
+	public TurtleCard makeTurtleCard(String tcString, String sprite) {
+		prepareEmptyCard(sprite);
 		for (String tString: tcString.split(";")) {
 			Color tColor = Color.getByCharacter(tString.charAt(0));
 			Orientation tOrientation = Orientation.getByCharacter(tString.charAt(1));
