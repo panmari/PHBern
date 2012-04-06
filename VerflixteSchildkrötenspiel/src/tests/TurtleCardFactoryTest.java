@@ -22,14 +22,14 @@ public class TurtleCardFactoryTest {
 
 	@Test(expected=CardNotReadyException.class)
 	public void notReadyCardShouldThrowException() {
-		tf.prepareEmptyCard();
+		tf.prepareEmptyCard("/sprites/tc1.jpg");
 		tf.addHalfTurtle(Color.BLUE, Orientation.BACK);
 		tf.getNewCard();
 	}
 	
 	@Test
 	public void shouldReturnCardWhenFourAdded() {
-		tf.prepareEmptyCard();
+		tf.prepareEmptyCard("/sprites/tc1.jpg");
 		tf.addHalfTurtle(Color.BLUE, Orientation.BACK);
 		tf.addHalfTurtle(Color.BLUE, Orientation.BACK);
 		tf.addHalfTurtle(Color.BLUE, Orientation.BACK);
@@ -40,7 +40,7 @@ public class TurtleCardFactoryTest {
 	
 	@Test
 	public void shouldMakeCardOutOfString() {
-		TurtleCard tc = tf.makeTurtleCard("yf;gb;rb;bf");
+		TurtleCard tc = tf.makeTurtleCard("yf;gb;rb;bf", "/sprites/tc1.jpg");
 		assertEquals("[yf, gb, rb, bf]" ,tc.toString());
 	}
 

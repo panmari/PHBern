@@ -1,6 +1,5 @@
 package ph;
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
@@ -27,12 +26,17 @@ public class CardGrid extends GameGrid {
 		show();
 	}
 	
-	public boolean isThereConflict(Point newCardPos) {
-		TurtleCard newCard = grid[newCardPos.x][newCardPos.y];
+	/**
+	 * TODO: make a null turtle for exception-cases?
+	 * @param p
+	 * @return
+	 */
+	public boolean isThereConflict(Location p) {
+		TurtleCard newCard = grid[p.x][p.y];
 		for (CardPosition cp: CardPosition.values()) {
 			try {
-				int newX = newCardPos.x + cp.x;
-				int newY = newCardPos.y + cp.y;
+				int newX = p.x + cp.x;
+				int newY = p.y + cp.y;
 				if (mismatch(newCard, grid[newX][newY], cp))
 					return true;
 			} catch (ArrayIndexOutOfBoundsException e) {
@@ -45,49 +49,18 @@ public class CardGrid extends GameGrid {
 	}
 
 	/**
-	 * This is way too long and needs refactoring
 	 * @param newCard
 	 * @param cardInDirection
 	 * @param cp
 	 * @return
 	 */
-	public boolean mismatch(TurtleCard newCard, TurtleCard cardInDirection, CardPosition cp) {
+	private boolean mismatch(TurtleCard newCard, TurtleCard cardInDirection, CardPosition cp) {
 		HalfTurtle turtle = newCard.getHalfTurtleAt(cp);
 		HalfTurtle otherTurtle = cardInDirection.getHalfTurtleAt(cp.getOpposite());
 		return !turtle.matches(otherTurtle);
 	}
-
-	/**
-	 * @param deadCards 
-	 * @return a point with the coordinates of the new card or
-	 * 			null, if there is no empty slot for another card.
-	 */
-	public Point putDownNextAliveCard(ArrayList<TurtleCard> deadCards) {
-		if (cardSet.isEmpty())
-			return null;
-		
-		TurtleCard nextCard = null;
-		for (TurtleCard tc: cardSet) {
-			if (!deadCards.contains(tc)) {
-				nextCard = tc;
-				break;
-			}
-		}
-		if (nextCard == null)
-			throw new NoCardAliveException();
-		else cardSet.remove(nextCard);
-		//find first empty slot:
-		for (int y = 0; y < grid.length; y++) 
-			for (int x = 0; x < grid[y].length; x++)
-				if (grid[x][y] == null) {
-					grid[x][y] = nextCard;
-					addActor(nextCard, new Location(x,y));
-					return new Point(x, y);
-				}
-		return null;
-	}
 	
-	public Point putDownCard(TurtleCard nextCard) {
+	public Location putDownCard(TurtleCard nextCard) {
 		cardSet.remove(nextCard);
 		//find first empty slot:
 		for (int y = 0; y < grid.length; y++) 
@@ -95,50 +68,26 @@ public class CardGrid extends GameGrid {
 				if (grid[x][y] == null) {
 					grid[x][y] = nextCard;
 					addActor(nextCard, new Location(x,y));
-					return new Point(x, y);
+					return new Location(x, y);
 				}
 		return null;
 	}
 
-	public boolean rotateCardAt(Point p) {
-		boolean originalPos = grid[p.x][p.y].rotateCardClockwise();
-		refresh();
+	public boolean rotateCardAt(Location p) {
+		boolean originalPos = getCardAt(p).rotateCardClockwise();
 		return originalPos;
-	}
-
-	/**
-	 * TODO: Where in cardSet should I put this card?
-	 * @param p
-	 * @return
-	 */
-	public Point removeCardAt(Point p) {
-		cardSet.addLast(grid[p.x][p.y]);
-		removeActorsAt(new Location(p.x, p.y));
-		refresh();
-		grid[p.x][p.y] = null;
-		return positionInGridBefore(p);
-	}
-
-	private Point positionInGridBefore(Point p) {
-		if (p.x == 0 && p.y == 0)
-			return new Point(0, 0);
-		int x = (p.x + 2) % 3;
-		int y = p.y;
-		if (p.x == 0) 
-			y = p.y - 1;
-		return new Point(x, y);
 	}
 	
 	public TurtleCard[][] getGrid() {
 		return grid;
 	}
 
-	public TurtleCard getCardAt(Point p) {
+	public TurtleCard getCardAt(Location p) {
 		return grid[p.x][p.y];
 	}
 
 	public boolean isSolved() {
-		return grid[2][2] != null && !isThereConflict(new Point(2, 2));
+		return grid[2][2] != null && !isThereConflict(new Location(2, 2));
 	}
 	
 	public String toString() {
@@ -165,7 +114,6 @@ public class CardGrid extends GameGrid {
 					cardSet.add(grid[x][y]);
 					grid[x][y] = null;
 					removeActorsAt(new Location(x,y));
-					refresh();
 					return;
 				}
 	}

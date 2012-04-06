@@ -32,7 +32,7 @@ public class TurtleCardTest {
 	 */
 	@Test
 	public void testRotateCardClockwise() {
-		TurtleCard tc = tf.makeTurtleCard("yf;gb;rb;bf");
+		TurtleCard tc = tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc1.jpg");
 		assertEquals("[yf, gb, rb, bf]" ,tc.toString());
 		assertFalse(tc.rotateCardClockwise());
 		assertEquals("[bf, yf, gb, rb]", tc.toString());
@@ -46,11 +46,11 @@ public class TurtleCardTest {
 	
 	@Test
 	public void testIds() {
-		TurtleCard tc = tf.makeTurtleCard("yf;gb;rb;bf");
+		TurtleCard tc = tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc1.jpg");
 		assertEquals(1, tc.getId());
-		TurtleCard tc2 = tf.makeTurtleCard("yf;gb;rb;bf");
+		TurtleCard tc2 = tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc1.jpg");
 		assertEquals(2, tc2.getId());
-		TurtleCard tc3 = tf.makeTurtleCard("yf;gb;rb;bf");
+		TurtleCard tc3 = tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc1.jpg");
 		assertEquals(3, tc3.getId());
 	}
 

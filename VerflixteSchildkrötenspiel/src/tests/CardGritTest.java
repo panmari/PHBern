@@ -4,9 +4,12 @@ import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import ch.aplu.jgamegrid.Location;
 
 import ph.CardGrid;
 import ph.TurtleCard;
@@ -14,12 +17,12 @@ import ph.TurtleCard;
 public class CardGritTest {
 
 	CardGrid gg;
-	ArrayList<TurtleCard> noDeadCards;
+	LinkedList<TurtleCard> allCards;
 	
 	@Before
 	public void setUp() throws Exception {
 		gg = new CardGrid();
-		noDeadCards = new ArrayList<TurtleCard>();
+		allCards = gg.getCards();
 	}
 
 	@Test
@@ -27,100 +30,30 @@ public class CardGritTest {
 		TurtleCard[][] grid = gg.getGrid();
 		assertNull(grid[0][0]);
 		
-		Point p = gg.putDownNextAliveCard(noDeadCards);
+		Location p = gg.putDownCard(allCards.getFirst());
 		assertNotNull(grid[p.x][p.y]);
 		assertFalse(gg.isThereConflict(p));
 		
-		p = gg.putDownNextAliveCard(noDeadCards);
+		p = gg.putDownCard(allCards.getFirst());
 		assertNotNull(grid[p.x][p.y]);
 		assertFalse(gg.isThereConflict(p));
 		
-		p = gg.putDownNextAliveCard(noDeadCards);
+		p = gg.putDownCard(allCards.getFirst());
 		assertFalse(gg.isThereConflict(p));
 		
-		p = gg.putDownNextAliveCard(noDeadCards);
+		p = gg.putDownCard(allCards.getFirst());
 		assertNotNull(grid[p.x][p.y]);
 		assertEquals(new Point(0,1), p);
 		assertTrue(gg.isThereConflict(p));
 	}
-
-	@Test
-	public void puttingDownLastCardShouldReturnNull() {
-		assertEquals(new Point(0,0), gg.putDownNextAliveCard(noDeadCards));
-		assertEquals(new Point(1,0), gg.putDownNextAliveCard(noDeadCards));
-		assertEquals(new Point(2,0), gg.putDownNextAliveCard(noDeadCards));
-		assertEquals(new Point(0,1), gg.putDownNextAliveCard(noDeadCards));
-		assertEquals(new Point(1,1), gg.putDownNextAliveCard(noDeadCards));
-		assertEquals(new Point(2,1), gg.putDownNextAliveCard(noDeadCards));
-		assertEquals(new Point(0,2), gg.putDownNextAliveCard(noDeadCards));
-		assertEquals(new Point(1,2), gg.putDownNextAliveCard(noDeadCards));
-		assertEquals(new Point(2,2), gg.putDownNextAliveCard(noDeadCards));
-		assertNull(gg.putDownNextAliveCard(noDeadCards));	
-	}
 	
 	@Test
 	public void shouldNotLaySameCardTwice() {
-		gg.putDownNextAliveCard(noDeadCards);
-		gg.putDownNextAliveCard(noDeadCards);
-		gg.putDownNextAliveCard(noDeadCards);
+		gg.putDownCard(allCards.getFirst());
+		gg.putDownCard(allCards.getFirst());
+		gg.putDownCard(allCards.getFirst());
 		
-		assertThat(gg.getCardAt(new Point(0,0)), is(not(gg.getCardAt(new Point(1,0)))));
-		assertThat(gg.getCardAt(new Point(0,0)), is(not(gg.getCardAt(new Point(2,0)))));
-	}
-	
-	@Test
-	public void shouldNotLayDeadCard() {
-		ArrayList<TurtleCard> deadCards = new ArrayList<TurtleCard>();
-		deadCards.add(gg.getCardAt(gg.putDownNextAliveCard(noDeadCards)));
-		deadCards.add(gg.getCardAt(gg.putDownNextAliveCard(noDeadCards)));
-		deadCards.add(gg.getCardAt(gg.putDownNextAliveCard(noDeadCards)));
-		gg.removeCardAt(new Point (0,0));
-		gg.removeCardAt(new Point (1,0));
-		gg.removeCardAt(new Point (2,0));
-		gg.putDownNextAliveCard(deadCards);
-		gg.putDownNextAliveCard(deadCards);
-		gg.putDownNextAliveCard(deadCards);
-		
-		assertThat(deadCards, not(hasItem(gg.getCardAt(new Point(0,0)))));
-		assertFalse(gg.getCardAt(new Point(0,0)) == null);
-		assertThat(deadCards, not(hasItem(gg.getCardAt(new Point(1,0)))));
-		assertFalse(gg.getCardAt(new Point(1,0)) == null);
-		assertThat(deadCards, not(hasItem(gg.getCardAt(new Point(2,0)))));
-		assertFalse(gg.getCardAt(new Point(2,0)) == null);
-	}
-	
-	@Test
-	public void testRotateCardAt() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testRemoveFirstLaidCard() {
-		Point p = gg.putDownNextAliveCard(noDeadCards);
-		assertEquals(new Point(0,0), gg.removeCardAt(p));
-	}
-	
-	@Test
-	public void testRemoveSecondLaidCard() {
-		Point p = gg.putDownNextAliveCard(noDeadCards);
-		p = gg.putDownNextAliveCard(noDeadCards);
-		assertEquals(new Point(0,0),gg.removeCardAt(p));
-	}
-
-	@Test
-	public void testRemoveFourthLaidCard() {
-		gg.putDownNextAliveCard(noDeadCards);
-		gg.putDownNextAliveCard(noDeadCards);
-		gg.putDownNextAliveCard(noDeadCards);
-		Point p = gg.putDownNextAliveCard(noDeadCards);
-		assertEquals(new Point(2,0),gg.removeCardAt(p));
-	}
-	
-	@Test
-	public void testRemoveSeventhLaidCard() {
-		for (int i = 0; i < 6; i++)
-			gg.putDownNextAliveCard(noDeadCards);
-		Point p = gg.putDownNextAliveCard(noDeadCards);
-		assertEquals(new Point(2,1),gg.removeCardAt(p));
+		assertThat(gg.getCardAt(new Location(0,0)), is(not(gg.getCardAt(new Location(1,0)))));
+		assertThat(gg.getCardAt(new Location(0,0)), is(not(gg.getCardAt(new Location(2,0)))));
 	}
 }
