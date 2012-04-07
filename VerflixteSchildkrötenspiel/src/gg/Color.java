@@ -16,7 +16,7 @@ public enum Color {
 		for (Color c: Color.values())
 			if (character == c.getCharRepresentation())
 				return c;
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException(character + " is not a valid color");
 	}
 
 	public char getCharRepresentation() {

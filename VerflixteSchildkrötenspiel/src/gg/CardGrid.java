@@ -27,6 +27,8 @@ public class CardGrid extends GameGrid {
 	}
 	
 	/**
+	 * Checks if there is a conflict at the given location p. Only checks for conflicts
+	 * in this location, not anywhere else. If the location is empty, it returns true.
 	 * TODO: make a null turtle for exception-cases?
 	 * @param p
 	 * @return
@@ -48,12 +50,6 @@ public class CardGrid extends GameGrid {
 		return false;
 	}
 
-	/**
-	 * @param newCard
-	 * @param cardInDirection
-	 * @param cp
-	 * @return
-	 */
 	private boolean mismatch(TurtleCard newCard, TurtleCard cardInDirection, CardPosition cp) {
 		HalfTurtle turtle = newCard.getHalfTurtleAt(cp);
 		HalfTurtle otherTurtle = cardInDirection.getHalfTurtleAt(cp.getOpposite());

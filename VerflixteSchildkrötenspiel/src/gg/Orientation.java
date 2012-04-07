@@ -14,7 +14,7 @@ public enum Orientation {
 		for (Orientation o: Orientation.values())
 			if (character == o.getCharRepresentation())
 				return o;
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException(character + " is not a valid Orientation");
 	}
 	
 	public char getCharRepresentation() {

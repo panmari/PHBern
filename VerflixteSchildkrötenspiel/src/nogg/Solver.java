@@ -9,18 +9,20 @@ public class Solver {
 
 	static CardGrid gg;
 	static Timer t;
+	static long steps;
 	
 	public static void main(String[] args) {
 		gg = new CardGrid();
 		t = new Timer();
 		t.reset();
 		solve(gg.getCards());
-		System.out.println("Finished after " + t.timeElapsed());
+		System.out.println("Finished after " + t.timeElapsed() + " ms");
+		System.out.println("Steps:  " + steps);
 	}
 	
 	private static void solve(List<TurtleCard> availableCards) {
 		if (gg.isSolved()) { //=> done!
-			System.out.println("Found Solution after " + t.timeElapsed());
+			System.out.println("Found Solution after " + t.timeElapsed() + " ms");
 			System.out.println(gg);
 		}
 		for (TurtleCard tc: new LinkedList<TurtleCard>(availableCards)) {
@@ -33,6 +35,7 @@ public class Solver {
 					solve(leftCards);
 				}
 				initialRotation = gg.rotateCardAt(p);
+				steps++;
 			}
 			gg.removeLastCard();
 		}			

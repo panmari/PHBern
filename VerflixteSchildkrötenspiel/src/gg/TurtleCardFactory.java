@@ -1,5 +1,16 @@
 package gg;
 
+/**
+ * A Factory utility used for making TurtleCards. Supports two ways of making cards:
+ * <ul>
+ * <li> By giving a string of a whole card </li>
+ * <li> By piecing the card together using addHalfTurtle() </li>
+ * </ul>
+ * It is recommended to use the first method for creating a full set of cards (takes
+ * much less typing).
+ * This utility uses a singleton pattern, so at any time there is only
+ * one instance of it.
+ */
 public class TurtleCardFactory {
 	
 	private static TurtleCardFactory tf;
@@ -37,10 +48,13 @@ public class TurtleCardFactory {
 		else
 			throw new CardNotReadyException("Not enough HalfTurtles on card!");
 	}
+	
 	/**
-	 * A string of 4 turtles, separated by semicolon. A valid turtle is ie yf (=yellow front)
+	 * Takes as paramater a string of 4 turtles, separated by semicolon. 
+	 * A valid turtle is eg yf (=yellow front)
 	 * or bb (= blue back)
-	 * @param tcString
+	 * @param tcString the card as string
+	 * @param sprite the link to the sprite image of the card
 	 * @return
 	 */
 	public TurtleCard makeTurtleCard(String tcString, String sprite) {

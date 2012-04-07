@@ -7,8 +7,7 @@ import ch.aplu.jgamegrid.Actor;
  * Representation of a card. Consists of 4 half turtles. 
  * Every Card has an Id, ascending by the time of their creation.
  * The first TurtleCard has the id 1
- * @author panmari
- *
+ * A newly created TurtleCard is oriented to the left side by default.
  */
 public class TurtleCard extends Actor {
 	private CardPosition rotation;
@@ -28,7 +27,7 @@ public class TurtleCard extends Actor {
 	}
 
 	/**
-	 * Returns true if it's in the original position again (aka Rotation.LEFT)
+	 * Returns true if it's in the original position again (aka CardPosition.LEFT)
 	 */
 	public boolean rotateCardClockwise() {
 		turn(90);
@@ -52,5 +51,9 @@ public class TurtleCard extends Actor {
 
 	public int getId() {
 		return id;
+	}
+	
+	public CardPosition getRotation() {
+		return rotation;
 	}
 }
