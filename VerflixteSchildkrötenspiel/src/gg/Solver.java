@@ -23,8 +23,8 @@ public class Solver {
 	
 	private static void solve(List<TurtleCard> availableCards) {
 		if (gg.isSolved()) { //=> done!
-			System.out.println("Found Solution: ");
-			System.out.println(gg);
+			gg.showSolution();
+			sleep();
 		}
 		for (TurtleCard tc: new LinkedList<TurtleCard>(availableCards)) {
 			Location p = gg.putDownCard(tc);

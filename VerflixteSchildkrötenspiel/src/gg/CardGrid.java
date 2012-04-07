@@ -15,14 +15,15 @@ public class CardGrid extends GameGrid {
 		TurtleCardFactory tf = TurtleCardFactory.getInstance();
 		cardSet.add(tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc1.jpg"));
 		cardSet.add(tf.makeTurtleCard("rf;yb;gb;bf", "sprites/tc2.jpg"));
-		cardSet.add(tf.makeTurtleCard("gf;bb;yb;bf", "sprites/tc3.jpg"));
+		cardSet.add(tf.makeTurtleCard("gf;rb;yb;bf", "sprites/tc3.jpg"));
 		cardSet.add(tf.makeTurtleCard("bf;yb;rb;gf", "sprites/tc4.jpg"));
 		cardSet.add(tf.makeTurtleCard("rf;gb;yb;gf", "sprites/tc5.jpg"));
 		cardSet.add(tf.makeTurtleCard("yf;bb;rb;gf", "sprites/tc6.jpg"));
 		cardSet.add(tf.makeTurtleCard("rf;bb;yb;gf", "sprites/tc7.jpg"));
 		cardSet.add(tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc8.jpg"));
 		cardSet.add(tf.makeTurtleCard("yf;bb;rb;bf", "sprites/tc9.jpg"));
-		//show();
+		addStatusBar(20);
+		show();
 	}
 	
 	/**
@@ -119,5 +120,12 @@ public class CardGrid extends GameGrid {
 	
 	public void act() {
 		Monitor.wakeUp();
+	}
+
+	public void showSolution() {
+		doPause();
+		refresh();
+		setStatusText("Found Solution! Click once more on run to look for more.");
+		System.out.println(this);
 	}
 }
