@@ -8,9 +8,10 @@ import ch.aplu.util.Monitor;
 public class CardGrid extends GameGrid {
 	private LinkedList<TurtleCard> cardSet;
 	private TurtleCard[][] grid = new TurtleCard[3][3];
+	private StatusGrid sg;
 			
 	public CardGrid() {
-		super(3, 3, 200);
+		super(3, 3, 200, java.awt.Color.RED, null, true, 4);
 		cardSet = new LinkedList<TurtleCard>();
 		TurtleCardFactory tf = TurtleCardFactory.getInstance();
 		cardSet.add(tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc1.jpg"));
@@ -23,6 +24,7 @@ public class CardGrid extends GameGrid {
 		cardSet.add(tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc8.jpg"));
 		cardSet.add(tf.makeTurtleCard("yf;bb;rb;bf", "sprites/tc9.jpg"));
 		addStatusBar(20);
+		sg = new StatusGrid(cardSet);
 		show();
 	}
 	
@@ -64,6 +66,7 @@ public class CardGrid extends GameGrid {
 				if (grid[x][y] == null) {
 					grid[x][y] = nextCard;
 					addActor(nextCard, new Location(x,y));
+					sg.hideCard(nextCard.getId());
 					return new Location(x, y);
 				}
 		return null;
@@ -98,6 +101,21 @@ public class CardGrid extends GameGrid {
 		}
 		return sb.toString();
 	}
+	
+	public String toIdString() {
+		StringBuilder sb = new StringBuilder();
+		for (int y = 0; y < grid.length; y++) {
+			for (int x = 0; x < grid[y].length; x++) {
+				sb.append(" | ");
+				sb.append(grid[x][y].getId());
+				sb.append(" ");
+				sb.append(grid[x][y].getRotation());
+			}
+			sb.append(" | ");
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
 
 	public LinkedList<TurtleCard> getCards() {
 		return new LinkedList<TurtleCard>(cardSet);
@@ -108,6 +126,7 @@ public class CardGrid extends GameGrid {
 			for (int x = grid[y].length - 1; x >= 0; x--)
 				if (grid[x][y] != null) {
 					cardSet.add(grid[x][y]);
+					sg.hideCard(grid[x][y].getId());
 					grid[x][y] = null;
 					removeActorsAt(new Location(x,y));
 					return;
@@ -122,6 +141,6 @@ public class CardGrid extends GameGrid {
 		doPause();
 		refresh();
 		setStatusText("Found Solution! Click once more on run to look for more.");
-		System.out.println(this);
+		System.out.println(this.toIdString());
 	}
 }
