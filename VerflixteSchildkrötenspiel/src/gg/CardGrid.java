@@ -8,7 +8,6 @@ import ch.aplu.util.Monitor;
 public class CardGrid extends GameGrid {
 	private LinkedList<TurtleCard> cardSet;
 	private TurtleCard[][] grid = new TurtleCard[3][3];
-	private StatusGrid sg;
 			
 	public CardGrid() {
 		super(3, 3, 200, java.awt.Color.RED, null, true, 4);
@@ -24,7 +23,6 @@ public class CardGrid extends GameGrid {
 		cardSet.add(tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc8.jpg"));
 		cardSet.add(tf.makeTurtleCard("yf;bb;rb;bf", "sprites/tc9.jpg"));
 		addStatusBar(20);
-		sg = new StatusGrid(cardSet);
 		show();
 	}
 	
@@ -66,7 +64,6 @@ public class CardGrid extends GameGrid {
 				if (grid[x][y] == null) {
 					grid[x][y] = nextCard;
 					addActor(nextCard, new Location(x,y));
-					sg.hideCard(nextCard.getId());
 					return new Location(x, y);
 				}
 		return null;
@@ -126,7 +123,6 @@ public class CardGrid extends GameGrid {
 			for (int x = grid[y].length - 1; x >= 0; x--)
 				if (grid[x][y] != null) {
 					cardSet.add(grid[x][y]);
-					sg.hideCard(grid[x][y].getId());
 					grid[x][y] = null;
 					removeActorsAt(new Location(x,y));
 					return;
@@ -135,6 +131,10 @@ public class CardGrid extends GameGrid {
 	
 	public void act() {
 		Monitor.wakeUp();
+	}
+	
+	public void reset() {
+		setStatusText("The reset button doesn't work, restart the application");
 	}
 
 	public void showSolution() {
