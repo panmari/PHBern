@@ -10,6 +10,7 @@ public class Solver {
 	static CardGrid gg;
 	static Timer t;
 	static long steps;
+	static int solutions;
 	
 	public static void main(String[] args) {
 		gg = new CardGrid();
@@ -17,6 +18,7 @@ public class Solver {
 		t.reset();
 		solve(gg.getCards());
 		System.out.println("Finished after " + t.timeElapsed() + " ms");
+		System.out.println("Number of Solutions found: " + solutions);
 		System.out.println("Steps:  " + steps);
 	}
 	
@@ -24,6 +26,7 @@ public class Solver {
 		if (gg.isSolved()) { //=> done!
 			System.out.println("Found Solution after " + t.timeElapsed() + " ms");
 			System.out.println(gg);
+			solutions++;
 		}
 		for (TurtleCard tc: new LinkedList<TurtleCard>(availableCards)) {
 			Location p = gg.putDownCard(tc);
