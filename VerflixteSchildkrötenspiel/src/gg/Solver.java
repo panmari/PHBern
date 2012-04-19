@@ -16,16 +16,24 @@ public class Solver {
 		solve(gg.getCards());
 	}
 	
-	private static void sleep() {
-		gg.refresh();
-		Monitor.putSleep();
+	/**
+	 * Puts the thread to sleep, but only when the slider
+	 * isn't all the way to the right. If it is all the 
+	 * way to the right, it isn't put to sleep at all for performance reasons.
+	 * @param really  if true, the thread is put to sleep anyway, ignoring the slider settings.
+	 */
+	private static void sleep(boolean really) {
+		if (really || gg.getSimulationPeriod() > 10) {
+			gg.refresh();
+			Monitor.putSleep();
+		}
 	}
 	
 	private static void solve(List<TurtleCard> availableCards) {
 		if (gg.isSolved()) { //=> done!
 			gg.showSolution();
 			gg.setStatusText("Found solution in " + steps + " steps! Click again on run to find another...");
-			sleep();
+			sleep(true);
 		}
 		for (TurtleCard tc: new LinkedList<TurtleCard>(availableCards)) {
 			Location p = gg.putDownCard(tc);
@@ -34,7 +42,7 @@ public class Solver {
 			while (!initialRotation) {
 				steps++;
 				gg.setTitle("Tricky Turtle Game (www.java-online.ch) -- Steps: " + steps);
-				sleep();
+				sleep(false);
 				if (!gg.isThereConflict(p)) {
 					List<TurtleCard> leftCards = new LinkedList<TurtleCard>(availableCards);
 					leftCards.remove(tc);
@@ -45,7 +53,7 @@ public class Solver {
 			}
 			gg.removeLastCard();
 			gg.setStatusText("Conflict & all tried all orientations -> Go one step back");
-			sleep();
+			sleep(false);
 		}	
 	}
 }
