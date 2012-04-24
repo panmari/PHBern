@@ -1,4 +1,5 @@
 package gg;
+import java.util.Arrays;
 import java.util.LinkedList;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
@@ -77,6 +78,13 @@ public class CardGrid extends GameGrid {
 	public TurtleCard[][] getGrid() {
 		return grid;
 	}
+	
+	public TurtleCard[][] getCopyOfGrid() {
+		TurtleCard[][] gridCopy = new TurtleCard[grid.length][grid[0].length];
+		for (int i = 0; i < gridCopy.length; i++)
+			gridCopy[i] = Arrays.copyOf(grid[i], grid[i].length);
+		return gridCopy;
+	}
 
 	public TurtleCard getCardAt(Location p) {
 		return grid[p.x][p.y];
@@ -100,18 +108,7 @@ public class CardGrid extends GameGrid {
 	}
 	
 	public String toIdString() {
-		StringBuilder sb = new StringBuilder();
-		for (int y = 0; y < grid.length; y++) {
-			for (int x = 0; x < grid[y].length; x++) {
-				sb.append(" | ");
-				sb.append(grid[x][y].getId());
-				sb.append(" ");
-				sb.append(grid[x][y].getRotation());
-			}
-			sb.append(" | ");
-			sb.append("\n");
-		}
-		return sb.toString();
+		return SolutionConsole.toIdString(grid);
 	}
 
 	public LinkedList<TurtleCard> getCards() {
