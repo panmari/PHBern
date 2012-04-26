@@ -1,11 +1,13 @@
 package gg;
 
+import java.util.HashMap;
 import java.util.List;
 
 import ch.aplu.util.Console;
 
 public class SolutionConsole extends Console {
 
+	HashMap<TurtleCard[][], List<TurtleCard[][]>> rotatedsolutions;
 	public SolutionConsole(List<TurtleCard[][]> solutions) {
 		super();
 		println("Computation finished, found following solutions: ");

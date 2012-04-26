@@ -11,18 +11,18 @@ public class CardGrid extends GameGrid {
 	private TurtleCard[][] grid = new TurtleCard[3][3];
 			
 	public CardGrid() {
-		super(3, 3, 200, java.awt.Color.RED, null, true, 4);
+		super(3, 3, 165, java.awt.Color.RED, null, true, 4);
 		cardSet = new LinkedList<TurtleCard>();
 		TurtleCardFactory tf = TurtleCardFactory.getInstance();
-		cardSet.add(tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc1.jpg"));
-		cardSet.add(tf.makeTurtleCard("rf;yb;gb;bf", "sprites/tc2.jpg"));
-		cardSet.add(tf.makeTurtleCard("gf;rb;yb;bf", "sprites/tc3.jpg"));
-		cardSet.add(tf.makeTurtleCard("bf;yb;rb;gf", "sprites/tc4.jpg"));
-		cardSet.add(tf.makeTurtleCard("rf;gb;yb;gf", "sprites/tc5.jpg"));
-		cardSet.add(tf.makeTurtleCard("yf;bb;rb;gf", "sprites/tc6.jpg"));
-		cardSet.add(tf.makeTurtleCard("rf;bb;yb;gf", "sprites/tc7.jpg"));
-		cardSet.add(tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc8.jpg"));
-		cardSet.add(tf.makeTurtleCard("yf;bb;rb;bf", "sprites/tc9.jpg"));
+		cardSet.add(tf.makeTurtleCard("yb;rb;yf;bf", "sprites/karte1.gif"));
+		cardSet.add(tf.makeTurtleCard("gb;bb;gf;rf", "sprites/karte2.gif"));
+		cardSet.add(tf.makeTurtleCard("gb;rb;yf;bf", "sprites/karte3.gif"));
+		cardSet.add(tf.makeTurtleCard("gb;rb;yf;bf", "sprites/karte4.gif"));
+		cardSet.add(tf.makeTurtleCard("yb;bb;gf;rf", "sprites/karte5.gif"));
+		cardSet.add(tf.makeTurtleCard("yb;rb;gf;bf", "sprites/karte6.gif"));
+		cardSet.add(tf.makeTurtleCard("bb;rb;gf;yf", "sprites/karte7.gif"));
+		cardSet.add(tf.makeTurtleCard("bb;gb;yf;rf", "sprites/karte8.gif"));
+		cardSet.add(tf.makeTurtleCard("rb;bb;yf;gf", "sprites/karte9.gif"));
 		addStatusBar(20);
 		show();
 	}

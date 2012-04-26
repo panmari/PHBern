@@ -54,7 +54,7 @@ public class TurtleCardFactory {
 	 * A valid turtle is eg yf (=yellow front)
 	 * or bb (= blue back)
 	 * @param tcString the card as string
-	 * @param sprite the link to the sprite image of the card
+	 * @param sprite the file path to the sprite of the card
 	 * @return
 	 */
 	public TurtleCard makeTurtleCard(String tcString, String sprite) {

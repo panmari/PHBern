@@ -1,7 +1,6 @@
 package gg;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,7 +12,8 @@ public class Solver {
 	private static CardGrid gg;
 	private static long steps;
 	private static String status;
-	private static final boolean fastForward = true;
+	/**Set this to true if you want to reach the solutions as fast as possible*/
+	private static final boolean fastForward = false;
 	private static ArrayList<TurtleCard[][]> solutions = new ArrayList<TurtleCard[][]>();
 	
 	public static void main(String[] args) {
@@ -26,10 +26,11 @@ public class Solver {
 	 * Puts the thread to sleep, but only when the slider
 	 * isn't all the way to the right. If it is all the 
 	 * way to the right, it isn't put to sleep at all for performance reasons.
-	 * @param really  if true, the thread is put to sleep anyway, ignoring the slider settings.
+	 * @param really  if true, the thread is put to sleep anyway, ignoring the slider settings. If
+	 * the global variable fastForward is set to true, this parameter is ignored.
 	 */
 	private static void sleep(boolean really) {
-		if ((really || gg.getSimulationPeriod() > 10) && !fastForward) {
+		if ((really || gg.getSimulationPeriod() > 0) && !fastForward) {
 			gg.setStatusText(status);
 			gg.setTitle("Tricky Turtle Game (www.java-online.ch) -- Steps: " + steps);
 			gg.refresh();
