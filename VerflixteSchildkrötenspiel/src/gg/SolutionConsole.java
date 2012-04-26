@@ -8,12 +8,12 @@ import ch.aplu.util.Console;
 public class SolutionConsole extends Console {
 
 	HashMap<TurtleCard[][], List<TurtleCard[][]>> rotatedsolutions;
-	public SolutionConsole(List<TurtleCard[][]> solutions) {
+	public SolutionConsole(List<SolutionGrid> solutions) {
 		super();
 		println("Computation finished, found following solutions: ");
 		for (int i = 0; i < solutions.size(); i++) {
 			println("Solution #" + (i+1) + ": ");
-			print(toIdString(solutions.get(i)));
+			print(toIdString(solutions.get(i).getSol()));
 			println();
 		}
 		println("Of which some may be rotated versions of others");

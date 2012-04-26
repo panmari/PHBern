@@ -9,12 +9,12 @@ import ch.aplu.util.Monitor;
 
 public class Solver {
 
+	/** Set this to true if you want to reach the solutions as fast as possible */
+	private static final boolean fastForward = true;
 	private static CardGrid gg;
 	private static long steps;
 	private static String status;
-	/**Set this to true if you want to reach the solutions as fast as possible*/
-	private static final boolean fastForward = false;
-	private static ArrayList<TurtleCard[][]> solutions = new ArrayList<TurtleCard[][]>();
+	private static ArrayList<SolutionGrid> solutions = new ArrayList<SolutionGrid>();
 	
 	public static void main(String[] args) {
 		gg = new CardGrid();
@@ -41,7 +41,7 @@ public class Solver {
 	private static void solve(List<TurtleCard> availableCards) {
 		if (gg.isSolved()) { //=> done!
 			gg.showSolution();
-			solutions.add(gg.getCopyOfGrid());
+			solutions.add(new SolutionGrid(gg.getGrid()));
 			status = "Found solution in " + steps + " steps! Click again on run to find another...";
 			sleep(true);
 		}

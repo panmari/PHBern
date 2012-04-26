@@ -36,6 +36,7 @@ public class CardGrid extends GameGrid {
 	 */
 	public boolean isThereConflict(Location p) {
 		TurtleCard newCard = grid[p.x][p.y];
+		//it would be enough to only test the card to the left & top
 		for (CardPosition cp: CardPosition.values()) {
 			try {
 				int newX = p.x + cp.x;
