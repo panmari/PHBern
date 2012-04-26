@@ -51,6 +51,7 @@ public class SolutionGrid {
 
 	private String goAround(Point startElement) {
 		LinkedList<Point> aroundPoints = new LinkedList<Point>();
+		//Ugly hardcode:
 		aroundPoints.addLast(new Point(0,0));
 		aroundPoints.addLast(new Point(0,1));
 		aroundPoints.addLast(new Point(0,2));
@@ -61,12 +62,12 @@ public class SolutionGrid {
 		aroundPoints.addLast(new Point(1,0));
 		
 		String result = "";
+		int posStartElement = aroundPoints.indexOf(startElement);
+		List<Point> sortedAroundPoints = aroundPoints.subList(posStartElement, aroundPoints.size());
+		sortedAroundPoints.addAll(aroundPoints.subList(0, posStartElement));
 		
-		Iterator<Point> iter = aroundPoints.listIterator(aroundPoints.indexOf(startElement));
-		
-		while (iter.hasNext()) {
-			Point p = iter.next();
-			result += sol[p.x][p.y];
+		for (Point p: sortedAroundPoints) {
+			result += sol[p.x][p.y].getId();
 		}
 		return result;
 	}

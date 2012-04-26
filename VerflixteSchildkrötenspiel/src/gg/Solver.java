@@ -61,7 +61,7 @@ public class Solver {
 				status = "Conflict -> Turned card";
 			}
 			gg.removeLastCard();
-			status = "Conflict & all tried all orientations -> Go one step back";
+			status = "Conflict & tried all orientations -> Go one step back";
 			sleep(false);
 		}	
 	}
