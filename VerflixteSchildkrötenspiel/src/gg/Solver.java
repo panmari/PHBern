@@ -19,9 +19,9 @@ public class Solver {
 	public static void main(String[] args) {
 		gg = new CardGrid();
 		solve(gg.getCards());
-		new SolutionConsole(solutions);
+		new SolutionConsole(gg, solutions);
 	}
-	
+
 	/**
 	 * Puts the thread to sleep, but only when the slider
 	 * isn't all the way to the right. If it is all the 
@@ -32,7 +32,7 @@ public class Solver {
 	private static void sleep(boolean really) {
 		if ((really || gg.getSimulationPeriod() > 0) && !fastForward) {
 			gg.setStatusText(status);
-			gg.setTitle("Tricky Turtle Game (www.java-online.ch) -- Steps: " + steps);
+			gg.setTitle("Tricky Turtle (www.java-online.ch) -- Steps: " + steps);
 			gg.refresh();
 			Monitor.putSleep();
 		}

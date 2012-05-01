@@ -31,7 +31,7 @@ public class TurtleCard extends Actor implements Cloneable {
 	 * @param tc the TurtleCard that is to be cloned
 	 */
 	private TurtleCard(TurtleCard tc) {
-		//TODO: call super Constructor?
+		super(true, tc.getScaledImage(1, tc.rotation.ordinal()*90));
 		this.cardSetting = tc.cardSetting;
 		this.rotation = tc.rotation;
 		this.id = tc.id;

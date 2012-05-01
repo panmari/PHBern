@@ -20,12 +20,5 @@ public class HashingTest {
 	public void test() {
 		fail("Not yet implemented");
 	}
-	
-	private String makeHash(int[][] array) {
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < 3; i++)
-			sb.append(array[0][i]);
-		return sb.toString();
-	}
 
 }

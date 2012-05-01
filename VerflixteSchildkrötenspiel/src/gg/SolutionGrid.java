@@ -12,7 +12,6 @@ import java.util.Set;
 /**
  * This class is ugly. Fix it!
  * @author panmari
- *
  */
 public class SolutionGrid {
 
@@ -27,16 +26,6 @@ public class SolutionGrid {
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
 				sol[i][j] = grid[i][j].clone();
-	}
-	
-	public int hashCode() {
-		List<Point> cornerPoints = getCornerPoints();
-		Point minimalCorner = cornerPoints.get(0);
-		for (Point p: cornerPoints) {
-			if (sol[p.x][p.y].getId() < sol[minimalCorner.x][minimalCorner.y].getId())
-				minimalCorner = p;
-		}
-		return Integer.parseInt(goAround(minimalCorner));
 	}
 	
 	private List<Point> getCornerPoints() {
@@ -70,5 +59,33 @@ public class SolutionGrid {
 			result += sol[p.x][p.y].getId();
 		}
 		return result;
+	}
+
+	/**
+	 * TODO: Orientation of the cards should also influence hashCode
+	 */
+	@Override
+	public int hashCode() {
+		List<Point> cornerPoints = getCornerPoints();
+		Point maximalCorner = cornerPoints.get(0);
+		for (Point p: cornerPoints) {
+			if (sol[p.x][p.y].getId() > sol[maximalCorner.x][maximalCorner.y].getId())
+				maximalCorner = p;
+		}
+		return Integer.parseInt(goAround(maximalCorner));
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SolutionGrid other = (SolutionGrid) obj;
+		if (!(other.hashCode() == this.hashCode()))
+			return false;
+		return true;
 	}
 }

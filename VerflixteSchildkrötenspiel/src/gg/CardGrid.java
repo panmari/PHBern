@@ -1,6 +1,8 @@
 package gg;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Set;
+
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.util.Monitor;
@@ -11,19 +13,20 @@ public class CardGrid extends GameGrid {
 	private TurtleCard[][] grid = new TurtleCard[3][3];
 			
 	public CardGrid() {
-		super(3, 3, 165, java.awt.Color.RED, null, true, 4);
+		super(3, 3, 164, java.awt.Color.GRAY, null, true, 4);
 		cardSet = new LinkedList<TurtleCard>();
 		TurtleCardFactory tf = TurtleCardFactory.getInstance();
-		cardSet.add(tf.makeTurtleCard("yb;rb;yf;bf", "sprites/karte1.gif"));
-		cardSet.add(tf.makeTurtleCard("gb;bb;gf;rf", "sprites/karte2.gif"));
-		cardSet.add(tf.makeTurtleCard("gb;rb;yf;bf", "sprites/karte3.gif"));
-		cardSet.add(tf.makeTurtleCard("gb;rb;yf;bf", "sprites/karte4.gif"));
-		cardSet.add(tf.makeTurtleCard("yb;bb;gf;rf", "sprites/karte5.gif"));
-		cardSet.add(tf.makeTurtleCard("yb;rb;gf;bf", "sprites/karte6.gif"));
-		cardSet.add(tf.makeTurtleCard("bb;rb;gf;yf", "sprites/karte7.gif"));
-		cardSet.add(tf.makeTurtleCard("bb;gb;yf;rf", "sprites/karte8.gif"));
-		cardSet.add(tf.makeTurtleCard("rb;bb;yf;gf", "sprites/karte9.gif"));
-		addStatusBar(20);
+		cardSet.add(tf.makeTurtleCard("yb;rb;yf;bf", "sprites/crd0.gif"));
+		cardSet.add(tf.makeTurtleCard("gb;bb;gf;rf", "sprites/crd1.gif"));
+		cardSet.add(tf.makeTurtleCard("gb;rb;yf;bf", "sprites/crd2.gif"));
+		cardSet.add(tf.makeTurtleCard("gb;rb;yf;bf", "sprites/crd3.gif"));
+		cardSet.add(tf.makeTurtleCard("yb;bb;gf;rf", "sprites/crd4.gif"));
+		cardSet.add(tf.makeTurtleCard("yb;rb;gf;bf", "sprites/crd5.gif"));
+		cardSet.add(tf.makeTurtleCard("bb;rb;gf;yf", "sprites/crd6.gif"));
+		cardSet.add(tf.makeTurtleCard("bb;gb;yf;rf", "sprites/crd7.gif"));
+		cardSet.add(tf.makeTurtleCard("rb;bb;yf;gf", "sprites/crd8.gif"));
+		addStatusBar(25);
+		setTitle("Tricky Turtle (www.java-online.ch)");
 		show();
 	}
 	
@@ -140,5 +143,30 @@ public class CardGrid extends GameGrid {
 		refresh();
 		setStatusText("Found Solution! Click once more on run to look for more.");
 		System.out.println(this.toIdString());
+	}
+
+	/**
+	 * Shows every 5 seconds another solution (given as parameter).
+	 * Does this in an endless loop.
+	 * @param solutions
+	 */
+	public void cycleThroughSolutions(Set<SolutionGrid> solutions) {
+		setSimulationPeriod(5000);
+		doRun();
+		while (true) {
+			int solutionCounter = 1;
+			//sm: This doesn't work on the second loop of the "while", only the first one. No idea why.
+			for (SolutionGrid sg: solutions) {
+				removeAllActors();
+				setStatusText("Cycling through solutions... Now showing solution #" + solutionCounter);
+				grid = sg.getSol();
+				for (int x = 0; x < 3; x++)
+					for (int y = 0; y < 3; y++)
+						addActor(grid[x][y], new Location(x, y));
+				refresh();
+				Monitor.putSleep();
+				solutionCounter++;
+			}
+		}
 	}
 }

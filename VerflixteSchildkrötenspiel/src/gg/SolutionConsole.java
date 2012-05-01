@@ -1,5 +1,6 @@
 package gg;
 
+import java.awt.Font;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,8 +10,9 @@ import ch.aplu.util.Console;
 public class SolutionConsole extends Console {
 
 	HashMap<SolutionGrid, List<TurtleCard[][]>> rotatedSolutions = new HashMap<SolutionGrid, List<TurtleCard[][]>>();
-	public SolutionConsole(List<SolutionGrid> solutions) {
-		super();
+	
+	public SolutionConsole(CardGrid gg, List<SolutionGrid> solutions) {
+		super(null,null, new Font("Monospaced", Font.PLAIN, 16));
 		checkForRotatedSolutions(solutions);
 		
 		println("Computation finished, found following solutions: ");
@@ -24,7 +26,7 @@ public class SolutionConsole extends Console {
 			}
 			i++;
 		}
-		println("Of which some may be rotated versions of others");
+		gg.cycleThroughSolutions(rotatedSolutions.keySet());
 	}
 	
 	private void checkForRotatedSolutions(List<SolutionGrid> solutions) {
@@ -40,14 +42,19 @@ public class SolutionConsole extends Console {
 	}
 
 	public static String toIdString(TurtleCard[][] grid) {
+		int rotMaxSpace = 5;
 		StringBuilder sb = new StringBuilder();
 		for (int y = 0; y < grid.length; y++) {
 			for (int x = 0; x < grid[y].length; x++) {
 				sb.append(" | ");
 				sb.append(grid[x][y].getId());
 				sb.append(" ");
-				sb.append(grid[x][y].getRotation());
+				String rotString = grid[x][y].getRotation().toString();
+				sb.append(rotString);
+				//Lazy method to add spaces:
+				sb.append("      ".substring(0, rotMaxSpace - rotString.length()));
 			}
+			
 			sb.append(" | ");
 			sb.append("\n");
 		}
