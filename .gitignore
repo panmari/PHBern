@@ -18,7 +18,7 @@ nbproject/
 .settings
 *.pydevproject
 .metadata
-bin/**
+*/bin/**
 tmp/**
 tmp/**/*
 *.tmp
