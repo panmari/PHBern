@@ -1,29 +1,42 @@
 package gg;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import ch.aplu.util.Console;
 
 public class SolutionConsole extends Console {
 
-	HashMap<TurtleCard[][], List<TurtleCard[][]>> rotatedsolutions;
+	HashMap<SolutionGrid, List<TurtleCard[][]>> rotatedSolutions = new HashMap<SolutionGrid, List<TurtleCard[][]>>();
 	public SolutionConsole(List<SolutionGrid> solutions) {
 		super();
+		checkForRotatedSolutions(solutions);
 		
 		println("Computation finished, found following solutions: ");
-		for (int i = 0; i < solutions.size(); i++) {
-			println("Solution #" + (i+1) + ": ");
-			print(toIdString(solutions.get(i).getSol()));
-			println(solutions.get(i).hashCode());
-			println();
+		int i = 1;
+		for (SolutionGrid sg: rotatedSolutions.keySet()) {
+			println("Solution #" + i + ": ");
+			println("With hash: " + sg.hashCode());
+			for (TurtleCard[][] tg: rotatedSolutions.get(sg)) {
+				print(toIdString(tg));
+				println();
+			}
+			i++;
 		}
 		println("Of which some may be rotated versions of others");
 	}
 	
-	private void checkForRotatedSolutions() {
-		//TODO LULZ i duno
-		//except: n^2
+	private void checkForRotatedSolutions(List<SolutionGrid> solutions) {
+		for (SolutionGrid sg: solutions) {
+			if (rotatedSolutions.containsKey(sg)) {
+				rotatedSolutions.get(sg).add(sg.getSol());
+			} else {
+				LinkedList<TurtleCard[][]> list = new LinkedList<TurtleCard[][]>();
+				list.add(sg.getSol());
+				rotatedSolutions.put(sg, list);
+			}
+		}
 	}
 
 	public static String toIdString(TurtleCard[][] grid) {
