@@ -1,5 +1,6 @@
 package gg;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -159,7 +160,7 @@ public class CardGrid extends GameGrid {
 			for (SolutionGrid sg: solutions) {
 				removeAllActors();
 				setStatusText("Cycling through solutions... Now showing solution #" + solutionCounter);
-				grid = sg.getSol();
+				grid = sg.getGrid();
 				for (int x = 0; x < 3; x++)
 					for (int y = 0; y < 3; y++)
 						addActor(grid[x][y], new Location(x, y));

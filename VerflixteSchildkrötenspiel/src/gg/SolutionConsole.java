@@ -9,34 +9,39 @@ import ch.aplu.util.Console;
 
 public class SolutionConsole extends Console {
 
-	HashMap<SolutionGrid, List<TurtleCard[][]>> rotatedSolutions = new HashMap<SolutionGrid, List<TurtleCard[][]>>();
+	HashMap<SolutionGrid, List<TurtleCard[][]>> solutionMap = new HashMap<SolutionGrid, List<TurtleCard[][]>>();
 	
 	public SolutionConsole(CardGrid gg, List<SolutionGrid> solutions) {
 		super(null,null, new Font("Monospaced", Font.PLAIN, 16));
-		checkForRotatedSolutions(solutions);
+		initializeSolutionMap(solutions);
 		
 		println("Computation finished, found following solutions: ");
 		int i = 1;
-		for (SolutionGrid sg: rotatedSolutions.keySet()) {
+		for (SolutionGrid sg: solutionMap.keySet()) {
 			println("Solution #" + i + ": ");
 			println("With hash: " + sg.hashCode());
-			for (TurtleCard[][] tg: rotatedSolutions.get(sg)) {
+			for (TurtleCard[][] tg: solutionMap.get(sg)) {
 				print(toIdString(tg));
 				println();
 			}
 			i++;
 		}
-		gg.cycleThroughSolutions(rotatedSolutions.keySet());
+		gg.cycleThroughSolutions(solutionMap.keySet());
 	}
 	
-	private void checkForRotatedSolutions(List<SolutionGrid> solutions) {
+	/**
+	 * TODO: isn't there a better way to solve conflicts?
+	 * -> Konfliktbehebung sollte Verkettung sein!
+	 * @param solutions
+	 */
+	private void initializeSolutionMap(List<SolutionGrid> solutions) {
 		for (SolutionGrid sg: solutions) {
-			if (rotatedSolutions.containsKey(sg)) {
-				rotatedSolutions.get(sg).add(sg.getSol());
+			if (solutionMap.containsKey(sg)) {
+				solutionMap.get(sg).add(sg.getGrid());
 			} else {
 				LinkedList<TurtleCard[][]> list = new LinkedList<TurtleCard[][]>();
-				list.add(sg.getSol());
-				rotatedSolutions.put(sg, list);
+				list.add(sg.getGrid());
+				solutionMap.put(sg, list);
 			}
 		}
 	}

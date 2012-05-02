@@ -10,27 +10,34 @@ import java.util.ListIterator;
 import java.util.Set;
 
 /**
- * This class is ugly. Fix it!
+ * This class represents a solution of a tricky turtle game.
+ * The creator of the instance ins responsible for providing a valid solution.
+ * The validity of the given solution is NOT checked by this class.
  * @author panmari
  */
 public class SolutionGrid {
 
-	private TurtleCard[][] sol;
+	private TurtleCard[][] grid;
 
-	public TurtleCard[][] getSol() {
-		return sol;
+	public TurtleCard[][] getGrid() {
+		return grid;
 	}
 
-	public SolutionGrid(TurtleCard[][] grid) {
-		sol = new TurtleCard[grid.length][grid[0].length];
+	public SolutionGrid(TurtleCard[][] solution) {
+		grid = new TurtleCard[solution.length][solution[0].length];
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
-				sol[i][j] = grid[i][j].clone();
+				grid[i][j] = solution[i][j].clone();
 	}
 	
+	/**
+	 * This method returns the 4 corners of the rectangular grid which
+	 * is saved as solution in this instance.
+	 * @return the 4 boarder points assembled in a list.
+	 */
 	private List<Point> getCornerPoints() {
 		ArrayList<Point> cornerPoints = new ArrayList<Point>();
-		int borderPos = sol.length - 1;
+		int borderPos = grid.length - 1;
 		cornerPoints.add(new Point(0,0));
 		cornerPoints.add(new Point(borderPos,0));
 		cornerPoints.add(new Point(0,borderPos));
@@ -38,6 +45,12 @@ public class SolutionGrid {
 		return cornerPoints;
 	}
 
+	/**
+	 * Goes around the grid in a circular motion, starting at the given startElement,
+	 * and puts all values into a string.
+	 * @param startElement
+	 * @return the string created by going around.
+	 */
 	private String goAround(Point startElement) {
 		LinkedList<Point> aroundPoints = new LinkedList<Point>();
 		//Ugly hardcode:
@@ -56,12 +69,13 @@ public class SolutionGrid {
 		sortedAroundPoints.addAll(aroundPoints.subList(0, posStartElement));
 		
 		for (Point p: sortedAroundPoints) {
-			result += sol[p.x][p.y].getId();
+			result += grid[p.x][p.y].getId();
 		}
 		return result;
 	}
 
 	/**
+	 * A solution has the same hash code as in every rotation state.
 	 * TODO: Orientation of the cards should also influence hashCode
 	 */
 	@Override
@@ -69,12 +83,16 @@ public class SolutionGrid {
 		List<Point> cornerPoints = getCornerPoints();
 		Point maximalCorner = cornerPoints.get(0);
 		for (Point p: cornerPoints) {
-			if (sol[p.x][p.y].getId() > sol[maximalCorner.x][maximalCorner.y].getId())
+			if (grid[p.x][p.y].getId() > grid[maximalCorner.x][maximalCorner.y].getId())
 				maximalCorner = p;
 		}
 		return Integer.parseInt(goAround(maximalCorner));
 	}
 	
+	/**
+	 * Two solutions are equal if the have the same hashcode.
+	 * @see hashCode
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
