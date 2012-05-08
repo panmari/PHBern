@@ -7,6 +7,10 @@ import java.util.List;
 
 import ch.aplu.util.Console;
 
+/**
+ * This class shows the given solutions in a console window.
+ * It doesn't validate any of the solutions.
+ */
 public class SolutionConsole extends Console {
 
 	HashMap<SolutionGrid, List<TurtleCard[][]>> solutionMap = new HashMap<SolutionGrid, List<TurtleCard[][]>>();
@@ -30,8 +34,9 @@ public class SolutionConsole extends Console {
 	}
 	
 	/**
-	 * TODO: isn't there a better way to solve conflicts?
-	 * -> Konfliktbehebung sollte Verkettung sein!
+	 * Creates a hashmap out of the given solution.
+	 * Solutions which are the same as an already added solution (rotated)
+	 * are added to the list belonging to this solution.
 	 * @param solutions
 	 */
 	private void initializeSolutionMap(List<SolutionGrid> solutions) {
@@ -46,6 +51,12 @@ public class SolutionConsole extends Console {
 		}
 	}
 
+	/**
+	 * Helper method that gives back a grid of turtlecards as a String.
+	 * Is best viewed with a monospace font.
+	 * @param grid
+	 * @return
+	 */
 	public static String toIdString(TurtleCard[][] grid) {
 		int rotMaxSpace = 5;
 		StringBuilder sb = new StringBuilder();

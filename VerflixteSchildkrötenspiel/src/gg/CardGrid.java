@@ -152,22 +152,18 @@ public class CardGrid extends GameGrid {
 	 * @param solutions
 	 */
 	public void cycleThroughSolutions(Set<SolutionGrid> solutions) {
-		setSimulationPeriod(5000);
-		doRun();
-		while (true) {
-			int solutionCounter = 1;
-			//sm: This doesn't work on the second loop of the "while", only the first one. No idea why.
-			for (SolutionGrid sg: solutions) {
-				removeAllActors();
-				setStatusText("Cycling through solutions... Now showing solution #" + solutionCounter);
-				grid = sg.getGrid();
-				for (int x = 0; x < 3; x++)
-					for (int y = 0; y < 3; y++)
-						addActor(grid[x][y], new Location(x, y));
-				refresh();
-				Monitor.putSleep();
-				solutionCounter++;
-			}
+		//setSimulationPeriod(5000);
+		//doRun();
+		SolutionGrid[] solutionsArray = solutions.toArray(new SolutionGrid[0]);
+		for (int solutionCounter = 0; true; solutionCounter = (solutionCounter + 1) % solutions.size()) {
+			removeAllActors();
+			setStatusText("Cycling through solutions... Now showing solution #" + (solutionCounter+1));
+			grid = solutionsArray[solutionCounter].getGrid();
+			for (int x = 0; x < 3; x++)
+				for (int y = 0; y < 3; y++)
+					addActor(grid[x][y], new Location(x, y));
+			refresh();
+			Monitor.putSleep();
 		}
 	}
 }
