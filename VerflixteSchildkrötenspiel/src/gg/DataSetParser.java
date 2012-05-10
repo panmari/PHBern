@@ -25,8 +25,9 @@ public class DataSetParser {
 		TurtleCardFactory tf = TurtleCardFactory.getInstance();
 		while (parseScanner.hasNextLine()) {
 			String line = parseScanner.nextLine();
-			String tcString = line.split(" ", 1)[0];
-			String sprite = line.split(" ", 1)[1];
+			int firstSpace = line.indexOf(" ");
+			String tcString = line.substring(0, firstSpace);
+			String sprite = line.substring(firstSpace + 1);
 			tcList.add(tf.makeTurtleCard(tcString, sprite));
 		}
 		return tcList;

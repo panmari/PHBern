@@ -1,6 +1,7 @@
 package gg;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import ch.aplu.jgamegrid.GameGrid;
@@ -9,22 +10,14 @@ import ch.aplu.util.Monitor;
 
 
 public class CardGrid extends GameGrid {
-	private LinkedList<TurtleCard> cardSet;
+	private List<TurtleCard> cardSet;
 	private TurtleCard[][] grid = new TurtleCard[3][3];
-		
-	public CardGrid() {
-		super(3, 3, 164, java.awt.Color.GRAY, null, true, 4);
-		cardSet = new LinkedList<TurtleCard>();
-		TurtleCardFactory tf = TurtleCardFactory.getInstance();
-		cardSet.add(tf.makeTurtleCard("yb;rb;yf;bf", "sprites/crd0.gif"));
-		cardSet.add(tf.makeTurtleCard("gb;bb;gf;rf", "sprites/crd1.gif"));
-		cardSet.add(tf.makeTurtleCard("gb;rb;yf;bf", "sprites/crd2.gif"));
-		cardSet.add(tf.makeTurtleCard("gb;rb;yf;bf", "sprites/crd3.gif"));
-		cardSet.add(tf.makeTurtleCard("yb;bb;gf;rf", "sprites/crd4.gif"));
-		cardSet.add(tf.makeTurtleCard("yb;rb;gf;bf", "sprites/crd5.gif"));
-		cardSet.add(tf.makeTurtleCard("bb;rb;gf;yf", "sprites/crd6.gif"));
-		cardSet.add(tf.makeTurtleCard("bb;gb;yf;rf", "sprites/crd7.gif"));
-		cardSet.add(tf.makeTurtleCard("rb;bb;yf;gf", "sprites/crd8.gif"));
+	
+	public CardGrid(List<TurtleCard> cardSet) {
+		//bug: I can not use constructor with 4 sprites only argument !!
+		//super(3, 3, 164, java.awt.Color.GRAY, null, true, 4);
+		super(3, 3, 164, java.awt.Color.GRAY, null, true);
+		this.cardSet = cardSet;
 		addStatusBar(25);
 		setTitle("Tricky Turtle (www.java-online.ch)");
 		show();
@@ -103,7 +96,9 @@ public class CardGrid extends GameGrid {
 		for (int y = 0; y < grid.length; y++) {
 			for (int x = 0; x < grid[y].length; x++) {
 				sb.append(" | ");
-				sb.append(grid[x][y]);
+				if (grid[x][y] != null)
+					sb.append(grid[x][y]);
+				else sb.append("                ");
 			}
 			sb.append(" | ");
 			sb.append("\n");

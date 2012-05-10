@@ -62,13 +62,15 @@ public class SolutionConsole extends Console {
 		StringBuilder sb = new StringBuilder();
 		for (int y = 0; y < grid.length; y++) {
 			for (int x = 0; x < grid[y].length; x++) {
-				sb.append(" | ");
-				sb.append(grid[x][y].getId());
-				sb.append(" ");
-				String rotString = grid[x][y].getRotation().toString();
-				sb.append(rotString);
-				//Lazy method to add spaces:
-				sb.append("      ".substring(0, rotMaxSpace - rotString.length()));
+				if (grid[x][y] != null) {
+					sb.append(" | ");
+					sb.append(grid[x][y].getId());
+					sb.append(" ");
+					String rotString = grid[x][y].getRotation().toString();
+					sb.append(rotString);
+					//Lazy method to add spaces:
+					sb.append("      ".substring(0, rotMaxSpace - rotString.length()));
+				} else sb.append(" |        ");
 			}
 			
 			sb.append(" | ");

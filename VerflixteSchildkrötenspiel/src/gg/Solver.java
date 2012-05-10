@@ -1,5 +1,6 @@
 package gg;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,9 +18,14 @@ public class Solver {
 	private static ArrayList<SolutionGrid> solutions = new ArrayList<SolutionGrid>();
 	
 	public static void main(String[] args) {
-		gg = new CardGrid();
-		solve(gg.getCards());
-		new SolutionConsole(gg, solutions);
+		try {
+			List<TurtleCard> cardSet = new DataSetParser("cardset.data").parse();
+			gg = new CardGrid(cardSet);
+			solve(gg.getCards());
+			new SolutionConsole(gg, solutions);
+		} catch (FileNotFoundException e) {
+			System.out.println("Couldn't find cardset");
+		}
 	}
 
 	/**
@@ -31,6 +37,7 @@ public class Solver {
 	 */
 	private static void sleep(boolean really) {
 		if ((really || gg.getSimulationPeriod() > 0) && !fastForward) {
+			System.out.println(gg.toString());
 			gg.setStatusText(status);
 			gg.setTitle("Tricky Turtle (www.java-online.ch) -- Steps: " + steps);
 			gg.refresh();
