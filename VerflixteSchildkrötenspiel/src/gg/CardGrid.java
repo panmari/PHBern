@@ -11,7 +11,7 @@ import ch.aplu.util.Monitor;
 public class CardGrid extends GameGrid {
 	private LinkedList<TurtleCard> cardSet;
 	private TurtleCard[][] grid = new TurtleCard[3][3];
-			
+		
 	public CardGrid() {
 		super(3, 3, 164, java.awt.Color.GRAY, null, true, 4);
 		cardSet = new LinkedList<TurtleCard>();

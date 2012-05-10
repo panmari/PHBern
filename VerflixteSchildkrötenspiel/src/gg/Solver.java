@@ -10,7 +10,7 @@ import ch.aplu.util.Monitor;
 public class Solver {
 
 	/** Set this to true if you want to reach the solutions as fast as possible */
-	private static final boolean fastForward = true;
+	private static final boolean fastForward = false;
 	private static CardGrid gg;
 	private static long steps;
 	private static String status;
