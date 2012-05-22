@@ -1,15 +1,26 @@
 package generator;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import ch.aplu.jgamegrid.GameGrid;
 
-public class CardGenerator extends GameGrid {
+public class CardGenerator {
 
+	List<DragHalfTurtle> availableTurtles;
+	
 	public CardGenerator() {
-		super(3, 3, 164);
-		show();
+		CardField cardField = new CardField();
+		initiateTurtles();
+		new HalfTurtleField(cardField, availableTurtles);
 	}
 	
-	public void main(String[] args) {
+	private void initiateTurtles() {
+		availableTurtles = new LinkedList<DragHalfTurtle>();
+	}
+	
+	public static void main(String[] args) {
 		new CardGenerator();
 	}
+	
 }
