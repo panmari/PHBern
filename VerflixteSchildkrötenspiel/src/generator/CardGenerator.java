@@ -8,9 +8,10 @@ public class CardGenerator {
 	List<DragHalfTurtle> availableTurtles;
 	
 	public CardGenerator() {
-		CardField cardField = new CardField();
+		TurtleDragger turtleDragger = new TurtleDragger();
+		CardField cardField = new CardField(turtleDragger);
 		initiateTurtles();
-		HalfTurtleField htf = new HalfTurtleField(cardField, availableTurtles);
+		HalfTurtleField htf = new HalfTurtleField(cardField, availableTurtles, turtleDragger);
 		cardField.getFrame().toFront();
 		cardField.getFrame().repaint();
 	}
@@ -30,5 +31,5 @@ public class CardGenerator {
 	public static void main(String[] args) {
 		new CardGenerator();
 	}
-	
+
 }
