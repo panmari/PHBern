@@ -19,18 +19,28 @@ public class CardField extends GameGrid implements GGMouseTouchListener{
 		super(4,3,164, Color.gray, false);
 		this.availableTurtles = availableTurtles;
 		setBgColor(Color.white);
-		setTitle("Turtles");
+		setTitle("Turtles Generator");
+		initiateTurtles();
 		show();
+		doRun();
 	}
 	
 	private void initiateTurtles() {
 		int x = 0;
 		int y = 0;
+		boolean newRow = true;
 		for (DragHalfTurtle ht: availableTurtles) {
-			addActor(ht, new Location(x,y));
+			addActor(ht, new Location(0, 0));	
 			ht.addMouseTouchListener(this, GGMouse.lPress | GGMouse.lDrag | GGMouse.lRelease);
-			y += x;
-			x = (x + 1) % 2;
+			if (newRow) {
+				x = 535;
+				y = y + 100;
+				newRow = false;
+			} else {
+				x = x + 80;
+				newRow = true;
+			}
+			ht.setPixelLocation(new Point(x, y));
 		}
 	}
 
@@ -38,12 +48,11 @@ public class CardField extends GameGrid implements GGMouseTouchListener{
 	public void mouseTouched(Actor actor, GGMouse mouse, Point spot) {
 		switch (mouse.getEvent()) {
 		case GGMouse.lPress:
-			dragTurtle = getOneActorAt(toLocationInGrid(mouse.getX(), mouse.getY()));
+			dragTurtle = actor;
 			break;
 		case GGMouse.lDrag:
 			if (dragTurtle != null) {
 				dragTurtle.setPixelLocation(new Point(mouse.getX(), mouse.getY()));
-				//refresh();
 			}
 			break;
 		case GGMouse.lRelease:
