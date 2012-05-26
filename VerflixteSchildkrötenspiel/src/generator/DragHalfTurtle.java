@@ -1,6 +1,8 @@
 package generator;
 
 import ch.aplu.jgamegrid.Actor;
+import ch.aplu.jgamegrid.Location;
+import ch.aplu.jgamegrid.Location.CompassDirection;
 
 public class DragHalfTurtle extends Actor {
 	
@@ -18,6 +20,14 @@ public class DragHalfTurtle extends Actor {
 	
 	public DragHalfTurtle clone() {
 		return new DragHalfTurtle(this);
+	}
+
+	public void setLocationWithinCard(Location loc, CompassDirection dir) {
+		setLocation(loc);
+		switch (dir) {
+		
+		}
+		
 	}
 	
 }

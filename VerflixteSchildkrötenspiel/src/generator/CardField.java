@@ -69,8 +69,7 @@ public class CardField extends GameGrid implements GGMouseTouchListener, GGMouse
 			
 			if (offsetx < offsety) {
 				if (cellSize - offsetx < offsety) {
-					dragTurtle.setPixelLocation(new Point(loc.getX()*cellSize + cellSize/2, (loc.getY() + 1)*cellSize - 31));
-					dragTurtle.setDirection(CompassDirection.NORTH);
+					dragTurtle.setLocationWithinCard(loc, CompassDirection.NORTH);
 				}
 				else {
 				       dragTurtle.setPixelLocation(new Point(loc.getX()*cellSize + 31, loc.getY()*cellSize + cellSize/2));
