@@ -6,14 +6,16 @@ import java.util.List;
 
 import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.GGMouse;
+import ch.aplu.jgamegrid.GGMouseListener;
 import ch.aplu.jgamegrid.GGMouseTouchListener;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
+import ch.aplu.jgamegrid.Location.CompassDirection;
 
-public class CardField extends GameGrid implements GGMouseTouchListener{
+public class CardField extends GameGrid implements GGMouseTouchListener, GGMouseListener{
 	
 	private List<DragHalfTurtle> availableTurtles;
-	Actor dragTurtle;
+	DragHalfTurtle dragTurtle;
 	
 	CardField(List<DragHalfTurtle> availableTurtles) {
 		super(4,3,164, Color.gray, false);
@@ -21,8 +23,8 @@ public class CardField extends GameGrid implements GGMouseTouchListener{
 		setBgColor(Color.white);
 		setTitle("Turtles Generator");
 		initiateTurtles();
+		addMouseListener(this, GGMouse.lDrag);
 		show();
-		doRun();
 	}
 	
 	private void initiateTurtles() {
@@ -31,7 +33,7 @@ public class CardField extends GameGrid implements GGMouseTouchListener{
 		boolean newRow = true;
 		for (DragHalfTurtle ht: availableTurtles) {
 			addActor(ht, new Location(0, 0));	
-			ht.addMouseTouchListener(this, GGMouse.lPress | GGMouse.lDrag | GGMouse.lRelease);
+			ht.addMouseTouchListener(this, GGMouse.lPress | GGMouse.lRelease);
 			if (newRow) {
 				x = 535;
 				y = y + 100;
@@ -48,17 +50,33 @@ public class CardField extends GameGrid implements GGMouseTouchListener{
 	public void mouseTouched(Actor actor, GGMouse mouse, Point spot) {
 		switch (mouse.getEvent()) {
 		case GGMouse.lPress:
-			dragTurtle = actor;
-			break;
-		case GGMouse.lDrag:
-			if (dragTurtle != null) {
-				dragTurtle.setPixelLocation(new Point(mouse.getX(), mouse.getY()));
-			}
+			dragTurtle = ((DragHalfTurtle) actor).clone();
+			addActorNoRefresh(dragTurtle, actor.getLocation());
+			dragTurtle.setPixelLocation(actor.getPixelLocation());
 			break;
 		case GGMouse.lRelease:
 			dragTurtle = null;
 			break;
 		}
+	}
+
+	@Override
+	public boolean mouseEvent(GGMouse mouse) {
+		Location loc = toLocation(mouse.getX(), mouse.getY());
+		if (dragTurtle != null && isInGrid(loc)) {
+			int offsetx = mouse.getX() - loc.getX()*cellSize;
+			int offsety = mouse.getY() - loc.getY()*cellSize;
+			
+			if (offsetx < cellSize/4 && cellSize/4 < offsety && offsety < cellSize*3/4 ) {
+				dragTurtle.setPixelLocation(new Point(loc.getX()*cellSize + 32, loc.getY()*cellSize + cellSize/2));
+				dragTurtle.setDirection(CompassDirection.WEST);
+			}
+			else 
+				dragTurtle.setPixelLocation(new Point(mouse.getX(), mouse.getY()));
+			refresh();
+		}
+		return true;
+		
 	}
 			
 }
