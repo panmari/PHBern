@@ -26,7 +26,11 @@ public class DragHalfTurtle extends Actor {
 
 	public void setLocationWithinCard(Location loc, CompassDirection dir) {
 		setLocation(loc);
-		int offset = 50;
+		int offset;
+		if (isTurtleFront())
+			offset = 50;
+		else offset = 52;
+
 		switch (dir) {
 		case NORTH:
 			setLocationOffset(new Point(0, offset));
@@ -44,23 +48,29 @@ public class DragHalfTurtle extends Actor {
 			setLocationOffset(new Point(-offset, 0));
 			setDirection(dir);
 			break;
-			
+		default:
+			throw new RuntimeException();
 		}
 		
 	}
 	
 	/**
-	 * Needs to be inverted if back
+	 * Needs to be inverted in certain cases
+	 * TODO: make prettier
 	 */
 	public void setDirection(CompassDirection dir) {
-		if ((representation.charAt(1) == 'f' && (
+		if ( (isTurtleFront() && (
 				dir == CompassDirection.SOUTH ||
 				dir == CompassDirection.NORTH))
-				||
-				(representation.charAt(1) == 'b' && ( 
+				|| 
+				(!isTurtleFront() && ( 
 				dir == CompassDirection.WEST ||
 				dir == CompassDirection.EAST)))
 			super.setDirection(dir.getDirection()+180);
 		else super.setDirection(dir);
+	}
+	
+	private boolean isTurtleFront() {
+		return representation.charAt(1) == 'f';
 	}
 }

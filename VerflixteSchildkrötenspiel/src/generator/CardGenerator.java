@@ -16,9 +16,9 @@ public class CardGenerator {
 	private void initiateTurtles() {
 		availableTurtles = new LinkedList<DragHalfTurtle>();
 		availableTurtles.add(new DragHalfTurtle("bf", "sprites/blau_vorne.png"));
-		availableTurtles.add(new DragHalfTurtle("bh", "sprites/blau_hinten.png"));
+		availableTurtles.add(new DragHalfTurtle("bb", "sprites/blau_hinten.png"));
 		availableTurtles.add(new DragHalfTurtle("gf", "sprites/gruen_vorne.png"));
-		availableTurtles.add(new DragHalfTurtle("gh", "sprites/gruen_hinten.png"));
+		availableTurtles.add(new DragHalfTurtle("gb", "sprites/gruen_hinten.png"));
 		availableTurtles.add(new DragHalfTurtle("rf", "sprites/braun_vorne.png"));
 		availableTurtles.add(new DragHalfTurtle("rb", "sprites/braun_hinten.png"));
 		availableTurtles.add(new DragHalfTurtle("yf", "sprites/br_bla_vorne.png"));
