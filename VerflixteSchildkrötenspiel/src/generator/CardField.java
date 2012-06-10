@@ -72,11 +72,15 @@ public class CardField extends GameGrid implements GGMouseTouchListener, GGMouse
 					dragTurtle.setLocationWithinCard(loc, CompassDirection.NORTH);
 				}
 				else {
-				       dragTurtle.setPixelLocation(new Point(loc.getX()*cellSize + 31, loc.getY()*cellSize + cellSize/2));
-				       dragTurtle.setDirection(CompassDirection.WEST);
+				    dragTurtle.setLocationWithinCard(loc, CompassDirection.WEST);
 				}
 			}
-			else dragTurtle.setPixelLocation(new Point(mouse.getX(), mouse.getY()));
+			else if (cellSize - offsetx < offsety) {
+				dragTurtle.setLocationWithinCard(loc, CompassDirection.EAST);
+			}
+			else {
+			    dragTurtle.setLocationWithinCard(loc, CompassDirection.SOUTH);
+			}
 			refresh();
 		}
 		return true;
