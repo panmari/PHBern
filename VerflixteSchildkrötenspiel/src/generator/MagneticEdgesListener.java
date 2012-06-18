@@ -45,6 +45,7 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 			} else {
 				dragTurtle.setLocation(new Location(-1, -1)); // out of sight }
 			}
+			gg.refresh();
 		}
 		return true;
 	}

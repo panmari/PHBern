@@ -4,13 +4,9 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.List;
 
-import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.GGMouse;
-import ch.aplu.jgamegrid.GGMouseListener;
-import ch.aplu.jgamegrid.GGMouseTouchListener;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
-import ch.aplu.jgamegrid.Location.CompassDirection;
 
 public class CardField extends GameGrid {
 
