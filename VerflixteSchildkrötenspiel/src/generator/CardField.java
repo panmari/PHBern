@@ -12,28 +12,29 @@ import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.jgamegrid.Location.CompassDirection;
 
-public class CardField extends GameGrid implements GGMouseTouchListener, GGMouseListener{
-	
+public class CardField extends GameGrid {
+
 	private List<DragHalfTurtle> availableTurtles;
-	DragHalfTurtle dragTurtle;
-	
+	private MagneticEdgesListener mouseListener;
+
 	CardField(List<DragHalfTurtle> availableTurtles) {
-		super(4,3,164, Color.gray, false);
+		super(4, 3, 164, Color.gray, false);
 		this.availableTurtles = availableTurtles;
+		this.mouseListener = new MagneticEdgesListener(this, cellSize);
 		setBgColor(Color.white);
 		setTitle("Turtles Generator");
 		initiateTurtles();
-		addMouseListener(this, GGMouse.lDrag);
+		addMouseListener(mouseListener, GGMouse.lDrag);
 		show();
 	}
-	
+
 	private void initiateTurtles() {
 		int x = 0;
 		int y = 0;
 		boolean newRow = true;
-		for (DragHalfTurtle ht: availableTurtles) {
-			addActor(ht, new Location(0, 0));	
-			ht.addMouseTouchListener(this, GGMouse.lPress | GGMouse.lRelease);
+		for (DragHalfTurtle ht : availableTurtles) {
+			addActor(ht, new Location(0, 0));
+			ht.addMouseTouchListener(mouseListener, GGMouse.lPress | GGMouse.lRelease);
 			if (newRow) {
 				x = 535;
 				y = y + 100;
@@ -46,45 +47,4 @@ public class CardField extends GameGrid implements GGMouseTouchListener, GGMouse
 		}
 	}
 
-	@Override
-	public void mouseTouched(Actor actor, GGMouse mouse, Point spot) {
-		switch (mouse.getEvent()) {
-		case GGMouse.lPress:
-			dragTurtle = ((DragHalfTurtle) actor).clone();
-			addActorNoRefresh(dragTurtle, actor.getLocation());
-			dragTurtle.setPixelLocation(actor.getPixelLocation());
-			break;
-		case GGMouse.lRelease:
-			dragTurtle = null;
-			break;
-		}
-	}
-
-	@Override
-	public boolean mouseEvent(GGMouse mouse) {
-		Location loc = toLocation(mouse.getX(), mouse.getY());
-		if (dragTurtle != null && isInGrid(loc)) {
-			int offsetx = mouse.getX() - loc.getX()*cellSize;
-			int offsety = mouse.getY() - loc.getY()*cellSize;
-			
-			if (offsetx < offsety) {
-				if (cellSize - offsetx < offsety) {
-					dragTurtle.setLocationWithinCard(loc, CompassDirection.NORTH);
-				}
-				else {
-				    dragTurtle.setLocationWithinCard(loc, CompassDirection.WEST);
-				}
-			}
-			else if (cellSize - offsetx < offsety) {
-				dragTurtle.setLocationWithinCard(loc, CompassDirection.EAST);
-			}
-			else {
-			    dragTurtle.setLocationWithinCard(loc, CompassDirection.SOUTH);
-			}
-			refresh();
-		}
-		return true;
-		
-	}
-			
 }
