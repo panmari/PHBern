@@ -37,18 +37,14 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 
 				if (offsetx < offsety) {
 					if (cellSize - offsetx < offsety) {
-						dragTurtle.setLocationWithinCard(loc, CompassDirection.NORTH);
-						cardGrid[loc.x][loc.y].setTurtle(dragTurtle, CardPosition.UP);
+						dragTurtle.setLocationWithinCard(loc, CardPosition.UP);
 					} else {
-						dragTurtle.setLocationWithinCard(loc, CompassDirection.WEST);
-						cardGrid[loc.x][loc.y].setTurtle(dragTurtle, CardPosition.LEFT);
+						dragTurtle.setLocationWithinCard(loc, CardPosition.LEFT);
 					}
 				} else if (cellSize - offsetx < offsety) {
-					dragTurtle.setLocationWithinCard(loc, CompassDirection.EAST);
-					cardGrid[loc.x][loc.y].setTurtle(dragTurtle, CardPosition.RIGHT);
+					dragTurtle.setLocationWithinCard(loc, CardPosition.RIGHT);
 				} else {
-					dragTurtle.setLocationWithinCard(loc, CompassDirection.SOUTH);
-					cardGrid[loc.x][loc.y].setTurtle(dragTurtle, CardPosition.DOWN);
+					dragTurtle.setLocationWithinCard(loc, CardPosition.DOWN);
 				}
 			} else {
 				dragTurtle.setLocation(new Location(-1, -1)); // out of sight }
@@ -70,7 +66,10 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 			gg.addActorNoRefresh(dragTurtle, actor.getLocation());
 			break;
 		case GGMouse.lRelease:
+			Location loc = gg.toLocationInGrid(mouse.getX(), mouse.getY());
+			cardGrid[loc.x][loc.y].setTurtle(dragTurtle);
 			dragTurtle = null;
+			gg.refresh();
 			break;
 		}
 	}

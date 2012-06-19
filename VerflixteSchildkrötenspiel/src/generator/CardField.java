@@ -15,7 +15,7 @@ public class CardField extends GameGrid {
 	private Card[][] cardGrid;
 	
 	CardField(List<DragHalfTurtle> availableTurtles) {
-		super(4, 3, 164, Color.gray, false);
+		super(4, 3, 166, Color.gray, false);
 		this.availableTurtles = availableTurtles;
 		this.cardGrid = new Card[3][3];
 		this.mouseListener = new MagneticEdgesListener(this, cellSize, cardGrid);

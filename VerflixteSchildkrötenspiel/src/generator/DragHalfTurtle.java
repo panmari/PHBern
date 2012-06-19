@@ -1,5 +1,7 @@
 package generator;
 
+import gg.CardPosition;
+
 import java.awt.Point;
 
 import ch.aplu.jgamegrid.Actor;
@@ -9,6 +11,7 @@ import ch.aplu.jgamegrid.Location.CompassDirection;
 public class DragHalfTurtle extends Actor {
 	
 	private String representation;
+	private CardPosition pos;
 
 	public DragHalfTurtle(String representation, String sprite) {
 		super(sprite);
@@ -24,29 +27,26 @@ public class DragHalfTurtle extends Actor {
 		return new DragHalfTurtle(this);
 	}
 
-	public void setLocationWithinCard(Location loc, CompassDirection dir) {
+	public void setLocationWithinCard(Location loc, CardPosition pos) {
 		setLocation(loc);
 		int offset;
 		if (isTurtleFront())
 			offset = 50;
-		else offset = 52;
-
-		switch (dir) {
-		case NORTH:
+		else offset = 53;
+		setDirection(pos);
+		this.pos = pos;
+		switch (pos) {
+		case UP:
 			setLocationOffset(new Point(0, offset));
-			setDirection(dir);
 			break;
-		case EAST:
+		case RIGHT:
 			setLocationOffset(new Point(offset, 0));
-			setDirection(dir);
 			break;
-		case SOUTH:
+		case DOWN:
 			setLocationOffset(new Point(0, -offset));
-			setDirection(dir);
 			break;
-		case WEST:
+		case LEFT:
 			setLocationOffset(new Point(-offset, 0));
-			setDirection(dir);
 			break;
 		default:
 			throw new RuntimeException();
@@ -58,19 +58,23 @@ public class DragHalfTurtle extends Actor {
 	 * Needs to be inverted in certain cases
 	 * TODO: make prettier
 	 */
-	public void setDirection(CompassDirection dir) {
+	public void setDirection(CardPosition pos) {
 		if ( (isTurtleFront() && (
-				dir == CompassDirection.SOUTH ||
-				dir == CompassDirection.NORTH))
+				pos == CardPosition.UP ||
+				pos == CardPosition.DOWN))
 				|| 
 				(!isTurtleFront() && ( 
-				dir == CompassDirection.WEST ||
-				dir == CompassDirection.EAST)))
-			super.setDirection(dir.getDirection()+180);
-		else super.setDirection(dir);
+				pos == CardPosition.LEFT ||
+				pos == CardPosition.RIGHT)))
+			super.setDirection(pos.ordinal()*90);
+		else super.setDirection(pos.ordinal()*90 + 180);
 	}
 	
 	private boolean isTurtleFront() {
 		return representation.charAt(1) == 'f';
+	}
+
+	public CardPosition getPos() {
+		return pos;
 	}
 }

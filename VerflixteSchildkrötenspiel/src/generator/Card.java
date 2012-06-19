@@ -9,9 +9,10 @@ public class Card {
 		cardSetting = new DragHalfTurtle[4];
 	}
 	
-	public void setTurtle(DragHalfTurtle turtle, CardPosition pos) {
-		if (cardSetting[pos.ordinal()] != null)
-			cardSetting[pos.ordinal()].removeSelf();
-		cardSetting[pos.ordinal()] = turtle;
+	public void setTurtle(DragHalfTurtle turtle) {
+		int posOrdinal = turtle.getPos().ordinal();
+		if (cardSetting[posOrdinal] != null)
+			cardSetting[posOrdinal].removeSelf();
+		cardSetting[posOrdinal] = turtle;
 	}
 }
