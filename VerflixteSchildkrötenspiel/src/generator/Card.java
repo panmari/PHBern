@@ -1,7 +1,5 @@
 package generator;
 
-import gg.CardPosition;
-
 public class Card {
 	DragHalfTurtle[] cardSetting;
 	
@@ -14,5 +12,12 @@ public class Card {
 		if (cardSetting[posOrdinal] != null)
 			cardSetting[posOrdinal].removeSelf();
 		cardSetting[posOrdinal] = turtle;
+	}
+	
+	public String toString() {
+		String result = "";
+		for (DragHalfTurtle ht: cardSetting)
+			result += ht.toString();
+		return result;
 	}
 }

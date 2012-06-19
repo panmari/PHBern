@@ -48,8 +48,6 @@ public class DragHalfTurtle extends Actor {
 		case LEFT:
 			setLocationOffset(new Point(-offset, 0));
 			break;
-		default:
-			throw new RuntimeException();
 		}
 		
 	}
@@ -76,5 +74,9 @@ public class DragHalfTurtle extends Actor {
 
 	public CardPosition getPos() {
 		return pos;
+	}
+	
+	public String toString() {
+		return this.representation;
 	}
 }
