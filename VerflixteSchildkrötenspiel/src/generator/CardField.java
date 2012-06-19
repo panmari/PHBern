@@ -12,16 +12,25 @@ public class CardField extends GameGrid {
 
 	private List<DragHalfTurtle> availableTurtles;
 	private MagneticEdgesListener mouseListener;
-
+	private Card[][] cardGrid;
+	
 	CardField(List<DragHalfTurtle> availableTurtles) {
 		super(4, 3, 164, Color.gray, false);
 		this.availableTurtles = availableTurtles;
-		this.mouseListener = new MagneticEdgesListener(this, cellSize);
+		this.cardGrid = new Card[3][3];
+		this.mouseListener = new MagneticEdgesListener(this, cellSize, cardGrid);
 		setBgColor(Color.white);
 		setTitle("Turtles Generator");
 		initiateTurtles();
+		initiateCardGrid();
 		addMouseListener(mouseListener, GGMouse.lDrag);
 		show();
+	}
+
+	private void initiateCardGrid() {
+		for (int x = 0; x < cardGrid.length; x++)
+			for (int y = 0; y < cardGrid[x].length; y++)
+				cardGrid[x][y] = new Card();
 	}
 
 	private void initiateTurtles() {

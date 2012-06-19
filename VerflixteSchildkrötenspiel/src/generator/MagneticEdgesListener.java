@@ -1,5 +1,7 @@
 package generator;
 
+import gg.CardPosition;
+
 import java.awt.Point;
 
 import ch.aplu.jgamegrid.Actor;
@@ -12,12 +14,14 @@ import ch.aplu.jgamegrid.Location.CompassDirection;
 public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListener {
 
 	private int cellSize;
-	DragHalfTurtle dragTurtle;
+	private DragHalfTurtle dragTurtle;
 	private CardField gg;
+	private Card[][] cardGrid;
 	
-	public MagneticEdgesListener(CardField gg, int cellSize) {
+	public MagneticEdgesListener(CardField gg, int cellSize, Card[][] cardGrid) {
 		this.cellSize = cellSize;
 		this.gg = gg;
+		this.cardGrid = cardGrid;
 	}
 
 	/**
@@ -34,13 +38,17 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 				if (offsetx < offsety) {
 					if (cellSize - offsetx < offsety) {
 						dragTurtle.setLocationWithinCard(loc, CompassDirection.NORTH);
+						cardGrid[loc.x][loc.y].setTurtle(dragTurtle, CardPosition.UP);
 					} else {
 						dragTurtle.setLocationWithinCard(loc, CompassDirection.WEST);
+						cardGrid[loc.x][loc.y].setTurtle(dragTurtle, CardPosition.LEFT);
 					}
 				} else if (cellSize - offsetx < offsety) {
 					dragTurtle.setLocationWithinCard(loc, CompassDirection.EAST);
+					cardGrid[loc.x][loc.y].setTurtle(dragTurtle, CardPosition.RIGHT);
 				} else {
 					dragTurtle.setLocationWithinCard(loc, CompassDirection.SOUTH);
+					cardGrid[loc.x][loc.y].setTurtle(dragTurtle, CardPosition.DOWN);
 				}
 			} else {
 				dragTurtle.setLocation(new Location(-1, -1)); // out of sight }
@@ -60,7 +68,6 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 		case GGMouse.lPress:
 			dragTurtle = ((DragHalfTurtle) actor).clone();
 			gg.addActorNoRefresh(dragTurtle, actor.getLocation());
-			dragTurtle.setPixelLocation(actor.getPixelLocation());
 			break;
 		case GGMouse.lRelease:
 			dragTurtle = null;
