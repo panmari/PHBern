@@ -2,6 +2,7 @@ package generator;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -9,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import ch.aplu.jgamegrid.Actor;
+import ch.aplu.jgamegrid.GGBitmap;
 import ch.aplu.jgamegrid.GGButton;
 import ch.aplu.jgamegrid.GGButtonListener;
 import ch.aplu.jgamegrid.GGMouse;
@@ -81,6 +83,15 @@ public class CardField extends GameGrid implements GGButtonListener {
 			out = new PrintWriter(new FileWriter("data.txt"));
 			out.println(gridString);
 			out.close();
+			BufferedImage bi = getImage();
+			GGBitmap.writeImage(bi, "allCards.jpg", "jpg");
+			int imgCounter = 1;
+			for (int x = 0; x < 3*cellSize; x+=cellSize) {
+				for (int y = 0; y < 3*cellSize; y+=cellSize) {
+					BufferedImage card = bi.getSubimage(x, y, x+cellSize, y+cellSize);
+					GGBitmap.writeImage(card, "card" + imgCounter++ + ".jpg", "jpg");
+				}
+			}
 		} catch (NullPointerException e) {
 			setStatusText("Not all cards are fully occupied!");
 		} catch (IOException e) {
