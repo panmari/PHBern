@@ -37,14 +37,14 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 
 				if (offsetx < offsety) {
 					if (cellSize - offsetx < offsety) {
-						dragTurtle.setLocationWithinCard(loc, CardPosition.UP);
+						dragTurtle.setLocationWithinCard(loc, CardPosition.DOWN);
 					} else {
 						dragTurtle.setLocationWithinCard(loc, CardPosition.LEFT);
 					}
 				} else if (cellSize - offsetx < offsety) {
 					dragTurtle.setLocationWithinCard(loc, CardPosition.RIGHT);
 				} else {
-					dragTurtle.setLocationWithinCard(loc, CardPosition.DOWN);
+					dragTurtle.setLocationWithinCard(loc, CardPosition.UP);
 				}
 			} else {
 				dragTurtle.setLocation(new Location(-1, -1)); // out of sight }

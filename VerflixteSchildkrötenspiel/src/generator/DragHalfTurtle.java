@@ -30,20 +30,18 @@ public class DragHalfTurtle extends Actor {
 	public void setLocationWithinCard(Location loc, CardPosition pos) {
 		setLocation(loc);
 		int offset;
-		if (isTurtleFront())
-			offset = 50;
-		else offset = 53;
+		offset = 50;
 		setDirection(pos);
 		this.pos = pos;
 		switch (pos) {
 		case UP:
-			setLocationOffset(new Point(0, offset));
+			setLocationOffset(new Point(0, -offset));
 			break;
 		case RIGHT:
 			setLocationOffset(new Point(offset, 0));
 			break;
 		case DOWN:
-			setLocationOffset(new Point(0, -offset));
+			setLocationOffset(new Point(0, offset));
 			break;
 		case LEFT:
 			setLocationOffset(new Point(-offset, 0));
@@ -54,16 +52,9 @@ public class DragHalfTurtle extends Actor {
 	
 	/**
 	 * Needs to be inverted in certain cases
-	 * TODO: make prettier
 	 */
 	public void setDirection(CardPosition pos) {
-		if ( (isTurtleFront() && (
-				pos == CardPosition.UP ||
-				pos == CardPosition.DOWN))
-				|| 
-				(!isTurtleFront() && ( 
-				pos == CardPosition.LEFT ||
-				pos == CardPosition.RIGHT)))
+		if (!isTurtleFront())
 			super.setDirection(pos.ordinal()*90);
 		else super.setDirection(pos.ordinal()*90 + 180);
 	}

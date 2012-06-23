@@ -17,7 +17,7 @@ public class Card {
 	public String toString() {
 		String result = "";
 		for (DragHalfTurtle ht: cardSetting)
-			result += ht.toString();
+			result += ht.toString() + ";";
 		return result;
 	}
 }

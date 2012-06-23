@@ -73,25 +73,28 @@ public class CardField extends GameGrid implements GGButtonListener {
 
 	@Override
 	public void buttonClicked(GGButton button) {
+		final String PREFIX = "testTurties";
 		String gridString = "";
 		PrintWriter out;
 		try {
-			for (int x = 0; x < cardGrid.length; x++) {
-				for (int y = 0; y < cardGrid[x].length; y++)
-					gridString += cardGrid[x][y] + "\n";
-			}
-			out = new PrintWriter(new FileWriter("data.txt"));
+			int imgCounter = 0;
+			for (int y = 0; y < cardGrid.length; y++)
+				for (int x = 0; x < cardGrid.length; x++)
+					gridString += cardGrid[x][y] + " sprites/" + PREFIX + imgCounter++ + ".jpg" + "\n";
+			
+			out = new PrintWriter(new FileWriter(PREFIX + ".data"));
 			out.println(gridString);
 			out.close();
-			BufferedImage bi = getImage();
-			GGBitmap.writeImage(bi, "allCards.jpg", "jpg");
-			int imgCounter = 1;
-			for (int x = 0; x < 3*cellSize; x+=cellSize) {
-				for (int y = 0; y < 3*cellSize; y+=cellSize) {
-					BufferedImage card = bi.getSubimage(x, y, x+cellSize, y+cellSize);
-					GGBitmap.writeImage(card, "card" + imgCounter++ + ".jpg", "jpg");
+			BufferedImage bi = getImage().getSubimage(0,0,cellSize*3, cellSize*3);
+			GGBitmap.writeImage(bi, PREFIX + "allCards.jpg", "jpg");
+			imgCounter = 0;
+			for (int y = 0; y < 3*cellSize; y+=cellSize) {
+				for (int x = 0; x < 3*cellSize; x+=cellSize) {
+					BufferedImage card = bi.getSubimage(x, y, cellSize, cellSize);
+					GGBitmap.writeImage(card, PREFIX + imgCounter++ + ".jpg", "jpg");
 				}
 			}
+			setStatusText("Done!");
 		} catch (NullPointerException e) {
 			setStatusText("Not all cards are fully occupied!");
 		} catch (IOException e) {

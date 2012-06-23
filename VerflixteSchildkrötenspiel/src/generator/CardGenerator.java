@@ -21,8 +21,8 @@ public class CardGenerator {
 		availableTurtles.add(new DragHalfTurtle("gb", "sprites/gruen_hinten.png"));
 		availableTurtles.add(new DragHalfTurtle("rf", "sprites/braun_vorne.png"));
 		availableTurtles.add(new DragHalfTurtle("rb", "sprites/braun_hinten.png"));
-		availableTurtles.add(new DragHalfTurtle("yf", "sprites/br_bla_vorne.png"));
-		availableTurtles.add(new DragHalfTurtle("yb", "sprites/br_bla_hinten.png"));	
+		availableTurtles.add(new DragHalfTurtle("yf", "sprites/br_bl_vorne.png"));
+		availableTurtles.add(new DragHalfTurtle("yb", "sprites/br_bl_hinten.png"));	
 	}
 	
 	public static void main(String[] args) {
