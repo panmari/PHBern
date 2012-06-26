@@ -71,6 +71,10 @@ public class CardField extends GameGrid implements GGButtonListener {
 
 	@Override
 	public void buttonClicked(GGButton button) {
+		exportDataSet();
+	}
+	
+	private void exportDataSet()  {
 		final String PREFIX = "testTurties";
 		String gridString = "";
 		PrintWriter out;
@@ -98,7 +102,6 @@ public class CardField extends GameGrid implements GGButtonListener {
 		} catch (IOException e) {
 			setStatusText("Could not write files!");
 		}
-		
 	}
 
 	@Override

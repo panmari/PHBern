@@ -37,7 +37,6 @@ public class Solver {
 	 */
 	private static void sleep(boolean really) {
 		if ((really || gg.getSimulationPeriod() > 0) && !fastForward) {
-			System.out.println(gg.toString());
 			gg.setStatusText(status);
 			gg.setTitle("Tricky Turtle (www.java-online.ch) -- Steps: " + steps);
 			gg.refresh();

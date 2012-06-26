@@ -6,8 +6,13 @@ import java.awt.Point;
 
 import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.Location;
-import ch.aplu.jgamegrid.Location.CompassDirection;
 
+/**
+ * The representation of a HalfTurtle, just for the generator.
+ * It shares many attributes with the class HalfTurtle.
+ * @author mazzzy
+ *
+ */
 public class DragHalfTurtle extends Actor {
 	
 	private String representation;
@@ -30,7 +35,9 @@ public class DragHalfTurtle extends Actor {
 	public void setLocationWithinCard(Location loc, CardPosition pos) {
 		setLocation(loc);
 		int offset;
-		offset = 50;
+		if (isTurtleFront() && (pos == CardPosition.DOWN || pos == CardPosition.RIGHT))
+			offset = 51;
+		else offset = 50;
 		setDirection(pos);
 		this.pos = pos;
 		switch (pos) {
@@ -51,7 +58,8 @@ public class DragHalfTurtle extends Actor {
 	}
 	
 	/**
-	 * Needs to be inverted in certain cases
+	 * Sets the sprite rotation according to the given CardPosition
+	 * The sprite needs to be inverted in certain cases.
 	 */
 	public void setDirection(CardPosition pos) {
 		if (!isTurtleFront())

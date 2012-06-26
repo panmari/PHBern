@@ -26,7 +26,6 @@ public class CardGrid extends GameGrid {
 	/**
 	 * Checks if there is a conflict at the given location p. Only checks for conflicts
 	 * in this location, not anywhere else. If the location is empty, it returns true.
-	 * TODO: make a null turtle for exception-cases?
 	 * @param p
 	 * @return
 	 */
@@ -40,9 +39,9 @@ public class CardGrid extends GameGrid {
 				if (mismatch(newCard, grid[newX][newY], cp))
 					return true;
 			} catch (ArrayIndexOutOfBoundsException e) {
-				//it was k, bc there is only border
+				//border -> ok
 			} catch (NullPointerException e) {
-				//it was k, bc there is no card
+				//there is no card -> ok
 			}
 		}
 		return false;
@@ -138,6 +137,7 @@ public class CardGrid extends GameGrid {
 		refresh();
 		setStatusText("Found Solution! Click once more on run to look for more.");
 		System.out.println(this.toIdString());
+		System.out.println(this);
 	}
 
 	/**

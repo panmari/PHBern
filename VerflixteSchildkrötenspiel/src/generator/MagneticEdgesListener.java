@@ -10,6 +10,10 @@ import ch.aplu.jgamegrid.GGMouseListener;
 import ch.aplu.jgamegrid.GGMouseTouchListener;
 import ch.aplu.jgamegrid.Location;
 
+/**
+ * There are only 4 possible Locations for a DragHalfTurtle. This Listener automatically
+ * puts them to the closest of them.
+ */
 public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListener {
 
 	private int cellSize;
@@ -24,7 +28,7 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 	}
 
 	/**
-	 * TODO: remove ugliness
+	 * See class description
 	 */
 	@Override
 	public boolean mouseEvent(GGMouse mouse) {
@@ -53,6 +57,11 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 		return true;
 	}
 
+	/**
+	 * Only the left part of the gamegrid is valid for positioning HalfTurtles.
+	 * @param loc
+	 * @return true, if the given Location is valid for HalfTurtles
+	 */
 	private boolean isInTurtleGrid(Location loc) {
 		return loc.x < 3 && loc.y < 3;
 	}
@@ -66,7 +75,11 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 			break;
 		case GGMouse.lRelease:
 			Location loc = gg.toLocationInGrid(mouse.getX(), mouse.getY());
-			cardGrid[loc.x][loc.y].setTurtle(dragTurtle);
+			if (isInTurtleGrid(loc))
+				cardGrid[loc.x][loc.y].setTurtle(dragTurtle);
+			else
+				dragTurtle.removeSelf();
+
 			dragTurtle = null;
 			gg.refresh();
 			break;
