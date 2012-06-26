@@ -1,13 +1,13 @@
 package tests;
 
 import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
 import gg.CardGrid;
+import gg.DataSetParser;
 import gg.TurtleCard;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,11 +18,12 @@ import ch.aplu.jgamegrid.Location;
 public class CardGritTest {
 
 	CardGrid gg;
-	LinkedList<TurtleCard> allCards;
+	List<TurtleCard> allCards;
 	
 	@Before
 	public void setUp() throws Exception {
-		gg = new CardGrid();
+		allCards = new DataSetParser("cardset.data").parse();
+		gg = new CardGrid(allCards);
 		allCards = gg.getCards();
 	}
 
@@ -31,18 +32,18 @@ public class CardGritTest {
 		TurtleCard[][] grid = gg.getGrid();
 		assertNull(grid[0][0]);
 		
-		Location p = gg.putDownCard(allCards.getFirst());
+		Location p = gg.putDownCard(allCards.get(0));
 		assertNotNull(grid[p.x][p.y]);
 		assertFalse(gg.isThereConflict(p));
 		
-		p = gg.putDownCard(allCards.getFirst());
+		p = gg.putDownCard(allCards.get(0));
 		assertNotNull(grid[p.x][p.y]);
 		assertFalse(gg.isThereConflict(p));
 		
-		p = gg.putDownCard(allCards.getFirst());
+		p = gg.putDownCard(allCards.get(0));
 		assertFalse(gg.isThereConflict(p));
 		
-		p = gg.putDownCard(allCards.getFirst());
+		p = gg.putDownCard(allCards.get(0));
 		assertNotNull(grid[p.x][p.y]);
 		assertEquals(new Point(0,1), p);
 		assertTrue(gg.isThereConflict(p));
@@ -50,11 +51,11 @@ public class CardGritTest {
 	
 	@Test
 	public void shouldNotLaySameCardTwice() {
-		gg.putDownCard(allCards.getFirst());
-		gg.putDownCard(allCards.getFirst());
-		gg.putDownCard(allCards.getFirst());
+		gg.putDownCard(allCards.get(0));
+		gg.putDownCard(allCards.get(0));
+		gg.putDownCard(allCards.get(0));
 		
-		assertThat(gg.getCardAt(new Location(0,0)), is(not(gg.getCardAt(new Location(1,0)))));
-		assertThat(gg.getCardAt(new Location(0,0)), is(not(gg.getCardAt(new Location(2,0)))));
+		assertFalse(gg.getCardAt(new Location(0,0)).equals(gg.getCardAt(new Location(1,0))));
+		assertFalse(gg.getCardAt(new Location(0,0)).equals(gg.getCardAt(new Location(2,0))));
 	}
 }

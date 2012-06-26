@@ -9,7 +9,6 @@ import ch.aplu.jgamegrid.GGMouse;
 import ch.aplu.jgamegrid.GGMouseListener;
 import ch.aplu.jgamegrid.GGMouseTouchListener;
 import ch.aplu.jgamegrid.Location;
-import ch.aplu.jgamegrid.Location.CompassDirection;
 
 public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListener {
 

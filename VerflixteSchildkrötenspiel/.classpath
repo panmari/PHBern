@@ -2,12 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/opt/eclipse/plugins/hamcrest-all-1.3.0RC2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/home/mazzzy/PHBernAsi/lib/JGameGrid.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/home/mazzzy/PHBernAsi/lib/GameGridJavaDoc/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GameGrid"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -5,11 +5,9 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.List;
 
-import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.GGBitmap;
 import ch.aplu.jgamegrid.GGButton;
 import ch.aplu.jgamegrid.GGButtonListener;

@@ -18,6 +18,6 @@ public class Card {
 		String result = "";
 		for (DragHalfTurtle ht: cardSetting)
 			result += ht.toString() + ";";
-		return result;
+		return result.substring(0, result.length()-1);
 	}
 }

@@ -2,17 +2,13 @@ package gg;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
 
 /**
  * This class represents a solution of a tricky turtle game.
  * The creator of the instance ins responsible for providing a valid solution.
- * The validity of the given solution is NOT checked by this class.
+ * The validity of the given solutions is NOT checked by this class.
  * @author panmari
  */
 public class SolutionGrid {
