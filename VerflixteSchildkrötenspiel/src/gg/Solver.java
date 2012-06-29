@@ -19,7 +19,7 @@ public class Solver {
 	
 	public static void main(String[] args) {
 		try {
-			List<TurtleCard> cardSet = new DataSetParser("cardset.data").parse();
+			List<TurtleCard> cardSet = new DataSetParser("testTurties.data").parse();
 			gg = new CardGrid(cardSet);
 			solve(gg.getCards());
 			new SolutionConsole(gg, solutions);

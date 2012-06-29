@@ -14,8 +14,6 @@ public class CardGrid extends GameGrid {
 	private TurtleCard[][] grid = new TurtleCard[3][3];
 	
 	public CardGrid(List<TurtleCard> cardSet) {
-		//bug: I can not use constructor with 4 sprites only argument !!
-		//super(3, 3, 164, java.awt.Color.GRAY, null, true, 4);
 		super(3, 3, 164, java.awt.Color.GRAY, null, true);
 		this.cardSet = cardSet;
 		addStatusBar(25);

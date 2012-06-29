@@ -32,6 +32,10 @@ public class DragHalfTurtle extends Actor {
 		return new DragHalfTurtle(this);
 	}
 
+	/**
+	 * Due to the nature of the sprites, the offset needs to be set in
+	 * a quite ugly fashion.
+	 */
 	public void setLocationWithinCard(Location loc, CardPosition pos) {
 		setLocation(loc);
 		int offset;

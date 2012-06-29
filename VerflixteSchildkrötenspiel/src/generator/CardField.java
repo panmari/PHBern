@@ -22,7 +22,7 @@ public class CardField extends GameGrid implements GGButtonListener {
 	private Card[][] cardGrid;
 	
 	CardField(List<DragHalfTurtle> availableTurtles) {
-		super(4, 3, 166, Color.gray, false);
+		super(4, 3, 166, null, "sprites/generator_bg.jpg", false);
 		this.availableTurtles = availableTurtles;
 		this.cardGrid = new Card[3][3];
 		this.mouseListener = new MagneticEdgesListener(this, cellSize, cardGrid);
@@ -38,10 +38,10 @@ public class CardField extends GameGrid implements GGButtonListener {
 	}
 
 	private void initiateButton() {
-		GGButton generateBtn = new GGButton("sprites/generate.jpg");
+		GGButton generateBtn = new GGButton("sprites/generate_button.jpg");
 		generateBtn.addButtonListener(this);
 		addActor(generateBtn, new Location(3, 2));
-		generateBtn.setPixelLocation(new Point(580, 450));
+		generateBtn.setLocationOffset(new Point(7, 20));
 	}
 
 	private void initiateCardGrid() {
@@ -58,7 +58,7 @@ public class CardField extends GameGrid implements GGButtonListener {
 			addActor(ht, new Location(0, 0));
 			ht.addMouseTouchListener(mouseListener, GGMouse.lPress | GGMouse.lRelease);
 			if (newRow) {
-				x = 545;
+				x = 547;
 				y = y + 100;
 				newRow = false;
 			} else {

@@ -41,9 +41,11 @@ public class DataSetParser {
 		while (parseScanner.hasNextLine()) {
 			String line = parseScanner.nextLine();
 			int firstSpace = line.indexOf(" ");
-			String tcString = line.substring(0, firstSpace);
-			String sprite = line.substring(firstSpace + 1);
-			tcList.add(tf.makeTurtleCard(tcString, sprite));
+			if (firstSpace != -1) {
+				String tcString = line.substring(0, firstSpace);
+				String sprite = line.substring(firstSpace + 1);
+				tcList.add(tf.makeTurtleCard(tcString, sprite));
+			}
 		}
 		return tcList;
 	}
