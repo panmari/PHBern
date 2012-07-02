@@ -1,5 +1,7 @@
 package generator;
 
+import gg.Solver;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -11,6 +13,7 @@ import java.util.List;
 import ch.aplu.jgamegrid.GGBitmap;
 import ch.aplu.jgamegrid.GGButton;
 import ch.aplu.jgamegrid.GGButtonListener;
+import ch.aplu.jgamegrid.GGInputString;
 import ch.aplu.jgamegrid.GGMouse;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
@@ -75,33 +78,55 @@ public class CardField extends GameGrid implements GGButtonListener {
 	}
 	
 	private void exportDataSet()  {
-		final String PREFIX = "testTurties";
+		String prefix = "";
 		String gridString = "";
 		PrintWriter out;
+		if (!isGridFullyOccupied()) {
+			setStatusText("Not all cards are fully occupied!");
+			return;
+		}
+		
+		GGInputString popup = new GGInputString("Name?", 
+				"What's the name of your new set of cards?",
+				"custom_turtles");
 		try {
+			while (prefix.isEmpty())
+				prefix = popup.show();
 			int imgCounter = 0;
 			for (int y = 0; y < cardGrid.length; y++)
 				for (int x = 0; x < cardGrid.length; x++)
-					gridString += cardGrid[x][y] + " sprites/" + PREFIX + imgCounter++ + ".jpg" + "\n";
+					gridString += cardGrid[x][y] + " " + prefix + imgCounter++ + ".jpg" + "\n";
 			
-			out = new PrintWriter(new FileWriter(PREFIX + ".data"));
+			out = new PrintWriter(new FileWriter(prefix + ".data"));
 			out.println(gridString);
 			out.close();
 			BufferedImage bi = getImage().getSubimage(0,0,cellSize*3, cellSize*3);
-			GGBitmap.writeImage(bi, PREFIX + "allCards.jpg", "jpg");
+			GGBitmap.writeImage(bi, prefix + "allCards.jpg", "jpg");
 			imgCounter = 0;
 			for (int y = 0; y < 3*cellSize; y+=cellSize) {
 				for (int x = 0; x < 3*cellSize; x+=cellSize) {
 					BufferedImage card = bi.getSubimage(x, y, cellSize, cellSize);
-					GGBitmap.writeImage(card, PREFIX + imgCounter++ + ".jpg", "jpg");
+					GGBitmap.writeImage(card, prefix + imgCounter++ + ".jpg", "jpg");
 				}
 			}
 			setStatusText("Done!");
-		} catch (NullPointerException e) {
-			setStatusText("Not all cards are fully occupied!");
+			Solver.initSolver(prefix + ".data", true);
 		} catch (IOException e) {
 			setStatusText("Could not write files!");
+		} catch (NullPointerException e) {
+			setStatusText("This shouldn't happen anymore..");
+		} catch (RuntimeException e) { //TODO: throw exception instead of terminating!
+			setStatusText("You clicked on cancel! I wonder why?");
 		}
+		
+	}
+
+	private boolean isGridFullyOccupied() {
+		for (int y = 0; y < cardGrid.length; y++)
+			for (int x = 0; x < cardGrid.length; x++)
+				if (!cardGrid[x][y].isFullyOccupied())
+					return false;
+		return true;
 	}
 
 	@Override

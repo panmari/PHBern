@@ -2,6 +2,7 @@ package gg;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,8 +19,14 @@ public class Solver {
 	private static ArrayList<SolutionGrid> solutions = new ArrayList<SolutionGrid>();
 	
 	public static void main(String[] args) {
+		initSolver("testTurties.data", false);
+	}
+	
+	public static void initSolver(String dataset, boolean shuffle) {
 		try {
-			List<TurtleCard> cardSet = new DataSetParser("testTurties.data").parse();
+			List<TurtleCard> cardSet = new DataSetParser(dataset).parse();
+			if (shuffle)
+				Collections.shuffle(cardSet);
 			gg = new CardGrid(cardSet);
 			solve(gg.getCards());
 			new SolutionConsole(gg, solutions);

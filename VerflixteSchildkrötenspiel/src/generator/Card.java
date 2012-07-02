@@ -1,5 +1,6 @@
 package generator;
 
+
 public class Card {
 	DragHalfTurtle[] cardSetting;
 	
@@ -19,5 +20,12 @@ public class Card {
 		for (DragHalfTurtle ht: cardSetting)
 			result += ht.toString() + ";";
 		return result.substring(0, result.length()-1);
+	}
+
+	public boolean isFullyOccupied() {
+		for (DragHalfTurtle ht: cardSetting)
+			if (ht == null)
+				return false;
+		return true;
 	}
 }
