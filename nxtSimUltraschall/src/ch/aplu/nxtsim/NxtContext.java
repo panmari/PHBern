@@ -1,22 +1,22 @@
 // NxtContext.java
 
 /*
-This software is part of the NxtSim library.
-It is Open Source Free Software, so you may
-- run the code for any purpose
-- study how the code works and adapt it to your needs
-- integrate all or parts of the code in your own programs
-- redistribute copies of the code
-- improve the code and release your improvements to the public
-However the use of the code is entirely your responsibility.
+ This software is part of the NxtSim library.
+ It is Open Source Free Software, so you may
+ - run the code for any purpose
+ - study how the code works and adapt it to your needs
+ - integrate all or parts of the code in your own programs
+ - redistribute copies of the code
+ - improve the code and release your improvements to the public
+ However the use of the code is entirely your responsibility.
 
-Author: Aegidius Pluess, www.aplu.ch
-*/
-
+ Author: Aegidius Pluess, www.aplu.ch
+ */
 package ch.aplu.nxtsim;
 
 import ch.aplu.jgamegrid.*;
 import java.util.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Class to select user defined initial conditions of the
@@ -24,7 +24,7 @@ import java.util.*;
  */
 public class NxtContext
 {
-  protected static String imageName =  null;
+  protected static String imageName = null;
   protected static Location startLocation = new Location(250, 250);
   protected static double startDirection = -90;
   protected static boolean isNavigationBar = false;
@@ -43,7 +43,8 @@ public class NxtContext
   public static Obstacle channel = new Obstacle("sprites/channel.gif");
 
   private NxtContext()
-  {}
+  {
+  }
 
   /**
    * Use the give image as background (playground size 501 x 501).
@@ -73,11 +74,11 @@ public class NxtContext
     startDirection = direction;
   }
 
- /**
-  * Sets the location of the playground (pixel coordinates of the upper left vertex).
-  * @param x the x-pixel-coordinate of the upper left vertex (positive to the right)
-  * @param y the y-pixel-coordinate of the upper left vertex (positive to the bottom)
-  */
+  /**
+   * Sets the location of the playground (pixel coordinates of the upper left vertex).
+   * @param x the x-pixel-coordinate of the upper left vertex (positive to the right)
+   * @param y the y-pixel-coordinate of the upper left vertex (positive to the bottom)
+   */
   public static void setLocation(int x, int y)
   {
     xLoc = x;
@@ -85,8 +86,9 @@ public class NxtContext
   }
 
   /**
-   * Defines the give images as an obstacle. It will be shown at the given
-   * position. More than one obstacle may be defined.
+   * Defines the given sprite image to be used as touch obstacle. It will be shown at the given
+   * position. More than one obstacle may be defined. The touch is detected by 
+   * a JGameGrid collision with a non-transparent pixel of the obstacle sprite image.
    * @param filename the image file of the obstacle
    * @param x the x-coordinate of the image center
    * @param y the y-coordinate of the image center
@@ -99,14 +101,58 @@ public class NxtContext
   }
 
   /**
-   * Uses the given obstacle at the center of the playground. Mainly used for
-   * predefined obstacles.
-   * @param obstacle the obstacle to use.
+   * Defines the given buffered image to be used as touch obstacle. It will be shown at the given
+   * position. More than one obstacle may be defined. The touch is detected by 
+   * a JGameGrid collision with a non-transparent pixel of the obstacle sprite image.
+   * @param bi the buffered image of the obstacle
+   * @param x the x-coordinate of the image center
+   * @param y the y-coordinate of the image center
+   */
+  public static void useObstacle(BufferedImage bi, int x, int y)
+  {
+    Obstacle obstacle = new Obstacle(bi);
+    obstacles.add(obstacle);
+    obstacleLocations.add(new Location(x, y));
+  }
+
+  /**
+   * Defines the given obstacle to be used as touch obstacle. It will be shown at the given
+   * position. More than one obstacle may be defined. The touch is detected by 
+   * a JGameGrid collision with a non-transparent pixel of the obstacle sprite image.
+   * @param obstacle the obstacle to use
+   * @param x the x-coordinate of the image center
+   * @param y the y-coordinate of the image center
+   */
+  public static void useObstacle(Obstacle obstacle, int x, int y)
+  {
+    obstacles.add(obstacle);
+    obstacleLocations.add(new Location(x, y));
+  }
+
+  /**
+   * Defines the given obstacle to be used as touch obstacle. It will be shown
+   * at the center of the simulation window. More than one obstacle may be defined. 
+   * The touch is detected by a JGameGrid collision with a non-transparent pixel 
+   * of the obstacle sprite image.
+   * @param obstacle the obstacle to use
    */
   public static void useObstacle(Obstacle obstacle)
   {
     obstacles.add(obstacle);
     obstacleLocations.add(new Location(250, 250));
+  }
+
+  /**
+   * Defines the given GGBitmap to be used as touch obstacle. It will be shown at the given
+   * position. More than one obstacle may be defined. The touch is detected by 
+   * a JGameGrid collision with a non-transparent pixel of the obstacle sprite image.
+   * @param bm the GGBitmap to be used as obstacle
+   * @param x the x-coordinate of the image center
+   * @param y the y-coordinate of the image center
+   */
+  public static void useObstacle(GGBitmap bm, int x, int y)
+  {
+    useObstacle(bm.getBufferedImage(), x, y);
   }
 
   /**
@@ -127,4 +173,5 @@ public class NxtContext
   {
     showNavigationBar(true);
   }
+
 }
