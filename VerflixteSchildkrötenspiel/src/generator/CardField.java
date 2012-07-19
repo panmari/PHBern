@@ -33,7 +33,7 @@ public class CardField extends GameGrid implements GGButtonListener {
 		initiateTurtles();
 		initiateCardGrid();
 		initiateButton();
-		addMouseListener(mouseListener, GGMouse.lDrag);
+		addMouseListener(mouseListener, GGMouse.lDrag | GGMouse.lRelease);
 		addStatusBar(20);
 		setStatusText("Drag Turtles to the field to place them.");
 		show();
@@ -58,7 +58,7 @@ public class CardField extends GameGrid implements GGButtonListener {
 		boolean newRow = true;
 		for (DragHalfTurtle ht : availableTurtles) {
 			addActor(ht, new Location(0, 0));
-			ht.addMouseTouchListener(mouseListener, GGMouse.lPress | GGMouse.lRelease);
+			ht.addMouseTouchListener(mouseListener, GGMouse.lPress);
 			if (newRow) {
 				x = 547;
 				y = y + 100;
@@ -117,8 +117,8 @@ public class CardField extends GameGrid implements GGButtonListener {
 					GGBitmap.writeImage(card, spriteDirectory + prefix + imgCounter++ + ".jpg", "jpg");
 				}
 			}
-			setStatusText("Done!");
-			new SolverLauncher(gameGridHome + prefix + ".data").run();
+			setStatusText("Done! Saved files under " + gameGridHome);
+			new SolverLauncher(gameGridHome + prefix + ".data").start();
 		} catch (IOException e) {
 			setStatusText("Could not write files!");
 		} catch (NullPointerException e) {

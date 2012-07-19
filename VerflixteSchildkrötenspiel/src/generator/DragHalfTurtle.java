@@ -21,6 +21,7 @@ public class DragHalfTurtle extends Actor {
 	public DragHalfTurtle(String representation, String sprite) {
 		super(sprite);
 		this.representation = representation;
+		this.setMouseTouchCircle(new Point(0,0), 32);
 	}
 	
 	private DragHalfTurtle(DragHalfTurtle toClone) {

@@ -12,17 +12,17 @@ import ch.aplu.util.Monitor;
 public class Solver {
 
 	/** Set this to true if you want to reach the solutions as fast as possible */
-	private static final boolean fastForward = false;
-	private static CardGrid gg;
-	private static long steps;
-	private static String status;
-	private static ArrayList<SolutionGrid> solutions = new ArrayList<SolutionGrid>();
+	private final boolean fastForward = false;
+	private CardGrid gg;
+	private long steps;
+	private String status;
+	private ArrayList<SolutionGrid> solutions = new ArrayList<SolutionGrid>();
 	
 	public static void main(String[] args) {
-		initSolver("testTurties.data", false);
+		new Solver("testTurties.data", false);
 	}
 	
-	public static void initSolver(String dataset, boolean shuffle) {
+	public Solver(String dataset, boolean shuffle) {
 		try {
 			List<TurtleCard> cardSet = new DataSetParser(dataset).parse();
 			if (shuffle)
@@ -42,7 +42,7 @@ public class Solver {
 	 * @param really  if true, the thread is put to sleep anyway, ignoring the slider settings. If
 	 * the global variable fastForward is set to true, this parameter is ignored.
 	 */
-	private static void sleep(boolean really) {
+	private void sleep(boolean really) {
 		if ((really || gg.getSimulationPeriod() > 0) && !fastForward) {
 			gg.setStatusText(status);
 			gg.setTitle("Tricky Turtle (www.java-online.ch) -- Steps: " + steps);
@@ -51,7 +51,7 @@ public class Solver {
 		}
 	}
 	
-	private static void solve(List<TurtleCard> availableCards) {
+	private void solve(List<TurtleCard> availableCards) {
 		if (gg.isSolved()) { //=> done!
 			gg.showSolution();
 			solutions.add(new SolutionGrid(gg.getGrid()));

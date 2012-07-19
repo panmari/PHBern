@@ -32,12 +32,14 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 	 */
 	@Override
 	public boolean mouseEvent(GGMouse mouse) {
+		if (dragTurtle == null)
+			return false;
 		Location loc = gg.toLocation(mouse.getX(), mouse.getY());
-		if (dragTurtle != null) {
+		switch (mouse.getEvent()) {
+		case GGMouse.lDrag:
 			if (isInTurtleGrid(loc)) {
 				int offsetx = mouse.getX() - loc.getX() * cellSize;
 				int offsety = mouse.getY() - loc.getY() * cellSize;
-
 				if (offsetx < offsety) {
 					if (cellSize - offsetx < offsety) {
 						dragTurtle.setLocationWithinCard(loc, CardPosition.DOWN);
@@ -52,8 +54,16 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 			} else {
 				dragTurtle.setLocation(new Location(-1, -1)); // out of sight }
 			}
-			gg.refresh();
+			break;
+		case GGMouse.lRelease:
+			if (isInTurtleGrid(loc))
+				cardGrid[loc.x][loc.y].setTurtle(dragTurtle);
+			else
+				dragTurtle.removeSelf();
+			dragTurtle = null;
+			break;
 		}
+		gg.refresh();
 		return true;
 	}
 
@@ -63,7 +73,7 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 	 * @return true, if the given Location is valid for HalfTurtles
 	 */
 	private boolean isInTurtleGrid(Location loc) {
-		return loc.x < 3 && loc.y < 3;
+		return loc.x >= 0 && loc.y >= 0 && loc.x < 3 && loc.y < 3;
 	}
 	
 	@Override
@@ -72,16 +82,6 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 		case GGMouse.lPress:
 			dragTurtle = ((DragHalfTurtle) actor).clone();
 			gg.addActorNoRefresh(dragTurtle, actor.getLocation());
-			break;
-		case GGMouse.lRelease:
-			Location loc = gg.toLocationInGrid(mouse.getX(), mouse.getY());
-			if (isInTurtleGrid(loc))
-				cardGrid[loc.x][loc.y].setTurtle(dragTurtle);
-			else
-				dragTurtle.removeSelf();
-
-			dragTurtle = null;
-			gg.refresh();
 			break;
 		}
 	}
