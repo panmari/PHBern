@@ -1,10 +1,9 @@
 package generator;
 
-import gg.Solver;
-
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,7 +29,7 @@ public class CardField extends GameGrid implements GGButtonListener {
 		this.cardGrid = new Card[3][3];
 		this.mouseListener = new MagneticEdgesListener(this, cellSize, cardGrid);
 		setBgColor(Color.white);
-		setTitle("Turtles Generator");
+		setTitle("Turtles Generator (www.java-online.ch)");
 		initiateTurtles();
 		initiateCardGrid();
 		initiateButton();
@@ -77,6 +76,11 @@ public class CardField extends GameGrid implements GGButtonListener {
 		exportDataSet();
 	}
 	
+	/**
+	 * This method exports the turtles to various images and a textfile containing
+	 * the configuration as string.
+	 * These is saved in the users home folder in the subfolder gamegrid.
+	 */
 	private void exportDataSet()  {
 		String prefix = "";
 		String gridString = "";
@@ -92,25 +96,29 @@ public class CardField extends GameGrid implements GGButtonListener {
 		try {
 			while (prefix.isEmpty())
 				prefix = popup.show();
+			String userHome = System.getProperty( "user.home" ) + "/";
+			String gameGridHome = userHome + "gamegrid/";
+			String spriteDirectory = gameGridHome + "sprites/";
+			new File(spriteDirectory).mkdirs();
 			int imgCounter = 0;
 			for (int y = 0; y < cardGrid.length; y++)
 				for (int x = 0; x < cardGrid.length; x++)
-					gridString += cardGrid[x][y] + " " + prefix + imgCounter++ + ".jpg" + "\n";
+					gridString += cardGrid[x][y] + " sprites/" + prefix + imgCounter++ + ".jpg" + "\n";
 			
-			out = new PrintWriter(new FileWriter(prefix + ".data"));
+			out = new PrintWriter(new FileWriter(gameGridHome + prefix + ".data"));
 			out.println(gridString);
 			out.close();
 			BufferedImage bi = getImage().getSubimage(0,0,cellSize*3, cellSize*3);
-			GGBitmap.writeImage(bi, prefix + "allCards.jpg", "jpg");
+			GGBitmap.writeImage(bi, spriteDirectory + prefix + "allCards.jpg", "jpg");
 			imgCounter = 0;
 			for (int y = 0; y < 3*cellSize; y+=cellSize) {
 				for (int x = 0; x < 3*cellSize; x+=cellSize) {
 					BufferedImage card = bi.getSubimage(x, y, cellSize, cellSize);
-					GGBitmap.writeImage(card, prefix + imgCounter++ + ".jpg", "jpg");
+					GGBitmap.writeImage(card, spriteDirectory + prefix + imgCounter++ + ".jpg", "jpg");
 				}
 			}
 			setStatusText("Done!");
-			Solver.initSolver(prefix + ".data", true);
+			new SolverLauncher(gameGridHome + prefix + ".data").run();
 		} catch (IOException e) {
 			setStatusText("Could not write files!");
 		} catch (NullPointerException e) {
