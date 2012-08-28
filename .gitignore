@@ -80,3 +80,8 @@ Desktop.ini
 *.orig
 
 signed\ libs/
+
+
+# Not My stuff so better don't publish it:
+
+OthersRefactor
