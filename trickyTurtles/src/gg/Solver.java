@@ -2,7 +2,6 @@ package gg;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,14 +23,11 @@ public class Solver {
 	
 	public Solver(String dataset, boolean shuffle) {
 		try {
-			List<TurtleCard> cardSet = new DataSetParser(dataset).parse();
-			if (shuffle)
-				Collections.shuffle(cardSet);
-			gg = new CardGrid(cardSet);
+			gg = new CardGrid(dataset, shuffle);
 			solve(gg.getCards());
 			new SolutionConsole(gg, solutions);
 		} catch (FileNotFoundException e) {
-			System.out.println("Couldn't find cardset");
+			gg.setStatusText("Couldn't find cardset");
 		}
 	}
 

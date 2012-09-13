@@ -1,5 +1,7 @@
 package gg;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -13,9 +15,11 @@ public class CardGrid extends GameGrid {
 	private List<TurtleCard> cardSet;
 	private TurtleCard[][] grid = new TurtleCard[3][3];
 	
-	public CardGrid(List<TurtleCard> cardSet) {
-		super(3, 3, 164, java.awt.Color.GRAY, null, true);
-		this.cardSet = cardSet;
+	public CardGrid(String dataset, boolean shuffle) throws FileNotFoundException {
+		super(3, 3, 164, java.awt.Color.GRAY, null, true, 4);
+		this.cardSet = new DataSetParser(dataset).parse();
+		if (shuffle)
+			Collections.shuffle(cardSet);
 		addStatusBar(25);
 		setTitle("Tricky Turtle (www.java-online.ch)");
 		show();
@@ -133,7 +137,6 @@ public class CardGrid extends GameGrid {
 	public void showSolution() {
 		doPause();
 		refresh();
-		setStatusText("Found Solution! Click once more on run to look for more.");
 		System.out.println(this.toIdString());
 		System.out.println(this);
 	}

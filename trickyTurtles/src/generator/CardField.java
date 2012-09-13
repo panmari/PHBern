@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+import javax.naming.NoPermissionException;
+import javax.swing.JFileChooser;
+
 import ch.aplu.jgamegrid.GGBitmap;
 import ch.aplu.jgamegrid.GGButton;
 import ch.aplu.jgamegrid.GGButtonListener;
@@ -87,27 +90,36 @@ public class CardField extends GameGrid implements GGButtonListener {
 		PrintWriter out;
 		if (!isGridFullyOccupied()) {
 			setStatusText("Not all cards are fully occupied!");
-			return;
+			// return;
 		}
 		
 		GGInputString popup = new GGInputString("Name?", 
 				"What's the name of your new set of cards?",
 				"custom_turtles");
+		
+		JFileChooser chooser = new JFileChooser(); 
+	    chooser.setCurrentDirectory(new java.io.File("."));
+	    chooser.setDialogTitle("Chose a directory to save your set");
+	    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+	    String trickyHome;
 		try {
 			while (prefix.isEmpty())
 				prefix = popup.show();
-			String userHome = System.getProperty( "user.home" ) + "/";
-			String gameGridHome = userHome + "gamegrid/";
-			String spriteDirectory = gameGridHome + "sprites/";
+		    if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) 
+		    	trickyHome = chooser.getCurrentDirectory().getAbsolutePath() + "trickyTurtles/";
+		    else throw new NoPermissionException();
+			String spriteDirectory = trickyHome + "sprites/";
+			System.out.println(spriteDirectory);
 			new File(spriteDirectory).mkdirs();
 			int imgCounter = 0;
 			for (int y = 0; y < cardGrid.length; y++)
 				for (int x = 0; x < cardGrid.length; x++)
 					gridString += cardGrid[x][y] + " sprites/" + prefix + imgCounter++ + ".jpg" + "\n";
 			
-			out = new PrintWriter(new FileWriter(gameGridHome + prefix + ".data"));
+			out = new PrintWriter(new FileWriter(trickyHome + prefix + ".data"));
 			out.println(gridString);
 			out.close();
+			//TODO: Remove grid before getting image
 			BufferedImage bi = getImage().getSubimage(0,0,cellSize*3, cellSize*3);
 			GGBitmap.writeImage(bi, spriteDirectory + prefix + "allCards.jpg", "jpg");
 			imgCounter = 0;
@@ -117,10 +129,12 @@ public class CardField extends GameGrid implements GGButtonListener {
 					GGBitmap.writeImage(card, spriteDirectory + prefix + imgCounter++ + ".jpg", "jpg");
 				}
 			}
-			setStatusText("Done! Saved files under " + gameGridHome);
-			new SolverLauncher(gameGridHome + prefix + ".data").start();
+			setStatusText("Done! Saved files under " + trickyHome);
+			new SolverLauncher(trickyHome + prefix + ".data").start();
 		} catch (IOException e) {
 			setStatusText("Could not write files!");
+		} catch (NoPermissionException e) {
+			setStatusText("No Permissions for this folder");
 		} catch (NullPointerException e) {
 			setStatusText("This shouldn't happen anymore..");
 		} catch (RuntimeException e) { //TODO: throw exception instead of terminating!
