@@ -45,7 +45,7 @@ public class Solver {
 	private void sleep(boolean really) {
 		if ((really || gg.getSimulationPeriod() > 0) && !fastForward) {
 			gg.setStatusText(status);
-			gg.setTitle("Tricky Turtle (www.java-online.ch) -- Steps: " + steps);
+			gg.setTitle("Tricky Turtle (www.java-online.ch) -- Total steps: " + steps);
 			gg.refresh();
 			Monitor.putSleep();
 		}
@@ -55,7 +55,7 @@ public class Solver {
 		if (gg.isSolved()) { //=> done!
 			gg.showSolution();
 			solutions.add(new SolutionGrid(gg.getGrid()));
-			status = "Found solution in " + steps + " steps! Click again on run to find another...";
+			status = "Found " + (solutions.size() - 1)  + ". solution! Click RUN to find another...";
 			sleep(true);
 		}
 		for (TurtleCard tc: new LinkedList<TurtleCard>(availableCards)) {
