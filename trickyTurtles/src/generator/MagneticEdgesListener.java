@@ -13,6 +13,8 @@ import ch.aplu.jgamegrid.Location;
 /**
  * There are only 4 possible Locations for a DragHalfTurtle. This Listener automatically
  * puts them to the closest of them.
+ * If the drag occurs outside of the turtlegrid, the pixellocation of the turtle is set
+ * to the mouse location to make it clear it's being dragged.
  */
 public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListener {
 
@@ -52,7 +54,9 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 					dragTurtle.setLocationWithinCard(loc, CardPosition.UP);
 				}
 			} else {
-				dragTurtle.setLocation(new Location(-1, -1)); // out of sight }
+				if (gg.isInGrid(loc)) {
+					dragTurtle.setPixelLocation(new Point(mouse.getX(), mouse.getY()));
+				}
 			}
 			break;
 		case GGMouse.lRelease:
