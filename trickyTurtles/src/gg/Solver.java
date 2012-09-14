@@ -11,21 +11,23 @@ import ch.aplu.util.Monitor;
 public class Solver {
 
 	/** Set this to true if you want to reach the solutions as fast as possible */
-	private final boolean fastForward = false;
+	private final boolean fastForward = true;
 	private CardGrid gg;
 	private long steps;
 	private String status;
 	private ArrayList<SolutionGrid> solutions = new ArrayList<SolutionGrid>();
 	
 	public static void main(String[] args) {
-		new Solver("testTurties.data", false);
+		new Solver("cardset.data", false);
 	}
 	
 	public Solver(String dataset, boolean shuffle) {
 		try {
 			gg = new CardGrid(dataset, shuffle);
 			solve(gg.getCards());
-			new SolutionConsole(gg, solutions);
+			if (solutions.size() > 0)
+				new SolutionConsole(gg, solutions);
+			else gg.setStatusText("There are no solutions for this set!");
 		} catch (FileNotFoundException e) {
 			gg.setStatusText("Couldn't find cardset");
 		}

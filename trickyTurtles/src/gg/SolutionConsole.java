@@ -22,7 +22,7 @@ public class SolutionConsole extends Console {
 		println("Computation finished, found following solutions: ");
 		int i = 1;
 		for (SolutionGrid sg: solutionMap.keySet()) {
-			println("Solution #" + i + ": ");
+			println("Solution #" + i + " (and its rotations): ");
 			println("With hash: " + sg.hashCode());
 			for (TurtleCard[][] tg: solutionMap.get(sg)) {
 				print(toIdString(tg));
