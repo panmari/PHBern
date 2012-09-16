@@ -102,8 +102,6 @@ public class GeneratorCardGrid extends GameGrid implements GGButtonListener {
 	 */
 	private void exportDataSet()  {
 		String prefix = "";
-		String gridString = "";
-		PrintWriter out;
 		if (!isGridFullyOccupied()) {
 			setStatusText("Not all cards are fully occupied!");
 			// return;
@@ -127,6 +125,20 @@ public class GeneratorCardGrid extends GameGrid implements GGButtonListener {
 			String spriteDirectory = new File(trickyHome, "sprites/").getAbsolutePath();
 			System.out.println(spriteDirectory);
 			new File(spriteDirectory).mkdirs();
+			if (new File(spriteDirectory).canWrite())
+				generateDataSetFiles(trickyHome, spriteDirectory, prefix);
+			else throw new NoPermissionException();
+		} catch (InterruptedException e) {
+			setStatusText("Generation of cards canceled by user");
+		} catch (NoPermissionException e) {
+			setStatusText("No write permissions for " + trickyHome);
+		}
+	}
+
+	private void generateDataSetFiles(String trickyHome, String spriteDirectory, String prefix) {
+		try {
+			PrintWriter out;
+			String gridString = "";
 			int imgCounter = 0;
 			for (int y = 0; y < cardGrid.length; y++)
 				for (int x = 0; x < cardGrid.length; x++) 
@@ -147,13 +159,11 @@ public class GeneratorCardGrid extends GameGrid implements GGButtonListener {
 			new SolverLauncher(trickyHome + prefix + ".data").start();
 		} catch (IOException e) {
 			setStatusText("Could not write files in " + trickyHome);
-		} catch (InterruptedException e) {
-			setStatusText("Generation of cards canceled by user");
 		} catch (CardNotReadyException e) {
 			setStatusText("Not all cards are fully occupied yet.");
 		}
-		
 	}
+
 
 	private boolean isGridFullyOccupied() {
 		for (int y = 0; y < cardGrid.length; y++)
