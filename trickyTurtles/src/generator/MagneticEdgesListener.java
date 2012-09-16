@@ -20,10 +20,10 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 
 	private int cellSize;
 	private DragHalfTurtle dragTurtle;
-	private CardField gg;
+	private GeneratorCardGrid gg;
 	private Card[][] cardGrid;
 	
-	public MagneticEdgesListener(CardField gg, int cellSize, Card[][] cardGrid) {
+	public MagneticEdgesListener(GeneratorCardGrid gg, int cellSize, Card[][] cardGrid) {
 		this.cellSize = cellSize;
 		this.gg = gg;
 		this.cardGrid = cardGrid;
@@ -55,6 +55,7 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 				}
 			} else {
 				if (gg.isInGrid(loc)) {
+					dragTurtle.setDirection(0);
 					dragTurtle.setPixelLocation(new Point(mouse.getX(), mouse.getY()));
 				}
 			}

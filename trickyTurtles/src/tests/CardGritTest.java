@@ -25,8 +25,7 @@ public class CardGritTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		allCards = new DataSetParser("cardset.data").parse();
-		gg = new CardGrid(allCards);
+		gg = new CardGrid("cardset.data", false);
 		allCards = gg.getCards();
 	}
 

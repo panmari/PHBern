@@ -6,11 +6,11 @@ import java.util.List;
 public class CardGenerator {
 
 	List<DragHalfTurtle> availableTurtles;
-	CardField cardField;
+	GeneratorCardGrid cardField;
 
 	public CardGenerator() {
 		initiateTurtles();
-		cardField = new CardField(availableTurtles);
+		cardField = new GeneratorCardGrid(availableTurtles);
 	}
 	
 	private void initiateTurtles() {
