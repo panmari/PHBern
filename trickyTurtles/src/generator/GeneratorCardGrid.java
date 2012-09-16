@@ -1,5 +1,7 @@
 package generator;
 
+import gg.CardNotReadyException;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -115,7 +117,7 @@ public class GeneratorCardGrid extends GameGrid implements GGButtonListener {
 	    chooser.setCurrentDirectory(new java.io.File("."));
 	    chooser.setDialogTitle("Chose a directory to save your set");
 	    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-	    String trickyHome;
+	    String trickyHome = "";
 		try {
 			while (prefix.isEmpty())
 				prefix = popup.show();
@@ -124,17 +126,11 @@ public class GeneratorCardGrid extends GameGrid implements GGButtonListener {
 		    else throw new InterruptedException();
 			String spriteDirectory = trickyHome + "sprites/";
 			System.out.println(spriteDirectory);
-			if (!new File(spriteDirectory).mkdirs())
-				throw new NoPermissionException();
+			new File(spriteDirectory).mkdirs();
 			int imgCounter = 0;
 			for (int y = 0; y < cardGrid.length; y++)
-				for (int x = 0; x < cardGrid.length; x++) {
-					String cardString;
-					if (cardGrid[x][y] != null)
-						cardString = cardGrid[x][y].toString();
-					else cardString = "***INVALID CARD***";
-					gridString += cardString + " sprites/" + prefix + imgCounter++ + ".jpg" + "\n";
-				}
+				for (int x = 0; x < cardGrid.length; x++) 
+					gridString += cardGrid[x][y].toString() + " sprites/" + prefix + imgCounter++ + ".jpg" + "\n";
 			out = new PrintWriter(new FileWriter(trickyHome + prefix + ".data"));
 			out.println(gridString);
 			out.close();
@@ -150,11 +146,11 @@ public class GeneratorCardGrid extends GameGrid implements GGButtonListener {
 			setStatusText("Done! Saved files under " + trickyHome);
 			new SolverLauncher(trickyHome + prefix + ".data").start();
 		} catch (IOException e) {
-			setStatusText("Could not write files!");
-		} catch (NoPermissionException e) {
-			setStatusText("No Permissions for this folder");
+			setStatusText("Could not write files in: " + trickyHome);
 		} catch (InterruptedException e) {
 			setStatusText("Generation of cards canceled by user");
+		} catch (CardNotReadyException e) {
+			setStatusText("Not all cards are fully occupied yet.");
 		}
 		
 	}

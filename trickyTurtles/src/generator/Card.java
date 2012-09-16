@@ -1,5 +1,7 @@
 package generator;
 
+import gg.CardNotReadyException;
+
 
 public class Card {
 	DragHalfTurtle[] cardSetting;
@@ -17,8 +19,11 @@ public class Card {
 	
 	public String toString() {
 		String result = "";
-		for (DragHalfTurtle ht: cardSetting)
+		for (DragHalfTurtle ht: cardSetting) {
+			if (ht == null)
+				throw new CardNotReadyException();
 			result += ht.toString() + ";";
+		}
 		return result.substring(0, result.length()-1);
 	}
 
