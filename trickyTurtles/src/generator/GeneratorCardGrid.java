@@ -122,9 +122,9 @@ public class GeneratorCardGrid extends GameGrid implements GGButtonListener {
 			while (prefix.isEmpty())
 				prefix = popup.show();
 		    if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) 
-		    	trickyHome = chooser.getCurrentDirectory().getAbsolutePath() + "/trickyTurtles/";
+		    	trickyHome = new File(chooser.getSelectedFile(), "trickyTurtles/").getAbsolutePath();
 		    else throw new InterruptedException();
-			String spriteDirectory = trickyHome + "sprites/";
+			String spriteDirectory = new File(trickyHome, "sprites/").getAbsolutePath();
 			System.out.println(spriteDirectory);
 			new File(spriteDirectory).mkdirs();
 			int imgCounter = 0;
@@ -146,7 +146,7 @@ public class GeneratorCardGrid extends GameGrid implements GGButtonListener {
 			setStatusText("Done! Saved files under " + trickyHome);
 			new SolverLauncher(trickyHome + prefix + ".data").start();
 		} catch (IOException e) {
-			setStatusText("Could not write files in: " + trickyHome);
+			setStatusText("Could not write files in " + trickyHome);
 		} catch (InterruptedException e) {
 			setStatusText("Generation of cards canceled by user");
 		} catch (CardNotReadyException e) {
