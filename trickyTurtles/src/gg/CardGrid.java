@@ -1,4 +1,6 @@
 package gg;
+import generator.CardGenerator;
+
 import java.awt.Font;
 import java.awt.Point;
 import java.io.FileNotFoundException;
@@ -9,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import ch.aplu.jgamegrid.GGExitListener;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.jgamegrid.TextActor;
@@ -16,13 +19,14 @@ import ch.aplu.util.Monitor;
 
 
 @SuppressWarnings("serial")
-public class CardGrid extends GameGrid {
+public class CardGrid extends GameGrid implements GGExitListener {
 	private List<TurtleCard> cardSet;
 	private TurtleCard[][] grid = new TurtleCard[3][3];
 	
 	public CardGrid(String dataset, boolean shuffle) throws FileNotFoundException {
 		super(3, 3, 164, java.awt.Color.GRAY, null, true, 4);
 		this.cardSet = new DataSetParser(dataset).parse();
+		addExitListener(this);
 		if (shuffle)
 			Collections.shuffle(cardSet);
 		addStatusBar(25);
@@ -149,6 +153,7 @@ public class CardGrid extends GameGrid {
 	/**
 	 * Shows every 5 seconds another solution (given as parameter).
 	 * Does this in an endless loop.
+	 * NOT USED IN CURRENT VERSION
 	 * @param solutions
 	 */
 	public void cycleThroughSolutions(Set<SolutionGrid> solutions) {
@@ -186,5 +191,17 @@ public class CardGrid extends GameGrid {
 				idCaption.setLocationOffset(new Point(-70, 0));
 				addActor(idCaption, new Location(x, y));
 			}
+	}
+
+	/**
+	 * If started with CardGenerator, the window is closed and the generator shown again.
+	 * If not, the program exits.
+	 */
+	@Override
+	public boolean notifyExit() {
+		stopGameThread();
+		removeAllActors();
+		hide();
+		return CardGenerator.showGeneratorWindow();
 	}
 }

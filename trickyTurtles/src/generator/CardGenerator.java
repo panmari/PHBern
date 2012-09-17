@@ -5,8 +5,8 @@ import java.util.List;
 
 public class CardGenerator {
 
-	List<DragHalfTurtle> availableTurtles;
-	GeneratorCardGrid cardField;
+	private List<DragHalfTurtle> availableTurtles;
+	private static GeneratorCardGrid cardField;
 
 	public CardGenerator() {
 		initiateTurtles();
@@ -27,6 +27,15 @@ public class CardGenerator {
 	
 	public static void main(String[] args) {
 		new CardGenerator();
+	}
+
+	public static boolean showGeneratorWindow() {
+		if (cardField == null)
+			return false;
+		else {
+			cardField.show();
+			return true;
+		}
 	}
 
 }

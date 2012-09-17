@@ -18,7 +18,7 @@ import ch.aplu.jgamegrid.GGInputString;
 /**
  * Handles the generation of a dataset. Needs a folder with 
  * write permissions for this purpose, which is supplied by the user.
- *
+ * After successfully creating a dataset, the solver is started.
  */
 public class GenerateButtonListener implements GGButtonListener {
 
@@ -46,7 +46,7 @@ public class GenerateButtonListener implements GGButtonListener {
 		String prefix = "";
 		if (!isGridFullyOccupied()) {
 			gg.setStatusText("Not all cards are fully occupied!");
-			// return;
+			return;
 		}
 		
 		GGInputString popup = new GGInputString("Name?", 
@@ -105,6 +105,7 @@ public class GenerateButtonListener implements GGButtonListener {
 			}
 			gg.setStatusText("Done! Saved files under " + trickyHome);
 			new SolverLauncher(trickyHome + prefix + ".data").start();
+			gg.hide();
 		} catch (IOException e) {
 			gg.setStatusText("Could not write files in " + trickyHome);
 		} catch (CardNotReadyException e) {

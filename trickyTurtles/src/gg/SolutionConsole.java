@@ -1,22 +1,26 @@
 package gg;
 
+import generator.CardGenerator;
+
 import java.awt.Font;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import ch.aplu.util.Console;
+import ch.aplu.util.ExitListener;
 
 /**
  * This class shows the given solutions in a console window.
  * It doesn't validate any of the solutions.
  */
-public class SolutionConsole extends Console {
+public class SolutionConsole extends Console implements ExitListener {
 
 	HashMap<SolutionGrid, List<TurtleCard[][]>> solutionMap = new HashMap<SolutionGrid, List<TurtleCard[][]>>();
 	
 	public SolutionConsole(List<SolutionGrid> solutions) {
 		super(null,null, new Font("Monospaced", Font.PLAIN, 16));
+		addExitListener(this);
 		initializeSolutionMap(solutions);
 		
 		println("Computation finished, found following solutions: ");
@@ -76,5 +80,13 @@ public class SolutionConsole extends Console {
 			sb.append("\n");
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public void notifyExit() {
+		//TODO close other window
+		if (CardGenerator.showGeneratorWindow())
+			end();
+		else System.exit(0);	
 	}
 }

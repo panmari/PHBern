@@ -40,7 +40,7 @@ public class DragHalfTurtle extends Actor {
 	public void setLocationWithinCard(Location loc, CardPosition pos) {
 		setLocation(loc);
 		int offset;
-		if (isTurtleFront() && (pos == CardPosition.DOWN || pos == CardPosition.RIGHT))
+		if (isTurtleFront())
 			offset = 51;
 		else offset = 50;
 		setDirection(pos);
