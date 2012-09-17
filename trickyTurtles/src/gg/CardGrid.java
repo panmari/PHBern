@@ -1,16 +1,21 @@
 package gg;
+import java.awt.Font;
+import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
+import ch.aplu.jgamegrid.TextActor;
 import ch.aplu.util.Monitor;
 
 
+@SuppressWarnings("serial")
 public class CardGrid extends GameGrid {
 	private List<TurtleCard> cardSet;
 	private TurtleCard[][] grid = new TurtleCard[3][3];
@@ -165,5 +170,21 @@ public class CardGrid extends GameGrid {
 				solutionCounter++;
 			}
 		}
+	}
+
+	public void lineUpCardsWithId() {
+		Iterator<TurtleCard> cardIter = cardSet.iterator();
+		removeAllActors();
+		for (int x = 0; x < 3; x++)
+			for (int y = 0; y < 3; y++) {
+				TurtleCard tc = cardIter.next();
+				addActor(tc, new Location(x, y));
+				TextActor idCaption = new TextActor("" + tc.getId(), 
+						java.awt.Color.YELLOW, 
+						new java.awt.Color(255,255,255,0), //transparent
+						new Font("SansSerif", Font.BOLD, 21));
+				idCaption.setLocationOffset(new Point(-70, 0));
+				addActor(idCaption, new Location(x, y));
+			}
 	}
 }

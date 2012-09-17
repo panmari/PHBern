@@ -15,7 +15,7 @@ public class SolutionConsole extends Console {
 
 	HashMap<SolutionGrid, List<TurtleCard[][]>> solutionMap = new HashMap<SolutionGrid, List<TurtleCard[][]>>();
 	
-	public SolutionConsole(CardGrid gg, List<SolutionGrid> solutions) {
+	public SolutionConsole(List<SolutionGrid> solutions) {
 		super(null,null, new Font("Monospaced", Font.PLAIN, 16));
 		initializeSolutionMap(solutions);
 		
@@ -30,7 +30,6 @@ public class SolutionConsole extends Console {
 			}
 			i++;
 		}
-		gg.cycleThroughSolutions(solutionMap.keySet());
 	}
 	
 	/**

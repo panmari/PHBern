@@ -26,8 +26,9 @@ public class Solver {
 			gg = new CardGrid(dataset, shuffle);
 			solve(gg.getCards());
 			if (solutions.size() > 0)
-				new SolutionConsole(gg, solutions);
+				new SolutionConsole(solutions);
 			else gg.setStatusText("There are no solutions for this set!");
+			gg.lineUpCardsWithId();
 		} catch (FileNotFoundException e) {
 			gg.setStatusText("Couldn't find cardset");
 		}
