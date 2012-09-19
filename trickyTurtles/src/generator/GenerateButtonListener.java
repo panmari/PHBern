@@ -62,9 +62,9 @@ public class GenerateButtonListener implements GGButtonListener {
 			while (prefix.isEmpty())
 				prefix = popup.show();
 		    if (chooser.showOpenDialog(gg) == JFileChooser.APPROVE_OPTION) 
-		    	trickyHome = new File(chooser.getSelectedFile(), "trickyTurtles/").getAbsolutePath();
+		    	trickyHome = new File(chooser.getSelectedFile(), "trickyTurtles").getAbsolutePath();
 		    else throw new InterruptedException();
-			String spriteDirectory = new File(trickyHome, "sprites/").getAbsolutePath();
+			String spriteDirectory = new File(trickyHome, "sprites").getAbsolutePath();
 			System.out.println(spriteDirectory);
 			new File(spriteDirectory).mkdirs();
 			if (new File(spriteDirectory).canWrite())
@@ -91,16 +91,18 @@ public class GenerateButtonListener implements GGButtonListener {
 			for (int y = 0; y < cardGrid.length; y++)
 				for (int x = 0; x < cardGrid.length; x++) 
 					gridString += cardGrid[x][y].toString() + " sprites/" + prefix + imgCounter++ + ".jpg" + "\n";
-			out = new PrintWriter(new FileWriter(trickyHome + prefix + ".data"));
+			out = new PrintWriter(new FileWriter(new File(trickyHome, prefix + ".data")));
 			out.println(gridString);
 			out.close();
 			BufferedImage bi = gg.getImage().getSubimage(0,0,cellSize*3, cellSize*3);
-			GGBitmap.writeImage(bi, spriteDirectory + prefix + "allCards.jpg", "jpg");
+			File allCards = new File(spriteDirectory, prefix + "allCards.jpg");
+			GGBitmap.writeImage(bi, allCards.getAbsolutePath(), "jpg");
 			imgCounter = 0;
 			for (int y = 0; y < 3*cellSize; y+=cellSize) {
 				for (int x = 0; x < 3*cellSize; x+=cellSize) {
 					BufferedImage card = bi.getSubimage(x, y, cellSize, cellSize);
-					GGBitmap.writeImage(card, spriteDirectory + prefix + imgCounter++ + ".jpg", "jpg");
+					File f = new File(spriteDirectory, prefix + imgCounter++ + ".jpg");
+					GGBitmap.writeImage(card, f.getAbsolutePath(), "jpg");
 				}
 			}
 			gg.setStatusText("Done! Saved files under " + trickyHome);

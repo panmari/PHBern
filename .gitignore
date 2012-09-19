@@ -26,6 +26,9 @@ tmp/**/*
 *.swp
 *~.nib
 
+#wtf where did this come from?
+RemoteSystemsTempFiles
+
 # CDT-specific
 .cproject
 
