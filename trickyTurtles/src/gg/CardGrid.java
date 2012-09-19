@@ -15,6 +15,7 @@ import ch.aplu.jgamegrid.GGExitListener;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.jgamegrid.TextActor;
+import ch.aplu.util.Console;
 import ch.aplu.util.Monitor;
 
 
@@ -201,6 +202,7 @@ public class CardGrid extends GameGrid implements GGExitListener {
 	public boolean notifyExit() {
 		stopGameThread();
 		removeAllActors();
+		Console.end();
 		hide();
 		return CardGenerator.showGeneratorWindow();
 	}

@@ -17,9 +17,11 @@ import ch.aplu.util.ExitListener;
 public class SolutionConsole extends Console implements ExitListener {
 
 	HashMap<SolutionGrid, List<TurtleCard[][]>> solutionMap = new HashMap<SolutionGrid, List<TurtleCard[][]>>();
+	private CardGrid gg;
 	
-	public SolutionConsole(List<SolutionGrid> solutions) {
+	public SolutionConsole(CardGrid gg, List<SolutionGrid> solutions) {
 		super(null,null, new Font("Monospaced", Font.PLAIN, 16));
+		this.gg = gg;
 		addExitListener(this);
 		initializeSolutionMap(solutions);
 		
@@ -84,8 +86,7 @@ public class SolutionConsole extends Console implements ExitListener {
 
 	@Override
 	public void notifyExit() {
-		//TODO close other window
-		if (CardGenerator.showGeneratorWindow())
+		if (!gg.notifyExit())
 			end();
 		else System.exit(0);	
 	}
