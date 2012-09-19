@@ -1,16 +1,21 @@
 package generator;
 
+import gg.CardPosition;
+
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import ch.aplu.jgamegrid.Location;
 
 public class CardGenerator {
 
 	private List<DragHalfTurtle> availableTurtles;
-	private static GeneratorCardGrid cardField;
+	private static GeneratorCardGrid generatorCardGrid;
 
 	public CardGenerator() {
 		initiateTurtles();
-		cardField = new GeneratorCardGrid(availableTurtles);
+		generatorCardGrid = new GeneratorCardGrid(availableTurtles);
 	}
 	
 	private void initiateTurtles() {
@@ -30,12 +35,25 @@ public class CardGenerator {
 	}
 
 	public static boolean showGeneratorWindow() {
-		if (cardField == null)
+		if (generatorCardGrid == null)
 			return false;
 		else {
-			cardField.show();
+			generatorCardGrid.show();
 			return true;
 		}
 	}
 
+	public void initiateWithRandomTurtles() {
+		for (int x = 0; x < 3; x++)
+			for (int y = 0; y < 3; y++)
+				for (CardPosition pos: CardPosition.values()) {
+					Collections.shuffle(availableTurtles);
+					DragHalfTurtle randomHalfTurtle = availableTurtles.get(0).clone();
+					Location loc = new Location(x,y);
+					generatorCardGrid.addActor(randomHalfTurtle, loc);
+					randomHalfTurtle.setLocationWithinCard(loc, pos);
+					generatorCardGrid.getCardGrid()[loc.x][loc.y].setTurtle(randomHalfTurtle);
+				}
+		generatorCardGrid.refresh();
+	}
 }

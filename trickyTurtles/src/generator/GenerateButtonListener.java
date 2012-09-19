@@ -91,7 +91,8 @@ public class GenerateButtonListener implements GGButtonListener {
 			for (int y = 0; y < cardGrid.length; y++)
 				for (int x = 0; x < cardGrid.length; x++) 
 					gridString += cardGrid[x][y].toString() + " sprites/" + prefix + imgCounter++ + ".jpg" + "\n";
-			out = new PrintWriter(new FileWriter(new File(trickyHome, prefix + ".data")));
+			File datasetFile = new File(trickyHome, prefix + ".data");
+			out = new PrintWriter(new FileWriter(datasetFile));
 			out.println(gridString);
 			out.close();
 			BufferedImage bi = gg.getImage().getSubimage(0,0,cellSize*3, cellSize*3);
@@ -106,7 +107,7 @@ public class GenerateButtonListener implements GGButtonListener {
 				}
 			}
 			gg.setStatusText("Done! Saved files under " + trickyHome);
-			new SolverLauncher(trickyHome + prefix + ".data").start();
+			new SolverLauncher(datasetFile.getAbsolutePath()).start();
 			gg.hide();
 		} catch (IOException e) {
 			gg.setStatusText("Could not write files in " + trickyHome);
