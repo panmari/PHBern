@@ -179,6 +179,7 @@ public class CardGrid extends GameGrid implements GGExitListener {
 	}
 
 	public void lineUpCardsWithId() {
+		Collections.sort(cardSet);
 		Iterator<TurtleCard> cardIter = cardSet.iterator();
 		removeAllActors();
 		for (int x = 0; x < 3; x++)

@@ -34,15 +34,22 @@ public class CardGenerator {
 		new CardGenerator();
 	}
 
+	/**
+	 * @return true, if program should terminate, false if not
+	 */
 	public static boolean showGeneratorWindow() {
 		if (generatorCardGrid == null)
-			return false;
+			return true;
 		else {
 			generatorCardGrid.show();
-			return true;
+			return false;
 		}
 	}
-
+	
+	/**
+	 * Fills the grid totally random. It is not that there is a solution
+	 * for this turtle set.
+	 */
 	public void initiateWithRandomTurtles() {
 		for (int x = 0; x < 3; x++)
 			for (int y = 0; y < 3; y++)
