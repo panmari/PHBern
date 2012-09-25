@@ -9,21 +9,20 @@ import ch.aplu.jgamegrid.Actor;
  * The first TurtleCard has the id 1
  * A newly created TurtleCard is oriented to the left side by default.
  */
-public class TurtleCard extends Actor implements Cloneable {
+public class TurtleCard extends Actor implements Cloneable, Comparable<TurtleCard> {
 	private CardPosition rotation;
 	private LinkedList<HalfTurtle> cardSetting;
-	private static int idCounter = 0;
 	private int id;
 	
 	/**
 	 * This constructor shouldn't be called directly. Rather create TurtleCards through 
 	 * the TurtleCardFactory.
 	 */
-	public TurtleCard(String sprite) {
+	public TurtleCard(int id, String sprite) {
 		super(true, sprite);
 		cardSetting = new LinkedList<HalfTurtle>();
 		rotation = CardPosition.LEFT;
-		id = idCounter++;
+		this.id = id;
 	}
 
 	/**
@@ -73,4 +72,9 @@ public class TurtleCard extends Actor implements Cloneable {
 		return new TurtleCard(this);
 	}
 	//TODO: Override equals
+
+	@Override
+	public int compareTo(TurtleCard o) {
+		return new Integer(id).compareTo(new Integer(o.id));
+	}
 }

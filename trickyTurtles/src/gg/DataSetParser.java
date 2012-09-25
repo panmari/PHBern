@@ -37,7 +37,7 @@ public class DataSetParser {
 	 */
 	public List<TurtleCard> parse() {
 		LinkedList<TurtleCard> tcList = new LinkedList<TurtleCard>();
-		TurtleCardFactory tf = TurtleCardFactory.getInstance();
+		TurtleCardFactory tf = new TurtleCardFactory();
 		while (parseScanner.hasNextLine()) {
 			String line = parseScanner.nextLine();
 			int firstSpace = line.indexOf(" ");

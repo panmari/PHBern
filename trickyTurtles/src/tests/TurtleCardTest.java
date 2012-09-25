@@ -24,7 +24,7 @@ public class TurtleCardTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		tf = TurtleCardFactory.getInstance();
+		tf = new TurtleCardFactory();
 	}
 
 	/**
@@ -47,11 +47,11 @@ public class TurtleCardTest {
 	@Test
 	public void testIds() {
 		TurtleCard tc = tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc1.jpg");
-		assertEquals(1, tc.getId());
+		assertEquals(0, tc.getId());
 		TurtleCard tc2 = tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc1.jpg");
-		assertEquals(2, tc2.getId());
+		assertEquals(1, tc2.getId());
 		TurtleCard tc3 = tf.makeTurtleCard("yf;gb;rb;bf", "sprites/tc1.jpg");
-		assertEquals(3, tc3.getId());
+		assertEquals(2, tc3.getId());
 	}
 
 }

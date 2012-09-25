@@ -8,8 +8,6 @@ package gg;
  * </ul>
  * It is recommended to use the first method for creating a full set of cards (takes
  * much less typing).
- * This utility uses a singleton pattern, so at any time there is only
- * one instance of it.
  * @see DataSetParser
  */
 public class TurtleCardFactory {
@@ -17,15 +15,10 @@ public class TurtleCardFactory {
 	private static TurtleCardFactory tf;
 	private TurtleCard card;
 	private int halfTurtleCount;
-	
-	public static TurtleCardFactory getInstance() {
-		if (tf == null)
-			tf = new TurtleCardFactory();
-		return tf;
-	}
+	private int idCounter = 0;
 	
 	public void prepareEmptyCard(String sprite) {
-		card = new TurtleCard(sprite);
+		card = new TurtleCard(idCounter, sprite);
 		halfTurtleCount = 0;
 	}
 	
@@ -44,8 +37,10 @@ public class TurtleCardFactory {
 	}
 	
 	public TurtleCard getNewCard() {
-		if (isCardReady())
+		if (isCardReady()) {
+			idCounter++;
 			return card;
+		}
 		else
 			throw new CardNotReadyException("Not enough HalfTurtles on card!");
 	}
