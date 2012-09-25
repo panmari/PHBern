@@ -11,17 +11,18 @@ import ch.aplu.util.Monitor;
 public class Solver {
 
 	/** Set this to true if you want to reach the solutions as fast as possible */
-	private final boolean fastForward = true;
+	private boolean fastForward = false;
 	private CardGrid gg;
 	private long steps;
 	private String status;
 	private ArrayList<SolutionGrid> solutions = new ArrayList<SolutionGrid>();
 	
 	public static void main(String[] args) {
-		new Solver("cardset.data", false);
+		new Solver("cardset.data", false, false);
 	}
 	
-	public Solver(String dataset, boolean shuffle) {
+	public Solver(String dataset, boolean shuffle, boolean fastForward) {
+		this.fastForward = fastForward;
 		try {
 			gg = new CardGrid(dataset, shuffle);
 			solve(gg.getCards());

@@ -59,6 +59,7 @@ public class GenerateButtonListener implements GGButtonListener {
 	    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	    String trickyHome = "";
 		try {
+			//TODO: when cancel is clicked, don't exit!
 			while (prefix.isEmpty())
 				prefix = popup.show();
 		    if (chooser.showOpenDialog(gg) == JFileChooser.APPROVE_OPTION) 
@@ -108,8 +109,10 @@ public class GenerateButtonListener implements GGButtonListener {
 					GGBitmap.writeImage(card, f.getAbsolutePath(), "jpg");
 				}
 			}
+			boolean fastForward = true;
+			//TODO: ask user if fastForward
 			gg.setStatusText("Done! Saved files under " + trickyHome);
-			new SolverLauncher(datasetFile.getAbsolutePath()).start();
+			new SolverLauncher(datasetFile.getAbsolutePath(), fastForward).start();
 			gg.hide();
 		} catch (IOException e) {
 			gg.setStatusText("Could not write files in " + trickyHome);

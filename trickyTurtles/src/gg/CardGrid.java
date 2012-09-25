@@ -187,7 +187,7 @@ public class CardGrid extends GameGrid implements GGExitListener {
 				TurtleCard tc = cardIter.next();
 				addActor(tc, new Location(x, y));
 				TextActor idCaption = new TextActor("" + tc.getId(), 
-						java.awt.Color.YELLOW, 
+						java.awt.Color.RED, 
 						new java.awt.Color(255,255,255,0), //transparent
 						new Font("SansSerif", Font.BOLD, 21));
 				idCaption.setLocationOffset(new Point(-70, 0));
