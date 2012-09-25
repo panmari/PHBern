@@ -12,7 +12,6 @@ package gg;
  */
 public class TurtleCardFactory {
 	
-	private static TurtleCardFactory tf;
 	private TurtleCard card;
 	private int halfTurtleCount;
 	private int idCounter = 0;

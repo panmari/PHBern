@@ -90,7 +90,9 @@ public class GenerateButtonListener implements GGButtonListener {
 			int imgCounter = 0;
 			for (int y = 0; y < cardGrid.length; y++)
 				for (int x = 0; x < cardGrid.length; x++) 
-					gridString += cardGrid[x][y].toString() + " sprites/" + prefix + imgCounter++ + ".jpg" + "\n";
+					gridString += cardGrid[x][y].toString() + " " + 
+									new File(spriteDirectory, prefix + imgCounter++ + ".jpg") + 
+									"\n";
 			File datasetFile = new File(trickyHome, prefix + ".data");
 			out = new PrintWriter(new FileWriter(datasetFile));
 			out.println(gridString);
