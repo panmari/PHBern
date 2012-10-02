@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 
 import javax.naming.NoPermissionException;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import ch.aplu.jgamegrid.GGBitmap;
 import ch.aplu.jgamegrid.GGButton;
@@ -43,26 +44,24 @@ public class GenerateButtonListener implements GGButtonListener {
 	 * @see generateDataSetFiles
 	 */
 	private void exportDataSet()  {
-		String prefix = "";
 		if (!isGridFullyOccupied()) {
 			gg.setStatusText("Not all cards are fully occupied!");
 			return;
 		}
-		
-		GGInputString popup = new GGInputString("Name?", 
-				"What's the name of your new set of cards?",
-				"custom_turtles");
-		
 		JFileChooser chooser = new JFileChooser(); 
 	    chooser.setCurrentDirectory(new java.io.File("."));
 	    chooser.setDialogTitle("Chose a directory to save your set");
 	    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	    String trickyHome = "";
 		try {
-			//TODO: when cancel is clicked, don't exit!
-			while (prefix.isEmpty())
-				prefix = popup.show();
-		    if (chooser.showOpenDialog(gg) == JFileChooser.APPROVE_OPTION) 
+			String prefix = JOptionPane.showInputDialog(gg, 
+					"What's the name of your new set of cards?",
+					"Choose a name", JOptionPane.QUESTION_MESSAGE);
+		    if (prefix == null) //clicked on "Cancel"
+		    	throw new InterruptedException();
+		    if (prefix.isEmpty() || prefix.contains(" "))
+		    	throw new IllegalArgumentException("Invalid name");
+			if (chooser.showOpenDialog(gg) == JFileChooser.APPROVE_OPTION) 
 		    	trickyHome = new File(chooser.getSelectedFile(), "trickyTurtles").getAbsolutePath();
 		    else throw new InterruptedException();
 			String spriteDirectory = new File(trickyHome, "sprites").getAbsolutePath();
@@ -75,6 +74,8 @@ public class GenerateButtonListener implements GGButtonListener {
 			gg.setStatusText("Generation of cards canceled by user");
 		} catch (NoPermissionException e) {
 			gg.setStatusText("No write permissions for " + trickyHome);
+		} catch (IllegalArgumentException e) {
+			gg.setStatusText(e.getMessage());
 		}
 	}
 	
@@ -109,8 +110,10 @@ public class GenerateButtonListener implements GGButtonListener {
 					GGBitmap.writeImage(card, f.getAbsolutePath(), "jpg");
 				}
 			}
-			boolean fastForward = true;
-			//TODO: ask user if fastForward
+			boolean fastForward = JOptionPane.showConfirmDialog(gg, 
+					"Do you want to fast forward to the solution(s)?", 
+					"Fast forward?", 
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
 			gg.setStatusText("Done! Saved files under " + trickyHome);
 			new SolverLauncher(datasetFile.getAbsolutePath(), fastForward).start();
 			gg.hide();
