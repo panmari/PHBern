@@ -11,16 +11,24 @@ import ch.aplu.util.ExitListener;
 /**
  * This class shows the given solutions in a console window.
  * It doesn't validate any of the solutions.
+ * The console is deployed as singleton. (which may or may not be a good idea..)
  */
 public class SolutionConsole extends Console implements ExitListener {
 
-	HashMap<SolutionGrid, List<TurtleCard[][]>> solutionMap = new HashMap<SolutionGrid, List<TurtleCard[][]>>();
+	HashMap<SolutionGrid, List<TurtleCard[][]>> solutionMap;
 	private CardGrid gg;
+	private static SolutionConsole sc;
 	
-	public SolutionConsole(CardGrid gg, List<SolutionGrid> solutions) {
-		super(null,null, new Font("Monospaced", Font.PLAIN, 16));
+	public static SolutionConsole getInstance() {
+		if (sc == null)
+			sc = new SolutionConsole();
+		return sc;
+	}
+	
+	public void printSolutions(CardGrid gg, List<SolutionGrid> solutions) {
+		getFrame().setVisible(true);
+		clear();
 		this.gg = gg;
-		addExitListener(this);
 		initializeSolutionMap(solutions);
 		
 		println("Computation finished, found following solutions: ");
@@ -36,6 +44,12 @@ public class SolutionConsole extends Console implements ExitListener {
 		}
 	}
 	
+	private SolutionConsole() {
+		super(null,null, new Font("Monospaced", Font.PLAIN, 16));
+		addExitListener(this);
+		setTitle("Solutions for TrickyTurtle");
+	}
+	
 	/**
 	 * Creates a hashmap out of the given solution.
 	 * Solutions which are the same as an already added solution (rotated)
@@ -43,6 +57,7 @@ public class SolutionConsole extends Console implements ExitListener {
 	 * @param solutions
 	 */
 	private void initializeSolutionMap(List<SolutionGrid> solutions) {
+		solutionMap = new HashMap<SolutionGrid, List<TurtleCard[][]>>();
 		for (SolutionGrid sg: solutions) {
 			if (solutionMap.containsKey(sg)) {
 				solutionMap.get(sg).add(sg.getGrid());
@@ -85,7 +100,7 @@ public class SolutionConsole extends Console implements ExitListener {
 	@Override
 	public void notifyExit() {
 		if (!gg.notifyExit())
-			end();
+			getFrame().setVisible(false);
 		else System.exit(0);	
 	}
 }
