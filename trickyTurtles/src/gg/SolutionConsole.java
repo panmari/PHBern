@@ -1,5 +1,6 @@
 package gg;
 
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -22,6 +23,7 @@ public class SolutionConsole extends Console implements ExitListener {
 	public static SolutionConsole getInstance() {
 		if (sc == null)
 			sc = new SolutionConsole();
+		else sc.show();
 		return sc;
 	}
 	
@@ -99,8 +101,32 @@ public class SolutionConsole extends Console implements ExitListener {
 
 	@Override
 	public void notifyExit() {
-		if (!gg.notifyExit())
-			getFrame().setVisible(false);
+		if (!gg.notifyExit()) {
+			clear();
+			hide();
+		}
 		else System.exit(0);	
 	}
+	
+	private void hide()
+	  {
+	    EventQueue.invokeLater(new Runnable()
+	    {
+	      public void run()
+	      {
+	        getFrame().setVisible(false);
+	      }
+	    });
+	  }
+
+	  private void show()
+	  {
+	    EventQueue.invokeLater(new Runnable()
+	    {
+	      public void run()
+	      {
+	        getFrame().setVisible(true);
+	      }
+	    });
+	  }
 }
