@@ -27,7 +27,8 @@ public class CardGrid {
 	
 	/**
 	 * TODO: make a null turtle to avert ugly exception-cases?
-	 * @param p
+	 * Assumes that TurtleCards are added from top left to bottom right. 
+	 * @param p, the location of the newly added TurtleCard
 	 * @return
 	 */
 	public boolean isThereConflict(Location p) {

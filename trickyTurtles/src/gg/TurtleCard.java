@@ -71,7 +71,6 @@ public class TurtleCard extends Actor implements Cloneable, Comparable<TurtleCar
 	public TurtleCard clone() {
 		return new TurtleCard(this);
 	}
-	//TODO: Override equals
 
 	@Override
 	public int compareTo(TurtleCard o) {

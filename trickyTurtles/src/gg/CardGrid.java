@@ -18,7 +18,7 @@ import ch.aplu.jgamegrid.TextActor;
 import ch.aplu.util.Console;
 import ch.aplu.util.Monitor;
 
-
+//TODO: could make a singleton out of this
 @SuppressWarnings("serial")
 public class CardGrid extends GameGrid implements GGExitListener {
 	private List<TurtleCard> cardSet;
@@ -203,6 +203,7 @@ public class CardGrid extends GameGrid implements GGExitListener {
 	public boolean notifyExit() {
 		stopGameThread();
 		removeAllActors();
+		//clear for pickup by gc
 		cardSet = null;
 		grid = null;
 		SolutionConsole.hide();
