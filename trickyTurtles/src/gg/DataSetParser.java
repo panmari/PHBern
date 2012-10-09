@@ -1,7 +1,9 @@
 package gg;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -26,8 +28,10 @@ public class DataSetParser {
 	Scanner parseScanner;
 	
 	public DataSetParser(String filePath) throws FileNotFoundException {
-		File file = new File(filePath);
-		parseScanner = new Scanner(file);
+		InputStream input = getClass().getResourceAsStream(filePath); //for internal card set
+		if (input == null)
+			input = new FileInputStream(filePath);
+		parseScanner = new Scanner(input);
 		parseScanner.useDelimiter("\\r?\\n");
 	}
 

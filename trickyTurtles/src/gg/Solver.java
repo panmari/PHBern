@@ -18,21 +18,17 @@ public class Solver {
 	private ArrayList<SolutionGrid> solutions = new ArrayList<SolutionGrid>();
 	
 	public static void main(String[] args) {
-		new Solver("cardset.data", false, false);
+		new Solver("/sprites/cardset.data", false, false);
 	}
 	
 	public Solver(String dataset, boolean shuffle, boolean fastForward) {
 		this.fastForward = fastForward;
-		try {
-			gg = new CardGrid(dataset, shuffle);
-			solve(gg.getCards());
-			if (solutions.size() > 0)
-				SolutionConsole.getInstance().printSolutions(gg, solutions);
-			else gg.setStatusText("There are no solutions for this set!");
-			gg.lineUpCardsWithId();
-		} catch (FileNotFoundException e) {
-			gg.setStatusText("Couldn't find cardset");
-		}
+		gg = new CardGrid(dataset, shuffle);
+		solve(gg.getCards());
+		if (solutions.size() > 0)
+			SolutionConsole.getInstance().printSolutions(gg, solutions);
+		else gg.setStatusText("There are no solutions for this set!");
+		gg.lineUpCardsWithId();
 	}
 
 	/**
@@ -55,7 +51,7 @@ public class Solver {
 		if (gg.isSolved()) { //=> done!
 			gg.showSolution();
 			solutions.add(new SolutionGrid(gg.getGrid()));
-			status = "Found " + (solutions.size() - 1)  + ". solution! Click RUN to find another...";
+			status = "Found " + solutions.size() + ". solution! Click RUN to find another...";
 			sleep(true);
 		}
 		for (TurtleCard tc: new LinkedList<TurtleCard>(availableCards)) {

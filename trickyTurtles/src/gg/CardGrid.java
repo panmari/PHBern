@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import ch.aplu.jgamegrid.GGExitListener;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
@@ -24,14 +26,19 @@ public class CardGrid extends GameGrid implements GGExitListener {
 	private List<TurtleCard> cardSet;
 	private TurtleCard[][] grid = new TurtleCard[3][3];
 	
-	public CardGrid(String dataset, boolean shuffle) throws FileNotFoundException {
+	public CardGrid(String dataset, boolean shuffle) {
 		super(3, 3, 164, java.awt.Color.GRAY, null, true, 4);
-		this.cardSet = new DataSetParser(dataset).parse();
-		addExitListener(this);
-		if (shuffle)
-			Collections.shuffle(cardSet);
 		addStatusBar(25);
 		setTitle("Tricky Turtle (www.java-online.ch)");
+		addExitListener(this);
+		try {
+			this.cardSet = new DataSetParser(dataset).parse();
+			if (shuffle)
+				Collections.shuffle(cardSet);
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(this, "Couldn't find cardset at " + dataset + ", aborting");
+			System.exit(1);
+		}
 		show();
 	}
 	
