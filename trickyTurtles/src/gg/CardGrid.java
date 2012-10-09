@@ -203,7 +203,9 @@ public class CardGrid extends GameGrid implements GGExitListener {
 	public boolean notifyExit() {
 		stopGameThread();
 		removeAllActors();
-		Console.end();
+		cardSet = null;
+		grid = null;
+		SolutionConsole.hide();
 		hide();
 		return CardGenerator.showGeneratorWindow();
 	}

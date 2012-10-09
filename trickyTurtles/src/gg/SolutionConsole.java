@@ -23,7 +23,10 @@ public class SolutionConsole extends Console implements ExitListener {
 	public static SolutionConsole getInstance() {
 		if (sc == null)
 			sc = new SolutionConsole();
-		else sc.show();
+		else {
+			clear();
+			sc.show();
+		}
 		return sc;
 	}
 	
@@ -108,7 +111,7 @@ public class SolutionConsole extends Console implements ExitListener {
 		else System.exit(0);	
 	}
 	
-	private void hide()
+	public static void hide()
 	  {
 	    EventQueue.invokeLater(new Runnable()
 	    {
