@@ -3,6 +3,10 @@ package gg;
 import ch.aplu.jgamegrid.GGNavigationListener;
 import ch.aplu.util.Monitor;
 
+/**
+ * Not in use right now
+ * @author mazzzy
+ */
 public class SolutionNavigation implements GGNavigationListener {
 	@Override
 	public boolean paused() {

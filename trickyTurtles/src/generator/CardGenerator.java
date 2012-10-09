@@ -47,14 +47,14 @@ public class CardGenerator {
 	}
 	
 	/**
-	 * Fills the grid totally random. It is not that there is a solution
-	 * for this turtle set.
+	 * Fills the grid totally random. It is not given that there is a solution
+	 * for this turtle set. Mainly for debugging purposes.
 	 */
-	public void initiateWithRandomTurtles() {
+	public void initiateWithTurtles() {
 		for (int x = 0; x < 3; x++)
 			for (int y = 0; y < 3; y++)
 				for (CardPosition pos: CardPosition.values()) {
-					Collections.shuffle(availableTurtles);
+				    Collections.shuffle(availableTurtles);
 					DragHalfTurtle randomHalfTurtle = availableTurtles.get(0).clone();
 					Location loc = new Location(x,y);
 					generatorCardGrid.addActor(randomHalfTurtle, loc);

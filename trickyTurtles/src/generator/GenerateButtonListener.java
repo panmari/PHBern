@@ -111,9 +111,10 @@ public class GenerateButtonListener implements GGButtonListener {
 				}
 			}
 			boolean fastForward = JOptionPane.showConfirmDialog(gg, 
-					"Do you want to fast forward to the solution(s)?", 
-					"Fast forward?", 
-					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+							"Turtle set successfully created in " + trickyHome +
+							". \n Do you want to fast forward to the solution(s)?", 
+							"Fast forward?", 
+							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
 			gg.setStatusText("Done! Saved files under " + trickyHome);
 			new SolverLauncher(datasetFile.getAbsolutePath(), fastForward).start();
 			gg.hide();

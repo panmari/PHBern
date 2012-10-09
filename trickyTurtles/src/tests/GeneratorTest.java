@@ -11,6 +11,6 @@ public class GeneratorTest {
 	 */
 	public static void main(String[] args) {
 		CardGenerator cg = new CardGenerator();
-		cg.initiateWithRandomTurtles();
+		cg.initiateWithTurtles();
 	}
 }
