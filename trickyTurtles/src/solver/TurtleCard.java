@@ -1,4 +1,4 @@
-package gg;
+package solver;
 import java.util.LinkedList;
 
 import ch.aplu.jgamegrid.Actor;

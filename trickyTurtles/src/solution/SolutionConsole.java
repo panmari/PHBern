@@ -1,10 +1,13 @@
-package gg;
+package solution;
 
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+
+import solver.CardGrid;
+import solver.TurtleCard;
 
 import ch.aplu.util.Console;
 import ch.aplu.util.ExitListener;

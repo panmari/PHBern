@@ -1,6 +1,6 @@
 package generator;
 
-import gg.Solver;
+import solver.Solver;
 
 /**
  * Own thread for the Solver to run.

@@ -1,11 +1,12 @@
 package tests;
 
 import static org.junit.Assert.*;
-import gg.Color;
-import gg.HalfTurtle;
-import gg.Orientation;
 
 import org.junit.Test;
+
+import solver.Color;
+import solver.HalfTurtle;
+import solver.Orientation;
 
 
 

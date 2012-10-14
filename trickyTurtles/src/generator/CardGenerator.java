@@ -1,11 +1,12 @@
 package generator;
 
-import gg.CardPosition;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
+import solver.CardPosition;
 
 import ch.aplu.jgamegrid.Location;
 

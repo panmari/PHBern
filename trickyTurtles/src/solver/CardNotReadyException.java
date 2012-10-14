@@ -1,4 +1,4 @@
-package gg;
+package solver;
 
 @SuppressWarnings("serial")
 public class CardNotReadyException extends RuntimeException {

@@ -1,8 +1,9 @@
 package nogg;
-import gg.CardPosition;
-import gg.HalfTurtle;
 
 import java.util.LinkedList;
+
+import solver.CardPosition;
+import solver.HalfTurtle;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.util.Monitor;
 

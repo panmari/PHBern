@@ -1,4 +1,4 @@
-package gg;
+package solver;
 
 public enum Orientation {
 	FRONT('f'),

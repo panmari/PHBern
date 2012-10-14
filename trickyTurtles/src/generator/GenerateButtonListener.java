@@ -1,6 +1,5 @@
 package generator;
 
-import gg.CardNotReadyException;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,6 +10,8 @@ import java.io.PrintWriter;
 import javax.naming.NoPermissionException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import solver.CardNotReadyException;
 
 import ch.aplu.jgamegrid.GGBitmap;
 import ch.aplu.jgamegrid.GGButton;

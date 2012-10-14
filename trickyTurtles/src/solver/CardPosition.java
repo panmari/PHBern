@@ -1,4 +1,4 @@
-package gg;
+package solver;
 
 public enum CardPosition {
 	LEFT (-1, 0, "LT"),

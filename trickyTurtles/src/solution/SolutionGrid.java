@@ -1,9 +1,11 @@
-package gg;
+package solution;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import solver.TurtleCard;
 
 /**
  * This class represents a solution of a tricky turtle game.

@@ -1,4 +1,4 @@
-package gg;
+package solver;
 
 public class HalfTurtle {
 

@@ -1,41 +1,52 @@
-package gg;
+package solution;
 
+import solver.CardGrid;
 import ch.aplu.jgamegrid.GGNavigationListener;
 import ch.aplu.util.Monitor;
 
 /**
- * Not in use right now
+ * Disables all buttons while showing the solution screen
  * @author mazzzy
  */
 public class SolutionNavigation implements GGNavigationListener {
+	
+	private CardGrid gg;
+
+	public SolutionNavigation(CardGrid cardGrid) {
+		this.gg = cardGrid;
+	}
+
 	@Override
 	public boolean paused() {
-		// do nothing
+		closeInfo();
 		return true;
 	}
 
 	@Override
 	public boolean periodChanged(int arg0) {
-		//do nothing
+		closeInfo();
 		return true;
 	}
 
 	@Override
 	public boolean resetted() {
-		// do nothing
+		closeInfo();
 		return true;
 	}
 
 	@Override
 	public boolean started() {
-		// do nothing
+		closeInfo();
 		return true;
 	}
 
 	@Override
 	public boolean stepped() {
-		Monitor.wakeUp();
+		closeInfo();
 		return true;
 	}
 
+	public void closeInfo() {
+		gg.setStatusText("Close window to return to generator.");
+	}
 }

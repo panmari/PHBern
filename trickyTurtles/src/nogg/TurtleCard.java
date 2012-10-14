@@ -1,8 +1,9 @@
 package nogg;
-import gg.CardPosition;
-import gg.HalfTurtle;
 
 import java.util.LinkedList;
+
+import solver.CardPosition;
+import solver.HalfTurtle;
 
 /**
  * Representation of a card. Consists of 4 half turtles. 

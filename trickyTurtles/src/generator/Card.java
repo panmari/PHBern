@@ -1,7 +1,7 @@
 package generator;
 
-import gg.CardNotReadyException;
-import gg.CardPosition;
+import solver.CardNotReadyException;
+import solver.CardPosition;
 
 
 public class Card {

@@ -1,4 +1,4 @@
-package gg;
+package solver;
 
 /**
  * A Factory utility used for making TurtleCards. Supports two ways of making cards:

@@ -1,8 +1,9 @@
 package generator;
 
-import gg.CardPosition;
 
 import java.awt.Point;
+
+import solver.CardPosition;
 
 import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.GGMouse;

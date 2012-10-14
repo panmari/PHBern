@@ -1,4 +1,4 @@
-package gg;
+package solver;
 import generator.CardGenerator;
 
 import java.awt.Font;
@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
+
+import solution.SolutionConsole;
+import solution.SolutionGrid;
+import solution.SolutionNavigation;
 
 import ch.aplu.jgamegrid.GGExitListener;
 import ch.aplu.jgamegrid.GameGrid;
@@ -158,34 +162,8 @@ public class CardGrid extends GameGrid implements GGExitListener {
 		System.out.println(this);
 	}
 
-	/**
-	 * Shows every 5 seconds another solution (given as parameter).
-	 * Does this in an endless loop.
-	 * NOT USED IN CURRENT VERSION
-	 * @param solutions
-	 */
-	public void cycleThroughSolutions(Set<SolutionGrid> solutions) {
-		addNavigationListener(new SolutionNavigation());
-		while (true) {
-			int solutionCounter = 1;
-			for (SolutionGrid sg: solutions) {
-				removeAllActors();
-				setStatusText("Cycling through solutions... Now showing solution #" + solutionCounter);
-				grid = sg.getGrid();
-				for (int x = 0; x < 3; x++) {
-					for (int y = 0; y < 3; y++) {
-						addActorNoRefresh(grid[x][y], new Location(x, y));
-						grid[x][y].show();
-					}
-				}
-				refresh();
-				Monitor.putSleep();
-				solutionCounter++;
-			}
-		}
-	}
-
 	public void lineUpCardsWithId() {
+		addNavigationListener(new SolutionNavigation(this));
 		Collections.sort(cardSet);
 		Iterator<TurtleCard> cardIter = cardSet.iterator();
 		removeAllActors();

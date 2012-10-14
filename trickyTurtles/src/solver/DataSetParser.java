@@ -1,4 +1,4 @@
-package gg;
+package solver;
 
 import java.io.File;
 import java.io.FileInputStream;

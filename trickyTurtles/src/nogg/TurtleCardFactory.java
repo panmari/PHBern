@@ -1,9 +1,9 @@
 package nogg;
 
-import gg.CardNotReadyException;
-import gg.Color;
-import gg.HalfTurtle;
-import gg.Orientation;
+import solver.CardNotReadyException;
+import solver.Color;
+import solver.HalfTurtle;
+import solver.Orientation;
 
 public class TurtleCardFactory {
 	

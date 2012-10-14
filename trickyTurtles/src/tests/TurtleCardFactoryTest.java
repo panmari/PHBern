@@ -1,14 +1,15 @@
 package tests;
 
 import static org.junit.Assert.*;
-import gg.CardNotReadyException;
-import gg.Color;
-import gg.Orientation;
-import gg.TurtleCard;
-import gg.TurtleCardFactory;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import solver.CardNotReadyException;
+import solver.Color;
+import solver.Orientation;
+import solver.TurtleCard;
+import solver.TurtleCardFactory;
 
 
 public class TurtleCardFactoryTest {

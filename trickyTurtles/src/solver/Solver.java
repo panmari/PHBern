@@ -1,9 +1,12 @@
-package gg;
+package solver;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import solution.SolutionConsole;
+import solution.SolutionGrid;
 
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.util.Monitor;

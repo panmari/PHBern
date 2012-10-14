@@ -1,10 +1,11 @@
 package tests;
 
 import static org.junit.Assert.*;
-import gg.CardPosition;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import solver.CardPosition;
 
 public class RotationTest {
 
