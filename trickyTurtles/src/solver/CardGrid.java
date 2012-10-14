@@ -9,19 +9,15 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JOptionPane;
 
 import solution.SolutionConsole;
-import solution.SolutionGrid;
 import solution.SolutionNavigation;
-
 import ch.aplu.jgamegrid.GGExitListener;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.jgamegrid.TextActor;
-import ch.aplu.util.Console;
 import ch.aplu.util.Monitor;
 
 //TODO: could make a singleton out of this
