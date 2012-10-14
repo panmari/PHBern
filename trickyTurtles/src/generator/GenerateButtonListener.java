@@ -45,7 +45,7 @@ public class GenerateButtonListener implements GGButtonListener {
 	 * @see generateDataSetFiles
 	 */
 	private void exportDataSet()  {
-		if (!isGridFullyOccupied()) {
+		if (gg.isFullyOccupied()) {
 			gg.setStatusText("Not all cards are fully occupied!");
 			return;
 		}
@@ -125,15 +125,6 @@ public class GenerateButtonListener implements GGButtonListener {
 			//this condition is already checked in the preceding method
 			gg.setStatusText("Not all cards are fully occupied yet.");
 		}
-	}
-
-
-	private boolean isGridFullyOccupied() {
-		for (int y = 0; y < cardGrid.length; y++)
-			for (int x = 0; x < cardGrid.length; x++)
-				if (!cardGrid[x][y].isFullyOccupied())
-					return false;
-		return true;
 	}
 
 	@Override

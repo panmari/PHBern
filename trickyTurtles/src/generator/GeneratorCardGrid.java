@@ -81,4 +81,12 @@ public class GeneratorCardGrid extends GameGrid {
 		return cardGrid;
 	}
 
+	public boolean isFullyOccupied() {
+		for (int y = 0; y < cardGrid.length; y++)
+			for (int x = 0; x < cardGrid.length; x++)
+				if (!cardGrid[x][y].isFullyOccupied())
+					return false;
+		return true;
+	}
+
 }

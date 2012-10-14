@@ -62,8 +62,11 @@ public class MagneticEdgesListener implements GGMouseListener, GGMouseTouchListe
 			}
 			break;
 		case GGMouse.lRelease:
-			if (isInTurtleGrid(loc))
+			if (isInTurtleGrid(loc)) {
 				cardGrid[loc.x][loc.y].setTurtle(dragTurtle);
+				if (gg.isFullyOccupied())
+					gg.setStatusText("Ready to generate data set.");
+			}
 			else
 				dragTurtle.removeSelf();
 			dragTurtle = null;
