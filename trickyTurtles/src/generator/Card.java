@@ -1,6 +1,7 @@
 package generator;
 
 import gg.CardNotReadyException;
+import gg.CardPosition;
 
 
 public class Card {
@@ -15,6 +16,10 @@ public class Card {
 		if (cardSetting[posOrdinal] != null)
 			cardSetting[posOrdinal].removeSelf();
 		cardSetting[posOrdinal] = turtle;
+	}
+	
+	public DragHalfTurtle getTurtleAt(CardPosition cp) {
+		return cardSetting[cp.ordinal()];
 	}
 	
 	public String toString() {

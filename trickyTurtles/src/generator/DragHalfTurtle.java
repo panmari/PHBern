@@ -13,20 +13,24 @@ import ch.aplu.jgamegrid.Location;
  * @author mazzzy
  *
  */
-public class DragHalfTurtle extends Actor {
+public class DragHalfTurtle extends Actor implements Comparable<DragHalfTurtle>{
 	
 	private String representation;
 	private CardPosition pos;
+	private int id;
+	private static int counter;
 
 	public DragHalfTurtle(String representation, String sprite) {
 		super(sprite);
 		this.representation = representation;
 		this.setMouseTouchCircle(new Point(0,0), 32);
+		this.id = counter++;
 	}
 	
 	private DragHalfTurtle(DragHalfTurtle toClone) {
 		super(true, toClone.getScaledImage(1, 0));
 		this.representation = toClone.representation;
+		this.id = toClone.id;
 	}
 	
 	public DragHalfTurtle clone() {
@@ -82,5 +86,20 @@ public class DragHalfTurtle extends Actor {
 	
 	public String toString() {
 		return this.representation;
+	}
+	
+	/**
+	 * Assumes that original and counterpart are created right after each other. 
+	 * @return id of the matching counterpart.
+	 */
+	public int getIdOfCounterpart(){
+		if (id % 2 == 0)
+			return id + 1;
+		else return id - 1;
+	}
+
+	@Override
+	public int compareTo(DragHalfTurtle other) {
+		return new Integer(id).compareTo(new Integer(other.id));
 	}
 }

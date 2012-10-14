@@ -2,7 +2,7 @@ package tests;
 
 import generator.CardGenerator;
 
-public class GeneratorTest {
+public class GeneratorSolvableScenarioTest {
 
 	/**
 	 * A somewhat crude test for the generator:
@@ -11,6 +11,6 @@ public class GeneratorTest {
 	 */
 	public static void main(String[] args) {
 		CardGenerator cg = new CardGenerator();
-		cg.initiateWithTurtles();
+		cg.initiateWithSolvableScenario();
 	}
 }
