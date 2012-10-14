@@ -64,7 +64,7 @@ public class CardGenerator {
 
 	public void initiateWithSolvableScenario() {
 		Card[][] grid = generatorCardGrid.getCardGrid();
-		Collections.sort(availableTurtles);
+		Collections.sort(availableTurtles); //sorts by id
 		for (int x = 0; x < 3; x++)
 			for (int y = 0; y < 3; y++)
 				for (CardPosition pos: CardPosition.values()) {
@@ -83,12 +83,12 @@ public class CardGenerator {
 	}
 	
 	/**
-	 * Asummes <code>availableTurtles</code> are ordered by id.
-	 * @param existingHt
+	 * Assumes <code>availableTurtles</code> are ordered by id.
+	 * @param ht
 	 * @return
 	 */
-	private DragHalfTurtle getCounterpartHalfTurtle(DragHalfTurtle existingHt) {
-		return availableTurtles.get(existingHt.getIdOfCounterpart()).clone();
+	private DragHalfTurtle getCounterpartHalfTurtle(DragHalfTurtle ht) {
+		return availableTurtles.get(ht.getIdOfCounterpart()).clone();
 	}
 
 	private DragHalfTurtle getRandomHalfTurtle() {
