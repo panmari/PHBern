@@ -26,7 +26,7 @@ public class SolutionConsole extends Console implements ExitListener {
 			sc = new SolutionConsole();
 		else {
 			clear();
-			sc.show();
+			show();
 		}
 		return sc;
 	}

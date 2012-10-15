@@ -45,7 +45,7 @@ public class GenerateButtonListener implements GGButtonListener {
 	 * @see generateDataSetFiles
 	 */
 	private void exportDataSet()  {
-		if (gg.isFullyOccupied()) {
+		if (!gg.isFullyOccupied()) {
 			gg.setStatusText("Not all cards are fully occupied!");
 			return;
 		}

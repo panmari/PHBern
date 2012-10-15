@@ -17,13 +17,13 @@ public class GeneratorCardGrid extends GameGrid {
 	private MagneticEdgesListener mouseListener;
 	private Card[][] cardGrid;
 	
-	GeneratorCardGrid(List<DragHalfTurtle> availableTurtles) {
+	GeneratorCardGrid(List<DragHalfTurtle> availableTurtles, String version) {
 		super(4, 3, 166, null, "sprites/generator_bg.jpg", false);
 		this.availableTurtles = availableTurtles;
 		this.cardGrid = new Card[3][3];
 		this.mouseListener = new MagneticEdgesListener(this, cellSize, cardGrid);
 		setBgColor(Color.white);
-		setTitle("Turtles Generator (www.java-online.ch)");
+		setTitle("Turtles Generator (www.java-online.ch) Version: " + version);
 		initiateLines();
 		initiateTurtles();
 		initiateCardGrid();

@@ -4,20 +4,19 @@ package generator;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import solver.CardPosition;
-
 import ch.aplu.jgamegrid.Location;
 
 public class CardGenerator {
 
+	private static final String version = "1.0";
 	private List<DragHalfTurtle> availableTurtles;
 	private static GeneratorCardGrid generatorCardGrid;
 
 	public CardGenerator() {
 		initiateTurtles();
-		generatorCardGrid = new GeneratorCardGrid(availableTurtles);
+		generatorCardGrid = new GeneratorCardGrid(availableTurtles, version);
 	}
 	
 	private void initiateTurtles() {
