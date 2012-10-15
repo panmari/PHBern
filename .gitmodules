@@ -1,0 +1,3 @@
+[submodule "trickyTurtles"]
+	path = trickyTurtles
+	url = git@github.com:panmari/trickyTurtles
