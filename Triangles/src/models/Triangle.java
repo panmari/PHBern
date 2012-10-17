@@ -23,21 +23,20 @@ public class Triangle {
 	 * @return
 	 */
 	public boolean liesInside(GGVector p) {
-		return true;
+		GGVector pNorm = toTriangleCoordinates(p);
+		return pNorm.x >= 0 && pNorm.y >= 0 && pNorm.x + pNorm.y <= 1 ;
 	}
 	
 	public GGVector toTriangleCoordinates(GGVector p) {
-		GGVector edgeOne = vertices[2].sub(vertices[0]);
-		GGVector edgeTwo = vertices[1].sub(vertices[0]);
+		GGVector edgeOne = vertices[1].sub(vertices[0]);
+		GGVector edgeTwo = vertices[2].sub(vertices[0]);
 		GGVector translatedP = p.sub(vertices[0]);
-		GGVector normOne = edgeOne.sub(vertices[0]);
-		GGVector normTwo = edgeTwo.sub(vertices[0]);
 		
-		double b = 1/(-(normTwo.y*normOne.x/normTwo.x) + normOne.y);
-		double a = -b*normTwo.y/normTwo.x;
-		double d = 1/(-(normOne.y*normTwo.x/normOne.x) + normTwo.y);
-		double c = -d*normOne.y/normOne.x;
-		return new GGVector(a*translatedP.x + b*translatedP.y, c*translatedP.x + d*translatedP.y);
+		double divisor = (edgeOne.x*edgeTwo.y-edgeOne.y*edgeTwo.x);
+		double x = (translatedP.x*edgeTwo.y - edgeOne.y*translatedP.y)/divisor;
+		double y = (edgeOne.x*translatedP.y - translatedP.x*edgeTwo.x)/divisor;
+
+		return new GGVector(x, y);
 	}
 
 	private int nextVertexIndex(int i) {

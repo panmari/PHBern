@@ -1,6 +1,6 @@
 package models;
-import ch.aplu.jgamegrid.GGVector;
 
+import ch.aplu.jgamegrid.GGVector;
 
 public class ViewingCone extends Triangle{
 
