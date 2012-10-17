@@ -12,8 +12,11 @@ public class Triangle {
 	}
 	
 	public boolean liesInside(Triangle t) {
-		//if 
-		return false;
+		for (GGVector v: vertices) {
+			if (!liesInside(v))
+				return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -41,5 +44,9 @@ public class Triangle {
 
 	private int nextVertexIndex(int i) {
 		return (i + 1) % 3;
+	}
+	
+	public GGVector[] getVertices() {
+		return vertices;
 	}
 }
