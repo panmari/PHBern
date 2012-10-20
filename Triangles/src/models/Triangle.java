@@ -41,6 +41,33 @@ public class Triangle {
 
 		return new GGVector(x, y);
 	}
+	
+	public GGVector closestPointTo(GGVector p) {
+		//TODO: make iterator for points?
+		GGVector best = closestPointOfLineTo(vertices[0], vertices[nextVertexIndex(0)], p);
+		for (int i = 1; i < vertices.length; i++) {
+			GGVector candidate = closestPointOfLineTo(vertices[i], vertices[nextVertexIndex(i)], p);
+			if (candidate.sub(p).magnitude2() < best.sub(p).magnitude2())
+				best = candidate;
+		}
+		return best;
+	}
+	
+	private GGVector closestPointOfLineTo(GGVector a, GGVector b, GGVector p) {
+		GGVector ap = p.sub(a);
+		GGVector ab = b.sub(a);
+		double abMag = ab.magnitude2();
+		
+		double apDotAb = ap.dot(ab);
+		
+		double t = apDotAb / abMag;
+		//only points on the line are valid:
+		if (t <= 0)
+			return a;
+		else if (t >= 1)
+			return b;
+		else return a.add(ab.mult(t));
+	}
 
 	private int nextVertexIndex(int i) {
 		return (i + 1) % 3;

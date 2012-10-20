@@ -101,4 +101,23 @@ public class TriangleTest {
 		assertEquals(v.x - 1, vTriangle.x, epsilon);
 		assertEquals(v.y - 1, vTriangle.y, epsilon);
 	}
+	
+	@Test
+	public void testClosestPointTo() {
+		GGVector upperVertex = new GGVector(1,0);
+		assertEquals(upperVertex.x, standardT.closestPointTo(upperVertex).x, epsilon);
+		assertEquals(upperVertex.y, standardT.closestPointTo(upperVertex).y, epsilon);
+		
+		GGVector farRight = new GGVector(3,0);
+		assertEquals(upperVertex.x, standardT.closestPointTo(farRight).x, epsilon);
+		assertEquals(upperVertex.y, standardT.closestPointTo(farRight).y, epsilon);
+		
+		GGVector highUp = new GGVector(0, 10);
+		assertEquals(0, standardT.closestPointTo(highUp).x, epsilon);
+		assertEquals(1, standardT.closestPointTo(highUp).y, epsilon);
+		
+		GGVector onBisectingLine = new GGVector(10, 10);
+		assertEquals(0.5, standardT.closestPointTo(onBisectingLine).x, epsilon);
+		assertEquals(0.5, standardT.closestPointTo(onBisectingLine).y, epsilon);
+	}
 }
