@@ -50,6 +50,7 @@ public class Triangle {
 			if (candidate.sub(p).magnitude2() < best.sub(p).magnitude2())
 				best = candidate;
 		}
+		
 		return best;
 	}
 	
@@ -69,7 +70,7 @@ public class Triangle {
 		else return a.add(ab.mult(t));
 	}
 
-	private int nextVertexIndex(int i) {
+	protected int nextVertexIndex(int i) {
 		return (i + 1) % 3;
 	}
 	

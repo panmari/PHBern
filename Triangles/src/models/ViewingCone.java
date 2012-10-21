@@ -33,11 +33,30 @@ public class ViewingCone extends Triangle{
 	}
 	
 	private LinkedList<GGVector> getIntersectionPoints(Triangle t) {
-		GGVector ab = standPoint.sub(vertices[1]);
-		GGVector ac = standPoint.sub(vertices[2]);
-		
-		for (int i = 0; i < 3; i++) {
-			
+		LinkedList<GGVector> intersectionPoints = new LinkedList<GGVector>();
+		Line[] viewBoarderLines = {	new Line(standPoint, standPoint.sub(vertices[1])),
+							new Line(standPoint, standPoint.sub(vertices[2])) 
+						};
+		for (Line l: viewBoarderLines) {
+			for (int i = 0; i < 3; i++) {
+				Line tl = new Line(t.vertices[i], t.vertices[i].sub(t.vertices[nextVertexIndex(i)]));
+				if (cross(l.direction, tl.direction) == 0)
+					break; //lines are parallel
+				double magL = cross(tl.start.sub(l.start), tl.direction)/cross(l.direction, tl.direction);
+				double magTl = cross(tl.start.sub(l.start), l.direction)/cross(l.direction, tl.direction);
+				if (isBetweenZeroAndOne(magL) && isBetweenZeroAndOne(magTl)) {
+					intersectionPoints.add(l.getPointOnLine(magL));
+				}
+			}
 		}
+		return intersectionPoints;
+	}
+	
+	private boolean isBetweenZeroAndOne(double d) {
+		return d <= 1 && d >= 0;
+	}
+
+	private double cross(GGVector a, GGVector b) {
+		return a.x*b.y - a.y*b.x;
 	}
 }
