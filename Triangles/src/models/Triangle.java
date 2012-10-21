@@ -3,7 +3,7 @@ import ch.aplu.jgamegrid.GGVector;
 
 public class Triangle {
 	
-	private GGVector[] vertices = new GGVector[3];
+	protected GGVector[] vertices = new GGVector[3];
 	
 	public Triangle(GGVector a, GGVector b, GGVector c) {
 		vertices[0] = a;

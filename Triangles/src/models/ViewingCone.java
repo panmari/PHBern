@@ -29,7 +29,15 @@ public class ViewingCone extends Triangle{
 					candidate.sub(standPoint).magnitude2() < best.sub(candidate).magnitude2())
 				best = candidate;
 		}
-			
 		return best;
+	}
+	
+	private LinkedList<GGVector> getIntersectionPoints(Triangle t) {
+		GGVector ab = standPoint.sub(vertices[1]);
+		GGVector ac = standPoint.sub(vertices[2]);
+		
+		for (int i = 0; i < 3; i++) {
+			
+		}
 	}
 }
