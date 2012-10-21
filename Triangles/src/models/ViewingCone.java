@@ -23,15 +23,20 @@ public class ViewingCone extends Triangle{
 		//TODO add special case, where intersection of viewing cone & obstacle is closest value
 		GGVector best = new GGVector(Double.MAX_VALUE, Double.MAX_VALUE);
 		for (Triangle t: obstacles) {
-			GGVector candidate = t.closestPointTo(standPoint);
-			//TODO: add isShorterThan for Vectors
-			if (liesInside(candidate) && 
-					candidate.sub(standPoint).magnitude2() < best.sub(candidate).magnitude2())
-				best = candidate;
+			LinkedList<GGVector> candidates = new LinkedList<GGVector>();
+			candidates.add(t.closestPointTo(standPoint));
+			candidates.addAll(getIntersectionPoints(t));
+			for (GGVector candidate: candidates)
+				if (liesInside(candidate) && isCloser(candidate, best))
+					best = candidate;
 		}
 		return best;
 	}
 	
+	private boolean isCloser(GGVector candidate, GGVector best) {
+		return candidate.sub(standPoint).magnitude2() < best.sub(candidate).magnitude2();
+	}
+
 	private LinkedList<GGVector> getIntersectionPoints(Triangle t) {
 		LinkedList<GGVector> intersectionPoints = new LinkedList<GGVector>();
 		Line[] viewBoarderLines = {	new Line(standPoint, standPoint.sub(vertices[1])),
