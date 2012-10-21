@@ -42,4 +42,8 @@ public class LineSegment {
 	private double cross(GGVector a, GGVector b) {
 		return a.x*b.y - a.y*b.x;
 	}
+	
+	public String toString() {
+		return "start: " + start + " dir: " + direction;
+	}
 }

@@ -8,11 +8,16 @@ public class ViewingCone extends Triangle{
 
 	private GGVector standPoint;
 	private LinkedList<Triangle> obstacles;
+	private LineSegment[] viewBoarderLines;
 	
 	public ViewingCone(GGVector a, GGVector b, GGVector c) {
 		super(a, b, c);
 		this.standPoint = a;
 		this.obstacles = new LinkedList<Triangle>();
+		this.viewBoarderLines = new LineSegment[2];
+		this.viewBoarderLines[0] = new LineSegment(standPoint, standPoint.sub(vertices[1]));
+		this.viewBoarderLines[1] = new LineSegment(standPoint, standPoint.sub(vertices[2]));
+
 	}
 	
 	public void addObstacle(Triangle t) {
@@ -20,7 +25,6 @@ public class ViewingCone extends Triangle{
 	}
 	
 	public GGVector getClosestObstacle() {
-		//TODO add special case, where intersection of viewing cone & obstacle is closest value
 		GGVector best = new GGVector(Double.MAX_VALUE, Double.MAX_VALUE);
 		for (Triangle t: obstacles) {
 			LinkedList<GGVector> candidates = new LinkedList<GGVector>();
@@ -39,11 +43,9 @@ public class ViewingCone extends Triangle{
 
 	private LinkedList<GGVector> getIntersectionPoints(Triangle t) {
 		LinkedList<GGVector> intersectionPoints = new LinkedList<GGVector>();
-		LineSegment[] viewBoarderLines = {	new LineSegment(standPoint, standPoint.sub(vertices[1])),
-											new LineSegment(standPoint, standPoint.sub(vertices[2])) };
 		for (LineSegment l: viewBoarderLines) {
 			for (int i = 0; i < 3; i++) {
-				LineSegment tl = new LineSegment(t.vertices[i], t.vertices[i].sub(t.vertices[nextVertexIndex(i)]));
+				LineSegment tl = new LineSegment(t.vertices[i], t.vertices[nextVertexIndex(i)].sub(t.vertices[i]));
 				GGVector p = l.getIntersectionPointWith(tl);
 				if (p != null)
 					intersectionPoints.add(p);
