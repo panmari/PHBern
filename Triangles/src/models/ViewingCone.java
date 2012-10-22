@@ -53,4 +53,10 @@ public class ViewingCone extends Triangle{
 		}
 		return intersectionPoints;
 	}
+	
+	public boolean liesInside(GGVector p) {
+		GGVector pNorm = toTriangleCoordinates(p);
+		// don't use magnitude2() or you'll have (more) rounding errors!
+		return pNorm.x >= 0 && pNorm.y >= 0 && pNorm.magnitude() <= 1; 
+	}
 }

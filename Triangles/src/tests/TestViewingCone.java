@@ -50,4 +50,18 @@ public class TestViewingCone {
 		assertEquals(.25, v.x, epsilon);
 		assertEquals(.25, v.y, epsilon);
 	}
+	
+	@Test
+	public void liesInsideShouldConsiderConeShape() {
+		Triangle t = new Triangle(new GGVector(0,0), new GGVector(1,0), new GGVector(0,1));
+		GGVector g = new GGVector(0.51, 0.51);
+		assertFalse(t.liesInside(g));
+		assertTrue(vc.liesInside(g));
+		g = new GGVector(Math.sqrt(1/2d), Math.sqrt(1/2d));
+		assertFalse(t.liesInside(g));
+		assertTrue(vc.liesInside(g));
+		g = new GGVector(Math.sqrt(1/2d) + 0.1, Math.sqrt(1/2d) + 0.1);
+		assertFalse(t.liesInside(g));
+		assertFalse(vc.liesInside(g));
+	}
 }
