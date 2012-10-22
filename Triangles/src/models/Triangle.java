@@ -30,6 +30,14 @@ public class Triangle {
 		return pNorm.x >= 0 && pNorm.y >= 0 && pNorm.x + pNorm.y <= 1 ;
 	}
 	
+	/**
+	 * Maps the given Point to the standard coordinate system 
+	 * (defined by the triangle around (0,0), (0,1), (1,0))
+	 * with the triangle defining the original coordinate system.
+	 * 
+	 * @param p
+	 * @return
+	 */
 	public GGVector toTriangleCoordinates(GGVector p) {
 		GGVector edgeOne = vertices[1].sub(vertices[0]);
 		GGVector edgeTwo = vertices[2].sub(vertices[0]);

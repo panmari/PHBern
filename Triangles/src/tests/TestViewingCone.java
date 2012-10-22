@@ -52,6 +52,14 @@ public class TestViewingCone {
 	}
 	
 	@Test
+	public void shouldConsiderIfNotInside() {
+		Triangle t = new Triangle(new GGVector(-1, -.5), new GGVector(-1, 5), new GGVector(-5, 1));
+		vc.addObstacle(t);
+		GGVector v = vc.getClosestObstacle();		
+		assertNull(v);
+	}
+	
+	@Test
 	public void liesInsideShouldConsiderConeShape() {
 		Triangle t = new Triangle(new GGVector(0,0), new GGVector(1,0), new GGVector(0,1));
 		GGVector g = new GGVector(0.51, 0.51);

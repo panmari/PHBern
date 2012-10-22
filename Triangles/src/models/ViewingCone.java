@@ -15,8 +15,8 @@ public class ViewingCone extends Triangle{
 		this.standPoint = a;
 		this.obstacles = new LinkedList<Triangle>();
 		this.viewBoarderLines = new LineSegment[2];
-		this.viewBoarderLines[0] = new LineSegment(standPoint, standPoint.sub(vertices[1]));
-		this.viewBoarderLines[1] = new LineSegment(standPoint, standPoint.sub(vertices[2]));
+		this.viewBoarderLines[0] = new LineSegment(standPoint, vertices[1].sub(standPoint));
+		this.viewBoarderLines[1] = new LineSegment(standPoint, vertices[2].sub(standPoint));
 
 	}
 	
@@ -24,8 +24,13 @@ public class ViewingCone extends Triangle{
 		obstacles.add(t);
 	}
 	
+	/**
+	 * Returns closest point of any obstacles. Returns null if there is no
+	 * obstacle visible. 
+	 * @return
+	 */
 	public GGVector getClosestObstacle() {
-		GGVector best = new GGVector(Double.MAX_VALUE, Double.MAX_VALUE);
+		GGVector best = null;
 		for (Triangle t: obstacles) {
 			LinkedList<GGVector> candidates = new LinkedList<GGVector>();
 			candidates.add(t.closestPointTo(standPoint));
@@ -38,6 +43,8 @@ public class ViewingCone extends Triangle{
 	}
 	
 	private boolean isCloser(GGVector candidate, GGVector best) {
+		if (best == null) 
+			return true;
 		return candidate.sub(standPoint).magnitude2() < best.sub(candidate).magnitude2();
 	}
 
