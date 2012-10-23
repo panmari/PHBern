@@ -16,7 +16,7 @@ public class PerformanceTest {
 
 	private ViewingCone vc;
 	private Random rand;
-	private final boolean mute = false;
+	private final boolean mute = true;
 
 	@Before
 	public void setUp() throws Exception {
@@ -31,6 +31,23 @@ public class PerformanceTest {
 	public void addHugeLotOfTriangles() {
 		Triangle t;
 		for (int i = 0; i < 1000000; i++) {
+			t = new Triangle(new GGVector(rand.nextDouble(), rand.nextDouble()),
+					new GGVector(rand.nextDouble(), rand.nextDouble()),
+					new GGVector(rand.nextDouble(), rand.nextDouble()));
+			vc.addObstacle(t);
+		}
+		GGVector v = vc.getClosestObstacle();
+		assertNotNull(v);
+		print(v);
+	}
+	
+	/**
+	 * This takes 0.008 seconds for a ten thousand triangles
+	 */
+	@Test
+	public void addReasonableAmountOfTriangles() {
+		Triangle t;
+		for (int i = 0; i < 10000; i++) {
 			t = new Triangle(new GGVector(rand.nextDouble(), rand.nextDouble()),
 					new GGVector(rand.nextDouble(), rand.nextDouble()),
 					new GGVector(rand.nextDouble(), rand.nextDouble()));
