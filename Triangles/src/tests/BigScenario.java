@@ -16,6 +16,10 @@ public class BigScenario {
 	private Triangle obstacle1, obstacle2, obstacle3;
 	private double epsilon = 0.01;
 
+	/**
+	 * See bigScenario.ggb for the setting.
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		vc = new ViewingCone(new GGVector(6.05, 3.45), new GGVector(3.23, 1.67), Math.PI/3);
