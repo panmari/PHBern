@@ -10,9 +10,15 @@ public class ViewingCone extends Triangle{
 	private LinkedList<Triangle> obstacles;
 	private LineSegment[] viewBoarderLines;
 	
-	public ViewingCone(GGVector a, GGVector b, GGVector c) {
-		super(a, b, c);
-		this.standPoint = a;
+	/**
+	 * Creates a viewing cone located in standPoint
+	 * @param standPoint
+	 * @param b
+	 * @param c
+	 */
+	public ViewingCone(GGVector standPoint, GGVector b, GGVector c) {
+		super(standPoint, b, c);
+		this.standPoint = standPoint;
 		this.obstacles = new LinkedList<Triangle>();
 		this.viewBoarderLines = new LineSegment[2];
 		this.viewBoarderLines[0] = new LineSegment(standPoint, vertices[1].sub(standPoint));
@@ -20,6 +26,17 @@ public class ViewingCone extends Triangle{
 
 	}
 	
+	/**
+	 * Creates a viewing cone located at standPoint, looking into the direction of lookAtPoint,
+	 * lookAtPoint also beeing the furthest visible point. The cone extends to angle/2
+	 * to the left and angle/2 to the right of lookAtPoint.
+	 * </br>
+	 * Be aware that there may be problems with double precision when using this 
+	 * constructor. 
+	 * @param standPoint
+	 * @param lookAtPoint
+	 * @param angle
+	 */
 	public ViewingCone(GGVector standPoint, GGVector lookAtPoint, double angle) {
 		this(standPoint, 
 				makeCorner(standPoint, lookAtPoint, angle/2), 
@@ -79,5 +96,13 @@ public class ViewingCone extends Triangle{
 		GGVector pNorm = toTriangleCoordinates(p);
 		// don't use magnitude2() or you'll have (more) rounding errors!
 		return pNorm.x >= 0 && pNorm.y >= 0 && pNorm.magnitude() <= 1; 
+	}
+	
+	@Override
+	public String toString() {
+		String result = "ViewingCone around:";
+		for (GGVector v: vertices)
+			result += " " + v;
+		return result;
 	}
 }

@@ -66,7 +66,6 @@ public class TestViewingCone {
 		Triangle t = new Triangle(new GGVector(.5, .5), new GGVector(-1, -.9), new GGVector(-5, 1));
 		vc.addObstacle(t);
 		GGVector v = vc.getClosestObstacle();
-		System.out.println(v);
 		assertEquals(0, v.x, epsilon);
 		assertEquals(1/30f, v.y, epsilon);
 	}
@@ -87,7 +86,30 @@ public class TestViewingCone {
 	
 	@Test
 	public void testAlternativeConstructor() {
-		ViewingCone alternativeCons = new ViewingCone(new GGVector(0,0), new GGVector(1,1), Math.PI/4);
+		ViewingCone alternativeConstr = new ViewingCone(new GGVector(0,0), new GGVector(1,1), Math.PI/2);
+		GGVector[] vertices = alternativeConstr.getVertices();
 		
+		assertEquals(0, vertices[0].x, epsilon);
+		assertEquals(0, vertices[0].y, epsilon);
+		
+		assertEquals(0, vertices[1].x, epsilon);
+		assertEquals(Math.sqrt(2), vertices[1].y, epsilon);
+		
+		assertEquals(Math.sqrt(2), vertices[2].x, epsilon);
+		assertEquals(0, vertices[2].y, epsilon);
+	}
+	
+	@Test
+	public void testAlternativeAngle() {
+		ViewingCone alternativeConstr = new ViewingCone(new GGVector(0,0), new GGVector(0,1), Math.PI/3);
+		GGVector[] vertices = alternativeConstr.getVertices();
+		assertEquals(0, vertices[0].x, epsilon);
+		assertEquals(0, vertices[0].y, epsilon);
+		
+		assertEquals(-0.5, vertices[1].x, epsilon);
+		assertEquals(Math.sqrt(3/4d), vertices[1].y, epsilon);
+		
+		assertEquals(0.5, vertices[2].x, epsilon);
+		assertEquals(Math.sqrt(3/4d), vertices[2].y, epsilon);
 	}
 }
