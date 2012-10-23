@@ -35,7 +35,7 @@ public class ViewingCone extends Triangle{
 	 * constructor. 
 	 * @param standPoint
 	 * @param lookAtPoint
-	 * @param angle
+	 * @param angle in radian
 	 */
 	public ViewingCone(GGVector standPoint, GGVector lookAtPoint, double angle) {
 		this(standPoint, 
@@ -47,7 +47,7 @@ public class ViewingCone extends Triangle{
 			double d) {
 		GGVector corner = lookAtPoint.sub(standPoint);
 		corner.rotate(d);
-		corner.add(standPoint);
+		corner = corner.add(standPoint);
 		return corner;
 	}
 	
@@ -71,6 +71,18 @@ public class ViewingCone extends Triangle{
 					best = candidate;
 		}
 		return best;
+	}
+	/**
+	 * Returns the distance to the closest obstacle or
+	 *  -1 if there is no obstacle in the viewing cone.
+	 * @return
+	 */
+	public double getDistanceToClosestObstacle() {
+		GGVector obstaclePoint = getClosestObstacle();
+		if (obstaclePoint == null)
+			return -1;
+		GGVector fromSPtoOP = obstaclePoint.sub(standPoint);
+		return fromSPtoOP.magnitude();
 	}
 	
 	private boolean isCloser(GGVector candidate, GGVector best) {
