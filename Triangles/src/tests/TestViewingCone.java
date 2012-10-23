@@ -52,11 +52,23 @@ public class TestViewingCone {
 	}
 	
 	@Test
-	public void shouldConsiderIfNotInside() {
+	public void shouldNotConsiderIfNotInside() {
 		Triangle t = new Triangle(new GGVector(-1, -.5), new GGVector(-1, 5), new GGVector(-5, 1));
 		vc.addObstacle(t);
 		GGVector v = vc.getClosestObstacle();		
 		assertNull(v);
+	}
+	/**
+	 * see test_case files for proof
+	 */
+	@Test
+	public void shouldConsiderIntersectionPointIfClosest() {
+		Triangle t = new Triangle(new GGVector(.5, .5), new GGVector(-1, -.9), new GGVector(-5, 1));
+		vc.addObstacle(t);
+		GGVector v = vc.getClosestObstacle();
+		System.out.println(v);
+		assertEquals(0, v.x, epsilon);
+		assertEquals(1/30f, v.y, epsilon);
 	}
 	
 	@Test
@@ -71,5 +83,11 @@ public class TestViewingCone {
 		g = new GGVector(Math.sqrt(1/2d) + 0.1, Math.sqrt(1/2d) + 0.1);
 		assertFalse(t.liesInside(g));
 		assertFalse(vc.liesInside(g));
+	}
+	
+	@Test
+	public void testAlternativeConstructor() {
+		ViewingCone alternativeCons = new ViewingCone(new GGVector(0,0), new GGVector(1,1), Math.PI/4);
+		
 	}
 }

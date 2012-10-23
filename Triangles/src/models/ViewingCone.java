@@ -20,6 +20,20 @@ public class ViewingCone extends Triangle{
 
 	}
 	
+	public ViewingCone(GGVector standPoint, GGVector lookAtPoint, double angle) {
+		this(standPoint, 
+				makeCorner(standPoint, lookAtPoint, angle/2), 
+				makeCorner(standPoint, lookAtPoint, -angle/2));
+	}
+	
+	private static GGVector makeCorner(GGVector standPoint, GGVector lookAtPoint,
+			double d) {
+		GGVector corner = lookAtPoint.sub(standPoint);
+		corner.rotate(d);
+		corner.add(standPoint);
+		return corner;
+	}
+	
 	public void addObstacle(Triangle t) {
 		obstacles.add(t);
 	}
