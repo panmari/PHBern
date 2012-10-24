@@ -88,7 +88,7 @@ public class ViewingCone extends Triangle{
 	private boolean isCloser(GGVector candidate, GGVector best) {
 		if (best == null) 
 			return true;
-		return candidate.sub(standPoint).magnitude2() < best.sub(candidate).magnitude2();
+		return candidate.sub(standPoint).magnitude2() < best.sub(standPoint).magnitude2();
 	}
 
 	private LinkedList<GGVector> getIntersectionPoints(Triangle t) {
