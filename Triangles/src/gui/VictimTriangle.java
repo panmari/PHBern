@@ -36,13 +36,19 @@ public class VictimTriangle extends Actor {
 	}
 	
 	public void act() {
-		//lulz, do nothing
+		draw();
+	}
+	
+	public void setLocation(Location loc) {
+		GGVector[] vs = triangle.getVertices();
+		vs[0] = new GGVector(loc.x, loc.y);
+		vs[1] =	new GGVector(loc.x + 10, loc.y);
+		vs[2] =	new GGVector(loc.x, loc.y + 10);
 	}
 
 	private void draw() {
 		panel.setPaintColor(Color.green);
 		GGVector[] vs = triangle.getVertices();
-		Location loc = getLocation();
 		for (int i = 0; i < 3; i++) {
 			Point curr = Util.toPoint(vs[i]);
 			Point next = Util.toPoint(vs[(i + 1)%3]);
