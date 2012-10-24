@@ -13,21 +13,30 @@ public class VictimTriangle extends Actor {
 	
 	private Triangle triangle;
 	private GGPanel panel;
+	private Dalek dalek;
 
 	/**
 	 * No triangle shall be created without being enemy to the Dalek!
-	 * @param panel
+	 * @param exterminate
 	 * @param d
 	 */
-	public VictimTriangle(GGPanel panel, Dalek d) {
+	public VictimTriangle(Exterminate exterminate, Dalek d) {
 		super();
-		this.panel = panel;
-		this.triangle = Util.makeRandomTriangle();
-		d.addEnemy(triangle);
+		this.panel = exterminate.getPanel();
+		this.dalek = d;
 	}
 	
 	public void reset() {
+		Location loc = getLocation();
+		triangle = new Triangle(new GGVector(loc.x, loc.y),
+				new GGVector(loc.x + 10, loc.y),
+				new GGVector(loc.x, loc.y + 10));
+		dalek.addEnemy(triangle);
 		draw();
+	}
+	
+	public void act() {
+		//lulz, do nothing
 	}
 
 	private void draw() {
@@ -37,7 +46,7 @@ public class VictimTriangle extends Actor {
 		for (int i = 0; i < 3; i++) {
 			Point curr = Util.toPoint(vs[i]);
 			Point next = Util.toPoint(vs[(i + 1)%3]);
-			panel.drawLine(curr.x + loc.x, curr.y + loc.y, next.x + loc.x, next.y + loc.y );
+			panel.drawLine(curr.x, curr.y, next.x, next.y);
 		}
 	}
 }

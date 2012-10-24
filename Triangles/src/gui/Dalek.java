@@ -8,6 +8,7 @@ import models.Triangle;
 import models.ViewingCone;
 import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.GGPanel;
+import ch.aplu.jgamegrid.GGTextField;
 import ch.aplu.jgamegrid.GGVector;
 import ch.aplu.jgamegrid.Location;
 
@@ -19,12 +20,17 @@ import ch.aplu.jgamegrid.Location;
 public class Dalek extends Actor {
 
 	private ViewingCone vc;
-	private int sightDistance = 50;
-	private double sightAngle = 60;
+	private int sightDistance;
+	private double sightAngle;
 	private GGPanel panel;
+	private GGTextField text;
 
-	public Dalek(GGPanel panel) {
-		this.panel = panel;
+	public Dalek(Exterminate gg, int sightDistance, double sightAngle) {
+		this.sightDistance = sightDistance;
+		this.sightAngle = sightAngle;
+		this.panel = gg.getPanel();
+		text = new GGTextField(gg, new Location(10, 10), true);
+		text.show();
 	}
 	
 	public void reset() {
@@ -36,14 +42,24 @@ public class Dalek extends Actor {
 	}
 	
 	public void act() {
+		draw();
+		GGVector v = vc.getClosestObstacle();
+		if (v != null) {
+			panel.setPaintColor(Color.black);
+			panel.drawCircle(Util.toPoint(v), 5);
+		}
+		text.setText(v + ": "+ vc.getDistanceToClosestObstacle() );
+		
+	}
+
+	private void draw() {
 		panel.setPaintColor(Color.red);
 		GGVector[] vs = vc.getVertices();
-		System.out.println((getDirection() - sightAngle/2 + 360) % 360);
 		panel.drawArc(Util.toPoint(vs[0]), sightDistance, (getDirection() - sightAngle/2 + 360) % 360, sightAngle);
 		panel.drawLine(Util.toPoint(vs[0]), Util.toPoint(vs[1]));
 		panel.drawLine(Util.toPoint(vs[0]), Util.toPoint(vs[2]));
 	}
-
+	
 	public void addEnemy(Triangle t) {
 		vc.addObstacle(t);
 	}
