@@ -6,7 +6,6 @@ import ch.aplu.jgamegrid.GGVector;
 
 public class ViewingCone extends Triangle{
 
-	private GGVector standPoint;
 	private LinkedList<Triangle> obstacles;
 	private LineSegment[] viewBoarderLines;
 	
@@ -18,7 +17,6 @@ public class ViewingCone extends Triangle{
 	 */
 	public ViewingCone(GGVector standPoint, GGVector b, GGVector c) {
 		super(standPoint, b, c);
-		this.standPoint = standPoint;
 		this.obstacles = new LinkedList<Triangle>();
 		this.viewBoarderLines = new LineSegment[2];
 		this.viewBoarderLines[0] = new LineSegment(standPoint, vertices[1].sub(standPoint));
@@ -64,7 +62,7 @@ public class ViewingCone extends Triangle{
 		GGVector best = null;
 		for (Triangle t: obstacles) {
 			LinkedList<GGVector> candidates = new LinkedList<GGVector>();
-			candidates.add(t.closestPointTo(standPoint));
+			candidates.add(t.closestPointTo(getStandPoint()));
 			candidates.addAll(getIntersectionPoints(t));
 			for (GGVector candidate: candidates)
 				if (liesInside(candidate) && isCloser(candidate, best))
@@ -81,14 +79,14 @@ public class ViewingCone extends Triangle{
 		GGVector obstaclePoint = getClosestObstacle();
 		if (obstaclePoint == null)
 			return -1;
-		GGVector fromSPtoOP = obstaclePoint.sub(standPoint);
+		GGVector fromSPtoOP = obstaclePoint.sub(getStandPoint());
 		return fromSPtoOP.magnitude();
 	}
 	
 	private boolean isCloser(GGVector candidate, GGVector best) {
 		if (best == null) 
 			return true;
-		return candidate.sub(standPoint).magnitude2() < best.sub(standPoint).magnitude2();
+		return candidate.sub(getStandPoint()).magnitude2() < best.sub(getStandPoint()).magnitude2();
 	}
 
 	private LinkedList<GGVector> getIntersectionPoints(Triangle t) {
@@ -116,5 +114,9 @@ public class ViewingCone extends Triangle{
 		for (GGVector v: vertices)
 			result += " " + v;
 		return result;
+	}
+	
+	public GGVector getStandPoint() {
+		return vertices[0];
 	}
 }

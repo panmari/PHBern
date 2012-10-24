@@ -29,8 +29,8 @@ public class VictimTriangle extends Actor {
 	public void reset() {
 		Location loc = getLocation();
 		triangle = new Triangle(new GGVector(loc.x, loc.y),
-				new GGVector(loc.x + 10, loc.y),
-				new GGVector(loc.x, loc.y + 10));
+				new GGVector(loc.x + 20, loc.y),
+				new GGVector(loc.x, loc.y + 20));
 		dalek.addEnemy(triangle);
 		draw();
 	}
@@ -42,8 +42,8 @@ public class VictimTriangle extends Actor {
 	public void setLocation(Location loc) {
 		GGVector[] vs = triangle.getVertices();
 		vs[0] = new GGVector(loc.x, loc.y);
-		vs[1] =	new GGVector(loc.x + 10, loc.y);
-		vs[2] =	new GGVector(loc.x, loc.y + 10);
+		vs[1] =	new GGVector(loc.x + 20, loc.y);
+		vs[2] =	new GGVector(loc.x, loc.y + 20);
 	}
 
 	private void draw() {

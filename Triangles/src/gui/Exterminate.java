@@ -16,11 +16,13 @@ public class Exterminate extends GameGrid implements GGMouseListener {
 		dalek = new Dalek(this, 100, 90);
 		vt = new VictimTriangle(this, dalek);
 		addActor(dalek, new Location(200, 200));
+		addActor(new Cleaner(getPanel()), new Location(-10, -10));
 		show();
 		this.addMouseListener(this, GGMouse.lPress | GGMouse.rPress);
 		addActor(vt, new Location (-20, -20));
 		reset();
 		setSimulationPeriod(30);
+		setActOrder(Cleaner.class);
 		doRun();
 	}
 
@@ -32,7 +34,6 @@ public class Exterminate extends GameGrid implements GGMouseListener {
 
 	@Override
 	public boolean mouseEvent(GGMouse mouse) {
-		reset();
 		switch (mouse.getEvent()) {
 		case GGMouse.lPress:
 			vt.setLocation(new Location(mouse.getX(), mouse.getY()));
@@ -40,12 +41,9 @@ public class Exterminate extends GameGrid implements GGMouseListener {
 		case GGMouse.rPress:
 			vt = new VictimTriangle(this, dalek);
 			addActor(vt, new Location(mouse.getX(), mouse.getY()));
+			setActOrder(Cleaner.class);
 			break;
 		}
 		return true;
-	}
-	
-	public void reset() {
-		getPanel().clear(Color.white);
 	}
 }
