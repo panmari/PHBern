@@ -1,8 +1,6 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Point;
-import java.awt.geom.Point2D;
 
 import models.Triangle;
 import models.ViewingCone;
@@ -14,8 +12,9 @@ import ch.aplu.jgamegrid.Location;
 
 /**
  * This class represents a Dalek, the evil in its most robotic form.
- * Still, a Dalek only consists of it's viewing cone (and lots of EXTERMINATEEE)
- *
+ * Still, a Dalek only consists of it's viewing cone and some drawing methods.
+ * (and lots of EXTERMINATEEE)
+ * 
  */
 public class Dalek extends Actor {
 
@@ -24,13 +23,14 @@ public class Dalek extends Actor {
 	private double sightAngle;
 	private GGPanel panel;
 	private GGTextField text;
-	private GGVector direction;
-
+	private GGVector walkDirection;
+	
 	public Dalek(Exterminate gg, int sightDistance, double sightAngle) {
 		this.sightDistance = sightDistance;
 		this.sightAngle = sightAngle;
 		this.panel = gg.getPanel();
-		this.direction = new GGVector(0,1);
+		this.walkDirection = new GGVector(0,2); //set to null vector if you want it to stand still
+		walkDirection.rotate(Math.random()*360);
 		text = new GGTextField(gg, new Location(10, 10), true);
 		text.show();
 	}
@@ -44,16 +44,24 @@ public class Dalek extends Actor {
 	}
 	
 	public void act() {
-		GGVector[] vs = vc.getVertices();
-		for (int i = 0; i < 3; i++)
-			vs[i] = vs[i].add(direction);
-		direction.rotate(Math.PI/30);
+		GGVector lap = vc.getLookAtPoint();
+		lap = lap.sub(vc.getStandPoint());
+		lap.rotate(Math.PI/30);
+		double dir = Math.toDegrees(Math.acos(new GGVector(1,0).dot(lap)/lap.magnitude()));
+		if (lap.y > 0)
+			dir = 360 - dir;
+		setDirection(dir); //for drawing later on
+		lap = lap.add(vc.getStandPoint()).add(walkDirection);
+		vc.setStandPoint(vc.getStandPoint().add(walkDirection));
+		vc.setLookAtPoint(lap);
+		walkDirection.rotate(Math.random()*10 - 5);
 		draw();
 	}
 
 	private void draw() {
 		panel.setPaintColor(Color.red);
 		GGVector[] vs = vc.getVertices();
+		panel.drawCircle(Util.toPoint(vs[0]), 2);
 		panel.drawArc(Util.toPoint(vs[0]), sightDistance, (getDirection() - sightAngle/2 + 360) % 360, sightAngle);
 		panel.drawLine(Util.toPoint(vs[0]), Util.toPoint(vs[1]));
 		panel.drawLine(Util.toPoint(vs[0]), Util.toPoint(vs[2]));

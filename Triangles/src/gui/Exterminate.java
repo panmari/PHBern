@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.Color;
-
 import ch.aplu.jgamegrid.GGMouse;
 import ch.aplu.jgamegrid.GGMouseListener;
 import ch.aplu.jgamegrid.GameGrid;

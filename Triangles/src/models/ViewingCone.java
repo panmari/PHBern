@@ -8,6 +8,8 @@ public class ViewingCone extends Triangle{
 
 	private LinkedList<Triangle> obstacles;
 	private LineSegment[] viewBoarderLines;
+	private GGVector lookAtPoint;
+	private double angle;
 	
 	/**
 	 * Creates a viewing cone located in standPoint
@@ -39,6 +41,8 @@ public class ViewingCone extends Triangle{
 		this(standPoint, 
 				makeCorner(standPoint, lookAtPoint, angle/2), 
 				makeCorner(standPoint, lookAtPoint, -angle/2));
+		this.lookAtPoint = lookAtPoint;
+		this.angle = angle;
 	}
 	
 	private static GGVector makeCorner(GGVector standPoint, GGVector lookAtPoint,
@@ -118,5 +122,19 @@ public class ViewingCone extends Triangle{
 	
 	public GGVector getStandPoint() {
 		return vertices[0];
+	}
+	
+	public void setStandPoint(GGVector standPoint) {
+		vertices[0] = standPoint;
+	}
+	
+	public GGVector getLookAtPoint() {
+		return lookAtPoint;
+	}
+	
+	public void setLookAtPoint(GGVector lookAtPoint) {
+		this.lookAtPoint = lookAtPoint;
+		vertices[1] = makeCorner(getStandPoint(), lookAtPoint, angle/2);
+		vertices[2] = makeCorner(getStandPoint(), lookAtPoint, -angle/2);
 	}
 }
