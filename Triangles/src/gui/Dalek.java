@@ -9,12 +9,16 @@ import ch.aplu.jgamegrid.GGPanel;
 import ch.aplu.jgamegrid.GGTextField;
 import ch.aplu.jgamegrid.GGVector;
 import ch.aplu.jgamegrid.Location;
+import ch.aplu.jgamegrid.TextActor;
 
 /**
  * This class represents a Dalek, the evil in its most robotic form.
  * Still, a Dalek only consists of it's viewing cone and some drawing methods.
  * (and lots of EXTERMINATEEE)
- * 
+ * </br>
+ * When a Dalek doesn't see any enimies, it walks around aimlessly. Once it sees an
+ * Enemy, it purchases it merciless. The condition, that a Dalek has to rotate
+ * continuously is only a slight hindrance for the mighty race of the Dalek!
  */
 public class Dalek extends Actor {
 
@@ -24,17 +28,29 @@ public class Dalek extends Actor {
 	private GGPanel panel;
 	private GGTextField text;
 	private GGVector walkDirection;
+	private TextActor EXTERMINATE;
 	
+	/**
+	 * @param gg
+	 * @param sightDistance
+	 * @param sightAngle
+	 */
 	public Dalek(Exterminate gg, int sightDistance, double sightAngle) {
 		this.sightDistance = sightDistance;
 		this.sightAngle = sightAngle;
 		this.panel = gg.getPanel();
-		this.walkDirection = new GGVector(0,2); //set to null vector if you want it to stand still
-		walkDirection.rotate(Math.random()*360);
+		setRandomWalkDirection();
+		EXTERMINATE = new TextActor("EXTERMINATE!!!");
+		gg.addActor(EXTERMINATE, new Location(300, 10));
 		text = new GGTextField(gg, new Location(10, 10), true);
 		text.show();
 	}
 	
+	private void setRandomWalkDirection() {
+		this.walkDirection = new GGVector(0,2); //set to null vector if you want it to stand still
+		walkDirection.rotate(Math.random()*360);
+	}
+
 	public void reset() {
 		GGVector standPoint = Util.toVector(getLocation());
 		GGVector lookAtPoint = new GGVector(sightDistance, 0);
@@ -70,11 +86,31 @@ public class Dalek extends Actor {
 		if (v != null) {
 			panel.setPaintColor(Color.black);
 			panel.drawCircle(Util.toPoint(v), 3);
+			GGVector dir = v.sub(vc.getStandPoint());
+			dir.normalize();
+			dir = dir.mult(2);
+			walkDirection = dir;
+			EXTERMINATE.show();
+		} else  {
+			setRandomWalkDirection();
+			EXTERMINATE.hide();
 		}
 		text.setText(v + ": "+ vc.getDistanceToClosestObstacle() );
 	}
 	
 	public void addEnemy(Triangle t) {
 		vc.addObstacle(t);
+	}
+	
+	public Location getALocation() {
+		return Util.toLocation(vc.getStandPoint());
+	}
+
+	public GGVector getStandPoint() {
+		return vc.getStandPoint();
+	}
+
+	public boolean removeEnemy(Triangle t) {
+		return vc.removeObstacle(t);
 	}
 }

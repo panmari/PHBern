@@ -137,4 +137,8 @@ public class ViewingCone extends Triangle{
 		vertices[1] = makeCorner(getStandPoint(), lookAtPoint, angle/2);
 		vertices[2] = makeCorner(getStandPoint(), lookAtPoint, -angle/2);
 	}
+
+	public boolean removeObstacle(Triangle t) {
+		return obstacles.remove(t);
+	}
 }

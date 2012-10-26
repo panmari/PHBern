@@ -14,6 +14,7 @@ public class VictimTriangle extends Actor {
 	private Triangle triangle;
 	private GGPanel panel;
 	private Dalek dalek;
+	private boolean isDead = false;
 
 	/**
 	 * No triangle shall be created without being enemy to the Dalek!
@@ -36,6 +37,10 @@ public class VictimTriangle extends Actor {
 	}
 	
 	public void act() {
+		if (triangle.liesInside(dalek.getStandPoint())) {
+			isDead = true;
+			dalek.removeEnemy(triangle);
+		}
 		draw();
 	}
 	
@@ -47,7 +52,9 @@ public class VictimTriangle extends Actor {
 	}
 
 	private void draw() {
-		panel.setPaintColor(Color.green);
+		if (isDead)
+			panel.setPaintColor(Color.black);
+		else panel.setPaintColor(Color.green);
 		GGVector[] vs = triangle.getVertices();
 		for (int i = 0; i < 3; i++) {
 			Point curr = Util.toPoint(vs[i]);

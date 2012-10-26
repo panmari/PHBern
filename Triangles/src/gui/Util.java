@@ -23,4 +23,8 @@ public class Util {
 			vertices[i] = new GGVector(Math.random()*40, Math.random()*40);
 		return new Triangle(vertices[0], vertices[1], vertices[2]);
 	}
+
+	public static Location toLocation(GGVector v) {
+		return new Location((int)Math.round(v.x), (int)Math.round(v.y));
+	}
 }
