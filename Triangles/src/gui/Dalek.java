@@ -67,11 +67,32 @@ public class Dalek extends Actor {
 		if (lap.y > 0)
 			dir = 360 - dir;
 		setDirection(dir); //for drawing later on
+		//walkDirection = new GGVector(0,0); //UNCOMMENT to make it stand still
 		lap = lap.add(vc.getStandPoint()).add(walkDirection);
 		vc.setStandPoint(vc.getStandPoint().add(walkDirection));
 		vc.setLookAtPoint(lap);
 		walkDirection.rotate(Math.random()*10 - 5);
+		
+		analyzeSurroundings();
 		draw();
+	}
+
+	/**
+	 * Analyzes the objects in the viewing cone if there
+	 * are any living victimTriangles, it will be hunted down!
+	 */
+	private void analyzeSurroundings() {
+		GGVector v = vc.getClosestObstacle();
+		if (v != null) {
+			panel.setPaintColor(Color.black);
+			panel.drawCircle(Util.toPoint(v), 3);
+			chaseVictim(v);
+			EXTERMINATE.show();
+		} else  {
+			setRandomWalkDirection();
+			EXTERMINATE.hide();
+		}
+		text.setText(v + ": "+ vc.getDistanceToClosestObstacle() );
 	}
 
 	private void draw() {
@@ -81,23 +102,15 @@ public class Dalek extends Actor {
 		panel.drawArc(Util.toPoint(vs[0]), sightDistance, (getDirection() - sightAngle/2 + 360) % 360, sightAngle);
 		panel.drawLine(Util.toPoint(vs[0]), Util.toPoint(vs[1]));
 		panel.drawLine(Util.toPoint(vs[0]), Util.toPoint(vs[2]));
-		
-		GGVector v = vc.getClosestObstacle();
-		if (v != null) {
-			panel.setPaintColor(Color.black);
-			panel.drawCircle(Util.toPoint(v), 3);
-			GGVector dir = v.sub(vc.getStandPoint());
-			dir.normalize();
-			dir = dir.mult(2);
-			walkDirection = dir;
-			EXTERMINATE.show();
-		} else  {
-			setRandomWalkDirection();
-			EXTERMINATE.hide();
-		}
-		text.setText(v + ": "+ vc.getDistanceToClosestObstacle() );
 	}
 	
+	private void chaseVictim(GGVector v) {
+		GGVector dir = v.sub(vc.getStandPoint());
+		dir.normalize();
+		dir = dir.mult(2);
+		walkDirection = dir;
+	}
+
 	public void addEnemy(Triangle t) {
 		vc.addObstacle(t);
 	}
