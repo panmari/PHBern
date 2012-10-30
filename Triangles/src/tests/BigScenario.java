@@ -17,6 +17,7 @@ public class BigScenario {
 	private Triangle obstacle1, obstacle2, obstacle3;
 	private Circle obstacle4;
 	private double epsilon = 0.01;
+	private Circle obstacle5;
 
 	/**
 	 * See bigScenario.ggb for the setting.
@@ -25,10 +26,11 @@ public class BigScenario {
 	@Before
 	public void setUp() throws Exception {
 		vc = new ViewingCone(new GGVector(6.05, 3.45), new GGVector(3.23, 1.67), Math.PI/3);
-		obstacle1 = new Triangle(new GGVector(5.27, 4.79), new GGVector(3.53, 3.67), new GGVector(1.6, 2.52));
+		obstacle1 = new Triangle(new GGVector(5.27, 4.79), new GGVector(3.53, 3.67), new GGVector(2.72, 4.54));
 		obstacle2 = new Triangle(new GGVector(1.6, 2.52), new GGVector(3.11, 2.61), new GGVector(1.99, 1.35));
 		obstacle3 = new Triangle(new GGVector(4.99, 2.24), new GGVector(6.75, 3.03), new GGVector(5.43, 1.21));
 		obstacle4 = new Circle(new GGVector(3.89, 1.66), 0.56);
+		obstacle5 = new Circle(new GGVector(4.54, 3.89), 0.69);
 	}
 	
 	@Test
@@ -90,7 +92,7 @@ public class BigScenario {
 	}
 	
 	@Test
-	public void addCircleObstacle() {
+	public void addCircleWithClosestPointInside() {
 		vc.addObstacle(obstacle4);
 		GGVector v = vc.getClosestObstacle();
 		assertNotNull(v);
@@ -98,6 +100,17 @@ public class BigScenario {
 		assertEquals(4.32, v.x, epsilon);
 		assertEquals(2.02, v.y, epsilon);
 		assertEquals(2.24, vc.getDistanceToClosestObstacle(), epsilon);
+	}
+	
+	@Test
+	public void addCircleWithClosestPointIntersecting() {
+		vc.addObstacle(obstacle5);
+		GGVector v = vc.getClosestObstacle();
+		assertNotNull(v);
+		System.out.println(v);
+		assertEquals(5.03, v.x, epsilon);
+		assertEquals(3.41, v.y, epsilon);
+		assertEquals(1.02, vc.getDistanceToClosestObstacle(), epsilon);
 	}
 
 }

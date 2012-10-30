@@ -34,8 +34,26 @@ public class Circle implements IObstacle {
 		LineSegment[] viewBoarderLines) {
 		LinkedList<GGVector> intersectionPoints = new LinkedList<GGVector>();
 		for (LineSegment l: viewBoarderLines) {
-			//TODO: get Intersection points
+			GGVector startCentered = l.start.sub(centre);
+			double a = l.direction.magnitude2();
+			double b = 2*startCentered.dot(l.direction);
+			double c = startCentered.magnitude2() - radius*radius;
+			double discriminant = b*b - 4*a*c;
+			if (discriminant < 0)
+				continue; //only imaginary solutions
+			else {
+				int[] plusminus = {-1, 1};
+				for (int i: plusminus) {
+					double t = (-b + i*Math.sqrt(discriminant))/(2*a);
+					if (t >= 0 && t <= 1)
+						intersectionPoints.add(l.getPointOnLineSegment(t));
+				}
+			}
 		}
 		return intersectionPoints;
+	}
+	
+	public String toString() {
+		return "Circle around " + centre + ", r=" + radius;
 	}
 }

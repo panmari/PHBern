@@ -1,6 +1,7 @@
 package models;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import ch.aplu.jgamegrid.GGVector;
 
@@ -65,12 +66,14 @@ public class ViewingCone extends Triangle{
 	public GGVector getClosestObstacle() {
 		GGVector best = null;
 		for (IObstacle o: obstacles) {
-			LinkedList<GGVector> candidates = new LinkedList<GGVector>();
-			candidates.add(o.closestPointTo(getStandPoint()));
-			candidates.addAll(o.getIntersectionPointsWith(viewBoarderLines));
-			for (GGVector candidate: candidates)
-				if (liesInside(candidate) && isCloser(candidate, best))
-					best = candidate;
+			GGVector closest = o.closestPointTo(getStandPoint());
+			if (liesInside(closest) && isCloser(closest, best))
+				best = closest; //not possible that intersecting point is closer
+			else {
+				for (GGVector candidate: o.getIntersectionPointsWith(viewBoarderLines))
+					if (isCloser(candidate, best))
+						best = candidate;
+			}
 		}
 		return best;
 	}

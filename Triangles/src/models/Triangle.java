@@ -93,7 +93,7 @@ public class Triangle implements IObstacle {
 		LineSegment[] viewBoarderLines) {
 		LinkedList<GGVector> intersectionPoints = new LinkedList<GGVector>();
 		for (LineSegment l: viewBoarderLines) {
-			for (int i = 0; i < 3; i++) { //TODO: refactor to IObstacle
+			for (int i = 0; i < 3; i++) { 
 				LineSegment tl = new LineSegment(vertices[i], vertices[nextVertexIndex(i)].sub(vertices[i]));
 				GGVector p = l.getIntersectionPointWith(tl);
 				if (p != null)
