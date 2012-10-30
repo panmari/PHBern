@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Point;
 
+import models.IObstacle;
 import models.Triangle;
 
 import ch.aplu.jgamegrid.GGVector;
@@ -17,7 +18,7 @@ public class Util {
 		return new Point((int)Math.round(v.x), (int)Math.round(v.y));
 	}
 
-	public static Triangle makeRandomTriangle() {
+	public static IObstacle makeRandomTriangle() {
 		GGVector[] vertices = new GGVector[3];
 		for (int i = 0; i < 3; i++)
 			vertices[i] = new GGVector(Math.random()*40, Math.random()*40);

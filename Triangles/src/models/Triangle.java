@@ -1,7 +1,10 @@
 package models;
+import java.util.LinkedList;
+import java.util.List;
+
 import ch.aplu.jgamegrid.GGVector;
 
-public class Triangle {
+public class Triangle implements IObstacle {
 	
 	protected GGVector[] vertices = new GGVector[3];
 	
@@ -11,7 +14,7 @@ public class Triangle {
 		vertices[2] = c;
 	}
 	
-	public boolean liesInside(Triangle t) {
+	public boolean liesInside(IObstacle t) {
 		for (GGVector v: vertices) {
 			if (!liesInside(v))
 				return false;
@@ -19,12 +22,7 @@ public class Triangle {
 		return true;
 	}
 	
-	/**
-	 * idea: transform to standard coordinates, solve there easily
-	 * 
-	 * @param p
-	 * @return
-	 */
+	@Override
 	public boolean liesInside(GGVector p) {
 		GGVector pNorm = toTriangleCoordinates(p);
 		return pNorm.x >= 0 && pNorm.y >= 0 && pNorm.x + pNorm.y <= 1 ;
@@ -50,6 +48,10 @@ public class Triangle {
 		return new GGVector(x, y);
 	}
 	
+	/* (non-Javadoc)
+	 * @see models.IObstacle#closestPointTo(ch.aplu.jgamegrid.GGVector)
+	 */
+	@Override
 	public GGVector closestPointTo(GGVector p) {
 		//TODO: make iterator for points?
 		GGVector best = closestPointOfLineTo(vertices[0], vertices[nextVertexIndex(0)], p);
@@ -84,5 +86,20 @@ public class Triangle {
 	
 	public GGVector[] getVertices() {
 		return vertices;
+	}
+
+	@Override
+	public List<GGVector> getIntersectionPointsWith(
+		LineSegment[] viewBoarderLines) {
+		LinkedList<GGVector> intersectionPoints = new LinkedList<GGVector>();
+		for (LineSegment l: viewBoarderLines) {
+			for (int i = 0; i < 3; i++) { //TODO: refactor to IObstacle
+				LineSegment tl = new LineSegment(vertices[i], vertices[nextVertexIndex(i)].sub(vertices[i]));
+				GGVector p = l.getIntersectionPointWith(tl);
+				if (p != null)
+					intersectionPoints.add(p);
+			}
+		}
+		return intersectionPoints;
 	}
 }

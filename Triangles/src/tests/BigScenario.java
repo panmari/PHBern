@@ -2,6 +2,7 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import models.Circle;
 import models.Triangle;
 import models.ViewingCone;
 
@@ -14,6 +15,7 @@ public class BigScenario {
 
 	private ViewingCone vc;
 	private Triangle obstacle1, obstacle2, obstacle3;
+	private Circle obstacle4;
 	private double epsilon = 0.01;
 
 	/**
@@ -26,6 +28,7 @@ public class BigScenario {
 		obstacle1 = new Triangle(new GGVector(5.27, 4.79), new GGVector(3.53, 3.67), new GGVector(1.6, 2.52));
 		obstacle2 = new Triangle(new GGVector(1.6, 2.52), new GGVector(3.11, 2.61), new GGVector(1.99, 1.35));
 		obstacle3 = new Triangle(new GGVector(4.99, 2.24), new GGVector(6.75, 3.03), new GGVector(5.43, 1.21));
+		obstacle4 = new Circle(new GGVector(3.89, 1.66), 0.56);
 	}
 	
 	@Test
@@ -45,14 +48,14 @@ public class BigScenario {
 	@Test
 	public void noObstacle() {
 		assertNull(vc.getClosestObstacle());
-		assertEquals(-1, vc.getDistanceToClosestObstacle(), epsilon);
+		assertEquals(Float.NaN, vc.getDistanceToClosestObstacle(), epsilon);
 	}
 	
 	@Test
 	public void firstObstacle() {
 		vc.addObstacle(obstacle1);
 		assertNull(vc.getClosestObstacle());
-		assertEquals(-1, vc.getDistanceToClosestObstacle(), epsilon);
+		assertEquals(Float.NaN, vc.getDistanceToClosestObstacle(), epsilon);
 	}
 
 	@Test
@@ -84,6 +87,12 @@ public class BigScenario {
 		assertEquals(5.55, v.x, epsilon);
 		assertEquals(2.49, v.y, epsilon);
 		assertEquals(1.08, vc.getDistanceToClosestObstacle(), epsilon);
+	}
+	
+	@Test
+	public void addCircleObstacle() {
+		vc.addObstacle(obstacle4);
+		
 	}
 
 }

@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 
+import models.IObstacle;
 import models.Triangle;
 import models.ViewingCone;
 import ch.aplu.jgamegrid.Actor;
@@ -123,7 +124,7 @@ public class Dalek extends Actor {
 		return vc.getStandPoint();
 	}
 
-	public boolean removeEnemy(Triangle t) {
+	public boolean removeEnemy(IObstacle t) {
 		return vc.removeObstacle(t);
 	}
 }
