@@ -8,7 +8,7 @@ import ch.aplu.jgamegrid.Location;
 public class Exterminate extends GameGrid implements GGMouseListener {
 
 	private Dalek dalek;
-	private VictimTriangle vt;
+	private AbstractVictim vt;
 	public Exterminate() {
 		super(500, 500, 1, false);
 		dalek = new Dalek(this, 100, 90);
@@ -34,7 +34,9 @@ public class Exterminate extends GameGrid implements GGMouseListener {
 	public boolean mouseEvent(GGMouse mouse) {
 		switch (mouse.getEvent()) {
 		case GGMouse.lPress:
-			vt.setLocation(new Location(mouse.getX(), mouse.getY()));
+			vt = new VictimCircle(this, dalek);
+			addActor(vt, new Location(mouse.getX(), mouse.getY()));
+			setActOrder(Cleaner.class);
 			break;
 		case GGMouse.rPress:
 			vt = new VictimTriangle(this, dalek);

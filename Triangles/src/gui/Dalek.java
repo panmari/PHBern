@@ -112,8 +112,8 @@ public class Dalek extends Actor {
 		walkDirection = dir;
 	}
 
-	public void addEnemy(Triangle t) {
-		vc.addObstacle(t);
+	public void addEnemy(IObstacle o) {
+		vc.addObstacle(o);
 	}
 	
 	public Location getALocation() {

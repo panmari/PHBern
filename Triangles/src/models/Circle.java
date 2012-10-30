@@ -7,25 +7,25 @@ import ch.aplu.jgamegrid.GGVector;
 
 public class Circle implements IObstacle {
 
-	private GGVector centre;
+	private GGVector center;
 	private double radius;
 
 	public Circle(GGVector centre, double radius) {
-		this.centre = centre;
+		this.center = centre;
 		this.radius = radius;
 	}
 
 	@Override
 	public GGVector closestPointTo(GGVector p) {
-		GGVector between = p.sub(centre);
+		GGVector between = p.sub(center);
 		between.normalize();
 		between = between.mult(radius);
-		return centre.add(between);
+		return center.add(between);
 	}
 
 	@Override
 	public boolean liesInside(GGVector p) {
-		GGVector v = p.sub(centre);
+		GGVector v = p.sub(center);
 		return v.magnitude() < radius;
 	}
 
@@ -34,7 +34,7 @@ public class Circle implements IObstacle {
 		LineSegment[] viewBoarderLines) {
 		LinkedList<GGVector> intersectionPoints = new LinkedList<GGVector>();
 		for (LineSegment l: viewBoarderLines) {
-			GGVector startCentered = l.start.sub(centre);
+			GGVector startCentered = l.start.sub(center);
 			double a = l.direction.magnitude2();
 			double b = 2*startCentered.dot(l.direction);
 			double c = startCentered.magnitude2() - radius*radius;
@@ -54,6 +54,14 @@ public class Circle implements IObstacle {
 	}
 	
 	public String toString() {
-		return "Circle around " + centre + ", r=" + radius;
+		return "Circle around " + center + ", r=" + radius;
+	}
+
+	public GGVector getCenter() {
+		return center;
+	}
+
+	public void setCenter(GGVector c) {
+		this.center = c;
 	}
 }

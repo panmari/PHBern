@@ -9,53 +9,38 @@ import ch.aplu.jgamegrid.GGPanel;
 import ch.aplu.jgamegrid.GGVector;
 import ch.aplu.jgamegrid.Location;
 
-public class VictimTriangle extends Actor {
-	
-	private Triangle triangle;
-	private GGPanel panel;
-	private Dalek dalek;
-	private boolean isDead = false;
+public class VictimTriangle extends AbstractVictim {
 
 	/**
 	 * No triangle shall be created without being enemy to the Dalek!
 	 * @param exterminate
 	 * @param d
 	 */
-	public VictimTriangle(Exterminate exterminate, Dalek d) {
-		super();
-		this.panel = exterminate.getPanel();
-		this.dalek = d;
+	public VictimTriangle(Exterminate gg, Dalek d) {
+		super(gg, d);
 	}
 	
 	public void reset() {
 		Location loc = getLocation();
-		triangle = new Triangle(new GGVector(loc.x, loc.y),
+		shape = new Triangle(new GGVector(loc.x, loc.y),
 				new GGVector(loc.x + 20, loc.y),
 				new GGVector(loc.x, loc.y + 20));
-		dalek.addEnemy(triangle);
-		draw();
-	}
-	
-	public void act() {
-		if (triangle.liesInside(dalek.getStandPoint())) {
-			isDead = true;
-			dalek.removeEnemy(triangle);
-		}
+		dalek.addEnemy(shape);
 		draw();
 	}
 	
 	public void setLocation(Location loc) {
-		GGVector[] vs = triangle.getVertices();
+		GGVector[] vs = ((Triangle) shape).getVertices();
 		vs[0] = new GGVector(loc.x, loc.y);
 		vs[1] =	new GGVector(loc.x + 20, loc.y);
 		vs[2] =	new GGVector(loc.x, loc.y + 20);
 	}
 
-	private void draw() {
+	protected void draw() {
 		if (isDead)
 			panel.setPaintColor(Color.black);
 		else panel.setPaintColor(Color.green);
-		GGVector[] vs = triangle.getVertices();
+		GGVector[] vs = ((Triangle) shape).getVertices();
 		for (int i = 0; i < 3; i++) {
 			Point curr = Util.toPoint(vs[i]);
 			Point next = Util.toPoint(vs[(i + 1)%3]);
