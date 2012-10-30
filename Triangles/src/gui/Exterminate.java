@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 import ch.aplu.jgamegrid.GGKeyListener;
@@ -14,22 +15,28 @@ public class Exterminate extends GameGrid implements GGMouseListener, GGKeyListe
 	private AbstractVictim vTriangle, vCircle;
 	public Exterminate() {
 		super(500, 500, 1, false);
+		this.setBgColor(Color.white);
 		dalek = new Dalek(this, 100, 90);
 		addActor(dalek, new Location(200, 200));
 		addActor(new Cleaner(getPanel()), new Location(-10, -10));
 		show();
 		this.addMouseListener(this, GGMouse.lPress | GGMouse.rPress);
 		this.addKeyListener(this);
-		vTriangle = new VictimTriangle(this, dalek);
-		addActor(vTriangle, new Location(-20, -20));
-		vCircle = new VictimCircle(this, dalek);
-		addActor(vCircle, new Location(-20, -20));
+		makeVictims();
 		setSimulationPeriod(30);
-		setActOrder(Cleaner.class);
 		doRun();
 	}
 
 	
+	private void makeVictims() {
+		vTriangle = new VictimTriangle(this, dalek);
+		addActor(vTriangle, new Location(-20, -20));
+		vCircle = new VictimCircle(this, dalek);
+		addActor(vCircle, new Location(-20, -20));
+		setActOrder(Cleaner.class);
+	}
+
+
 	public static void main(String[] args) {
 		new Exterminate();
 	}

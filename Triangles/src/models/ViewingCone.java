@@ -13,10 +13,7 @@ public class ViewingCone extends Triangle{
 	private double angle;
 	
 	/**
-	 * Creates a viewing cone located in standPoint
-	 * @param standPoint
-	 * @param b
-	 * @param c
+	 * This constructor is mainly for testing, for real use see the other constructor
 	 */
 	public ViewingCone(GGVector standPoint, GGVector b, GGVector c) {
 		super(standPoint, b, c);
@@ -79,13 +76,13 @@ public class ViewingCone extends Triangle{
 	}
 	/**
 	 * Returns the distance to the closest obstacle or
-	 *  Float.NaN if there is no obstacle in the viewing cone.
+	 *  Double.NaN if there is no obstacle in the viewing cone.
 	 * @return
 	 */
 	public double getDistanceToClosestObstacle() {
 		GGVector obstaclePoint = getClosestObstacle();
 		if (obstaclePoint == null)
-			return Float.NaN;
+			return Double.NaN;
 		GGVector fromSPtoOP = obstaclePoint.sub(getStandPoint());
 		return fromSPtoOP.magnitude();
 	}

@@ -4,6 +4,10 @@ import models.IObstacle;
 import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.GGPanel;
 
+/**
+ * A victim consist of a shape and belongs to a certain Dalek.
+ *
+ */
 public abstract class AbstractVictim extends Actor {
 
 	protected IObstacle shape;

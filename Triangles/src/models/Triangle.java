@@ -57,7 +57,7 @@ public class Triangle implements IObstacle {
 		GGVector best = closestPointOfLineTo(vertices[0], vertices[nextVertexIndex(0)], p);
 		for (int i = 1; i < vertices.length; i++) {
 			GGVector candidate = closestPointOfLineTo(vertices[i], vertices[nextVertexIndex(i)], p);
-			if (candidate.sub(p).magnitude2() < best.sub(p).magnitude2())
+			if (candidate.distanceTo(p) < best.distanceTo(p))
 				best = candidate;
 		}
 		
