@@ -42,7 +42,7 @@ public class Dalek extends Actor {
 		this.panel = gg.getPanel();
 		setRandomWalkDirection();
 		EXTERMINATE = new TextActor("EXTERMINATE!!!");
-		gg.addActor(EXTERMINATE, new Location(300, 10));
+		gg.addActor(EXTERMINATE, new Location(10, 30));
 		text = new GGTextField(gg, new Location(10, 10), true);
 		text.show();
 	}
@@ -63,12 +63,12 @@ public class Dalek extends Actor {
 	public void act() {
 		GGVector lap = vc.getLookAtPoint();
 		lap = lap.sub(vc.getStandPoint());
-		lap.rotate(Math.PI/30);
+		//lap.rotate(Math.PI/30);
 		double dir = Math.toDegrees(Math.acos(new GGVector(1,0).dot(lap)/lap.magnitude()));
 		if (lap.y > 0)
 			dir = 360 - dir;
 		setDirection(dir); //for drawing later on
-		//walkDirection = new GGVector(0,0); //UNCOMMENT to make it stand still
+		walkDirection = new GGVector(0,0); //UNCOMMENT to make it stand still
 		lap = lap.add(vc.getStandPoint()).add(walkDirection);
 		vc.setStandPoint(vc.getStandPoint().add(walkDirection));
 		vc.setLookAtPoint(lap);
