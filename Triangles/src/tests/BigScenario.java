@@ -92,7 +92,12 @@ public class BigScenario {
 	@Test
 	public void addCircleObstacle() {
 		vc.addObstacle(obstacle4);
-		
+		GGVector v = vc.getClosestObstacle();
+		assertNotNull(v);
+		System.out.println(v);
+		assertEquals(4.32, v.x, epsilon);
+		assertEquals(2.02, v.y, epsilon);
+		assertEquals(2.24, vc.getDistanceToClosestObstacle(), epsilon);
 	}
 
 }

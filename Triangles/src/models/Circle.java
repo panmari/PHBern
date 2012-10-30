@@ -19,7 +19,7 @@ public class Circle implements IObstacle {
 	public GGVector closestPointTo(GGVector p) {
 		GGVector between = p.sub(centre);
 		between.normalize();
-		between.mult(radius);
+		between = between.mult(radius);
 		return centre.add(between);
 	}
 

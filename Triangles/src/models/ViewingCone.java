@@ -76,7 +76,7 @@ public class ViewingCone extends Triangle{
 	}
 	/**
 	 * Returns the distance to the closest obstacle or
-	 *  -1 if there is no obstacle in the viewing cone.
+	 *  Float.NaN if there is no obstacle in the viewing cone.
 	 * @return
 	 */
 	public double getDistanceToClosestObstacle() {
