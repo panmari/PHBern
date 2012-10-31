@@ -2,6 +2,10 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.awt.Point;
+import java.awt.geom.Point2D;
+
+import models.Rectangle;
 import models.Circle;
 import models.Triangle;
 import models.ViewingCone;
@@ -9,15 +13,16 @@ import models.ViewingCone;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.aplu.jgamegrid.GGRectangle;
 import ch.aplu.jgamegrid.GGVector;
 
 public class BigScenario {
 
 	private ViewingCone vc;
 	private Triangle obstacle1, obstacle2, obstacle3;
-	private Circle obstacle4;
+	private Circle obstacle4, obstacle5;
 	private double epsilon = 0.01;
-	private Circle obstacle5;
+	private Rectangle obstacle6;
 
 	/**
 	 * See bigScenario.ggb for the setting.
@@ -31,6 +36,10 @@ public class BigScenario {
 		obstacle3 = new Triangle(new GGVector(4.99, 2.24), new GGVector(6.75, 3.03), new GGVector(5.43, 1.21));
 		obstacle4 = new Circle(new GGVector(3.89, 1.66), 0.56);
 		obstacle5 = new Circle(new GGVector(4.54, 3.89), 0.69);
+		obstacle6 = new Rectangle(new GGRectangle(new Point2D.Double(3.27, 0.56), 
+				new Point2D.Double(3.72,1.32), 
+				new Point2D.Double(4.47, 0.86), 
+				new Point2D.Double(4.02, 0.11)));
 	}
 	
 	@Test
@@ -96,7 +105,6 @@ public class BigScenario {
 		vc.addObstacle(obstacle4);
 		GGVector v = vc.getClosestObstacle();
 		assertNotNull(v);
-		System.out.println(v);
 		assertEquals(4.32, v.x, epsilon);
 		assertEquals(2.02, v.y, epsilon);
 		assertEquals(2.24, vc.getDistanceToClosestObstacle(), epsilon);
@@ -107,10 +115,18 @@ public class BigScenario {
 		vc.addObstacle(obstacle5);
 		GGVector v = vc.getClosestObstacle();
 		assertNotNull(v);
-		System.out.println(v);
 		assertEquals(5.03, v.x, epsilon);
 		assertEquals(3.41, v.y, epsilon);
 		assertEquals(1.02, vc.getDistanceToClosestObstacle(), epsilon);
+	}
+	
+	@Test
+	public void addRectangleWithClosestPointOnEdge() {
+		vc.addObstacle(obstacle6);
+		GGVector v = vc.getClosestObstacle();
+		assertNotNull(v);
+		assertEquals(4.47, v.x, epsilon);
+		assertEquals(0.86, v.y, epsilon);
 	}
 
 }
