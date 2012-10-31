@@ -26,7 +26,7 @@ public class ViewingCone extends Triangle{
 	
 	/**
 	 * Creates a viewing cone located at standPoint, looking into the direction of lookAtPoint,
-	 * lookAtPoint also beeing the furthest visible point. The cone extends to angle/2
+	 * lookAtPoint also being the farthest visible point. The cone extends to angle/2
 	 * to the left and angle/2 to the right of lookAtPoint.
 	 * </br>
 	 * Be aware that there may be problems with double precision when using this 
@@ -44,9 +44,9 @@ public class ViewingCone extends Triangle{
 	}
 	
 	private static GGVector makeCorner(GGVector standPoint, GGVector lookAtPoint,
-			double d) {
+			double angle) {
 		GGVector corner = lookAtPoint.sub(standPoint);
-		corner.rotate(d);
+		corner.rotate(angle);
 		corner = corner.add(standPoint);
 		return corner;
 	}
@@ -55,9 +55,13 @@ public class ViewingCone extends Triangle{
 		obstacles.add(o);
 	}
 	
+	public void addObstacles(List<IObstacle> oList) {
+		obstacles.addAll(oList);
+	}
+	
 	/**
-	 * Returns closest point of any obstacles. Returns null if there is no
-	 * obstacle visible. 
+	 * Returns closest point of any obstacles added to this Viewing cone. 
+	 * Returns null if there is no obstacle visible. 
 	 * @return
 	 */
 	public GGVector getClosestObstacle() {
