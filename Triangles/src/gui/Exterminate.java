@@ -31,7 +31,7 @@ public class Exterminate extends GameGrid implements GGMouseListener, GGKeyListe
 	private void makeVictims() {
 		vTriangle = new VictimTriangle(this, dalek);
 		addActor(vTriangle, new Location(-20, -20));
-		vCircle = new VictimCircle(this, dalek);
+		vCircle = new VictimRectangle(this, dalek);
 		addActor(vCircle, new Location(-20, -20));
 		setActOrder(Cleaner.class);
 	}

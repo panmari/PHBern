@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,14 +12,38 @@ public class Rectangle implements IObstacle {
 	LinkedList<Triangle> triangles;
 	
 	/**
+	 * careful, this array does not provide any functionality. It is just for easier
+	 * retrieving all 4 vertices through getVertices.
+	 */
+	GGVector vertices[];
+	
+	/**
 	 * Could also be more generalized
 	 * @param r
 	 */
 	public Rectangle(GGRectangle r) {
-		GGVector[] vertices = r.getVertexes();
+		this.vertices = r.getVertexes();
 		triangles = new LinkedList<Triangle>();
 		triangles.add(new Triangle(vertices[0], vertices[1], vertices[3]));
 		triangles.add(new Triangle(vertices[1], vertices[2], vertices[3]));
+	}
+	
+	public void setVertices(GGRectangle r) {
+		this.vertices = r.getVertexes();
+		GGVector[] triangle1 = triangles.get(0).vertices;
+		GGVector[] triangle2 = triangles.get(1).vertices;
+		//quite stupid hardcoding:
+		triangle1[0] = vertices[0];
+		triangle1[1] = vertices[1];
+		triangle1[2] = vertices[3];
+		
+		triangle2[0] = vertices[1];
+		triangle2[1] = vertices[2];
+		triangle2[2] = vertices[3];
+	}
+	
+	public GGVector[] getVertices() {
+		return vertices;
 	}
 	
 	@Override

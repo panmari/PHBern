@@ -121,7 +121,7 @@ public class BigScenario {
 	}
 	
 	@Test
-	public void addRectangleWithClosestPointOnEdge() {
+	public void addRectangleWithClosestPointOnVertex() {
 		vc.addObstacle(obstacle6);
 		GGVector v = vc.getClosestObstacle();
 		assertNotNull(v);
