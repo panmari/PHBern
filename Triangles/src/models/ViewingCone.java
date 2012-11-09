@@ -11,6 +11,7 @@ public class ViewingCone extends Triangle{
 	private LineSegment[] viewBoarderLines;
 	private GGVector lookAtPoint;
 	private double angle;
+	private boolean infinite;
 	
 	/**
 	 * This constructor is mainly for testing, for real use see the other constructor
@@ -21,7 +22,7 @@ public class ViewingCone extends Triangle{
 		this.viewBoarderLines = new LineSegment[2];
 		this.viewBoarderLines[0] = new LineSegment(standPoint, vertices[1].sub(standPoint));
 		this.viewBoarderLines[1] = new LineSegment(standPoint, vertices[2].sub(standPoint));
-
+		this.infinite = false;
 	}
 	
 	/**
@@ -34,13 +35,15 @@ public class ViewingCone extends Triangle{
 	 * @param standPoint
 	 * @param lookAtPoint
 	 * @param angle in radian
+	 * @param infinite Set to true if the farthest visible point lies in infinity
 	 */
-	public ViewingCone(GGVector standPoint, GGVector lookAtPoint, double angle) {
+	public ViewingCone(GGVector standPoint, GGVector lookAtPoint, double angle, boolean infinite) {
 		this(standPoint, 
 				makeCorner(standPoint, lookAtPoint, angle/2), 
 				makeCorner(standPoint, lookAtPoint, -angle/2));
 		this.lookAtPoint = lookAtPoint;
 		this.angle = angle;
+		this.infinite = infinite;
 	}
 	
 	private static GGVector makeCorner(GGVector standPoint, GGVector lookAtPoint,
@@ -100,7 +103,7 @@ public class ViewingCone extends Triangle{
 	public boolean liesInside(GGVector p) {
 		GGVector pNorm = toTriangleCoordinates(p);
 		// don't use magnitude2() or you'll have (more) rounding errors!
-		return pNorm.x >= 0 && pNorm.y >= 0 && pNorm.magnitude() <= 1; 
+		return pNorm.x >= 0 && pNorm.y >= 0 && (infinite || pNorm.magnitude() <= 1); 
 	}
 	
 	@Override

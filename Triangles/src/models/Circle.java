@@ -3,6 +3,7 @@ package models;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.aplu.jgamegrid.GGCircle;
 import ch.aplu.jgamegrid.GGVector;
 
 public class Circle implements IObstacle {
@@ -13,6 +14,11 @@ public class Circle implements IObstacle {
 	public Circle(GGVector centre, double radius) {
 		this.center = centre;
 		this.radius = radius;
+	}
+	
+	public Circle(GGCircle circle) {
+		this.center = circle.getCenter();
+		this.radius = circle.getRadius();
 	}
 
 	@Override

@@ -86,7 +86,7 @@ public class TestViewingCone {
 	
 	@Test
 	public void testAlternativeConstructor() {
-		ViewingCone alternativeConstr = new ViewingCone(new GGVector(0,0), new GGVector(1,1), Math.PI/2);
+		ViewingCone alternativeConstr = new ViewingCone(new GGVector(0,0), new GGVector(1,1), Math.PI/2, false);
 		GGVector[] vertices = alternativeConstr.getVertices();
 		
 		assertEquals(0, vertices[0].x, epsilon);
@@ -101,7 +101,7 @@ public class TestViewingCone {
 	
 	@Test
 	public void testAlternativeAngle() {
-		ViewingCone alternativeConstr = new ViewingCone(new GGVector(0,0), new GGVector(0,1), Math.PI/3);
+		ViewingCone alternativeConstr = new ViewingCone(new GGVector(0,0), new GGVector(0,1), Math.PI/3, false);
 		GGVector[] vertices = alternativeConstr.getVertices();
 		assertEquals(0, vertices[0].x, epsilon);
 		assertEquals(0, vertices[0].y, epsilon);

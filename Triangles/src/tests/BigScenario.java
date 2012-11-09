@@ -30,7 +30,7 @@ public class BigScenario {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		vc = new ViewingCone(new GGVector(6.05, 3.45), new GGVector(3.23, 1.67), Math.PI/3);
+		vc = new ViewingCone(new GGVector(6.05, 3.45), new GGVector(3.23, 1.67), Math.PI/3, false);
 		obstacle1 = new Triangle(new GGVector(5.27, 4.79), new GGVector(3.53, 3.67), new GGVector(2.72, 4.54));
 		obstacle2 = new Triangle(new GGVector(1.6, 2.52), new GGVector(3.11, 2.61), new GGVector(1.99, 1.35));
 		obstacle3 = new Triangle(new GGVector(4.99, 2.24), new GGVector(6.75, 3.03), new GGVector(5.43, 1.21));

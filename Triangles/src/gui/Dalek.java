@@ -57,7 +57,7 @@ public class Dalek extends Actor {
 		GGVector lookAtPoint = new GGVector(sightDistance, 0);
 		lookAtPoint.rotate(Math.toRadians(getDirection()));
 		lookAtPoint = lookAtPoint.add(standPoint);
-		vc = new ViewingCone(standPoint, lookAtPoint, Math.toRadians(sightAngle));
+		vc = new ViewingCone(standPoint, lookAtPoint, Math.toRadians(sightAngle), false);
 	}
 	
 	public void act() {
