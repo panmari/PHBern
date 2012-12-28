@@ -112,4 +112,14 @@ public class TestViewingCone {
 		assertEquals(0.5, vertices[2].x, epsilon);
 		assertEquals(Math.sqrt(3/4d), vertices[2].y, epsilon);
 	}
+	
+	@Test
+	public void testOnePointTriangle() {
+		Triangle tiny = new Triangle(new GGVector(0.5,0.5), new GGVector(0.5,0.5), new GGVector(0.5,0.5));
+		assertTrue(vc.liesInside(tiny));
+		vc.addObstacle(tiny);
+		double dist = vc.getDistanceToClosestObstacle();
+		assertNotNull(vc.getClosestObstacle());
+		assertEquals(dist, Math.sqrt(0.5*0.5 + 0.5 * 0.5), epsilon);
+	}
 }

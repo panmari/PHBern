@@ -69,6 +69,10 @@ public class Triangle implements IObstacle {
 		GGVector ab = b.sub(a);
 		double abMag = ab.magnitude2();
 		
+		//if a and b are at the exact same position, return a by default
+		if (abMag == 0)
+			return a;
+		
 		double apDotAb = ap.dot(ab);
 		
 		double t = apDotAb / abMag;
