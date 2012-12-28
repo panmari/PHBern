@@ -134,4 +134,18 @@ public class TestViewingCone {
 		vcAlternative.addObstacle(t);
 		assertEquals(Double.NaN, vcAlternative.getDistanceToClosestObstacle(), epsilon);
 	}
+	
+	@Test
+	public void testIfLineSegmentsAreInfinitelyLong() {
+		ViewingCone vcAlternative = new ViewingCone(new GGVector(300,300), new GGVector(500, 300), Math.PI/4, true);
+		Triangle t = new Triangle(new GGVector(451.0, 196.0), new GGVector(463.0, 202.0), new GGVector(492.0, 223.0));
+		Triangle shiftedT = new Triangle(new GGVector(451.0, 600 - 196.0), new GGVector(463.0, 600 - 202.0), new GGVector(492.0, 600 - 223.0));
+		t = shiftedT;
+		//assertTrue(vcAlternative.liesInside(t));
+		assertFalse(vcAlternative.liesInside(t.getVertices()[0]));
+		assertFalse(vcAlternative.liesInside(t.getVertices()[1]));
+		assertTrue(vcAlternative.liesInside(t.getVertices()[2]));
+		vcAlternative.addObstacle(t);
+		assertNotNull(vcAlternative.getClosestObstacle());
+	}
 }

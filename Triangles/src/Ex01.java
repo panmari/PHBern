@@ -69,6 +69,7 @@ public class Ex01 extends GameGrid implements GGMouseListener
     {
       Triangle t = new Triangle(vertices[0], vertices[1], vertices[2]);
       drawTriangle(t);
+      System.out.println(t);
       cone.addObstacle(t);
       double r = cone.getDistanceToClosestObstacle();
       bg.drawCircle(new Point(300, 300), (int)r);
