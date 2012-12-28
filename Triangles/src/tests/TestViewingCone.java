@@ -122,4 +122,16 @@ public class TestViewingCone {
 		assertNotNull(vc.getClosestObstacle());
 		assertEquals(dist, Math.sqrt(0.5*0.5 + 0.5 * 0.5), epsilon);
 	}
+	
+	@Test
+	public void testRandom() {
+		ViewingCone vcAlternative = new ViewingCone(new GGVector(300,300), new GGVector(500, 300), Math.PI/4, true);
+		Triangle t = new Triangle(new GGVector(398.0, 407.0), new GGVector(427.0, 386.0), new GGVector(401.0, 379.0));
+		assertFalse(vcAlternative.liesInside(t));
+		assertFalse(vcAlternative.liesInside(t.getVertices()[0]));
+		assertFalse(vcAlternative.liesInside(t.getVertices()[1]));
+		assertFalse(vcAlternative.liesInside(t.getVertices()[2]));
+		vcAlternative.addObstacle(t);
+		assertEquals(Double.NaN, vcAlternative.getDistanceToClosestObstacle(), epsilon);
+	}
 }

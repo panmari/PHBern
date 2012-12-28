@@ -45,8 +45,8 @@ public class Ex01 extends GameGrid implements GGMouseListener
     GGVector dirLine = dir.sub(center);
     GGVector border1 = dirLine.clone();
     GGVector border2 = dirLine.clone();
-    border1.rotate(angle);
-    border2.rotate(-angle);
+    border1.rotate(angle / 2);
+    border2.rotate(-angle / 2);
     drawLine(center, center.add(border1));
     drawLine(center, center.add(border2));
   }
