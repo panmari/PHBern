@@ -15,6 +15,7 @@ public class Triangle implements IObstacle {
 		vertices[2] = c;
 	}
 	
+	@Deprecated
 	public boolean liesInside(Triangle t) {
 		for (GGVector v: t.getVertices()) {
 			if (!liesInside(v))

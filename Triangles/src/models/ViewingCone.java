@@ -44,6 +44,8 @@ public class ViewingCone extends Triangle{
 		this.lookAtPoint = lookAtPoint;
 		this.angle = angle;
 		this.infinite = infinite;
+		for (LineSegment ls: viewBoarderLines)
+			ls.setInfinite(infinite);
 	}
 	
 	private static GGVector makeCorner(GGVector standPoint, GGVector lookAtPoint,
