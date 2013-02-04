@@ -2,6 +2,7 @@
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.Random;
 
 import ch.aplu.nxtsim.NxtContext;
@@ -40,8 +41,11 @@ class SearchMiddleEffectively
      if (axisMaxDirection[i] == 2  || axisMaxDirection[i] == 1)
        distancesToMiddle[i] = -distancesToMiddle[i];
    }
-   int angle = (int) Math.toDegrees(Math.tan(distancesToMiddle[1]/((double)distancesToMiddle[0])));
    
+   
+   double gradient = distancesToMiddle[1]/((double)distancesToMiddle[0]);
+   int angle = (int) Math.toDegrees(Math.tan(gradient));
+   System.out.println(Arrays.toString(distancesToMiddle) + ": " + gradient);
    
    int diagonalDistance = (int) Math.sqrt(distancesToMiddle[0]*distancesToMiddle[0] + distancesToMiddle[1]*distancesToMiddle[1]);
    System.out.println(diagonalDistance + ": " + angle);
@@ -51,9 +55,9 @@ class SearchMiddleEffectively
   
   private void turn(TurtleRobot robot, int angle) {
     if (angle < 0)
-      robot.left(-angle);
+      robot.right(-angle);
     else
-      robot.right(angle);
+      robot.left(angle);
   }
 
   public static void main(String[] args)
