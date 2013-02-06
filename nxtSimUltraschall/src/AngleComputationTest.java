@@ -19,28 +19,28 @@ public class AngleComputationTest {
 	@Test
 	public void testUpperLeftQuadrant() {
 		int[] middleDist = { -150, -150 };
-		int angle = SearchMiddleEffectively.computeTurnAngleToMiddle(middleDist);
+		int angle = SearchMiddleEfficiently.turnAngleToMiddle(middleDist);
 		assertEquals(-135, angle);
 	}
 	
 	@Test
 	public void testlowerLeftQuadrant() {
 		int[] middleDist = { 150, -150 };
-		int angle = SearchMiddleEffectively.computeTurnAngleToMiddle(middleDist);
+		int angle = SearchMiddleEfficiently.turnAngleToMiddle(middleDist);
 		assertEquals(-45, angle);
 	}
 	
 	@Test
 	public void testLowerRightQuadrant() {
 		int[] middleDist = { 150, 150 };
-		int angle = SearchMiddleEffectively.computeTurnAngleToMiddle(middleDist);
+		int angle = SearchMiddleEfficiently.turnAngleToMiddle(middleDist);
 		assertEquals(45, angle);
 	}
 	
 	@Test
 	public void testUpperRightQuadrant() {
 		int[] middleDist = { -150, 150 };
-		int angle = SearchMiddleEffectively.computeTurnAngleToMiddle(middleDist);
+		int angle = SearchMiddleEfficiently.turnAngleToMiddle(middleDist);
 		assertEquals(135, angle);
 	}
 	
