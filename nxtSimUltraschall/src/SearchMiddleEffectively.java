@@ -10,7 +10,7 @@ import ch.aplu.nxtsim.SensorPort;
 import ch.aplu.nxtsim.TurtleRobot;
 import ch.aplu.nxtsim.UltrasonicSensor;
 
-class SearchMiddleEffectively
+public class SearchMiddleEffectively
 {
 
   SearchMiddleEffectively()
@@ -35,22 +35,31 @@ class SearchMiddleEffectively
        }
       robot.right(90);
    }
+   
    int[] distancesToMiddle = new int[2];
    for (int i = 0; i < 2; i++){
 	 distancesToMiddle[i] = axisMax[i] - roomSize[i]/2;
      if (axisMaxDirection[i] == 2  || axisMaxDirection[i] == 1)
        distancesToMiddle[i] = -distancesToMiddle[i];
    }
-   
-   
-   double gradient = distancesToMiddle[1]/((double)distancesToMiddle[0]);
-   int angle = (int) Math.toDegrees(Math.tan(gradient));
-   System.out.println(Arrays.toString(distancesToMiddle) + ": " + gradient);
-   
+   int angle = computeTurnAngleToMiddle(distancesToMiddle);
    int diagonalDistance = (int) Math.sqrt(distancesToMiddle[0]*distancesToMiddle[0] + distancesToMiddle[1]*distancesToMiddle[1]);
-   System.out.println(diagonalDistance + ": " + angle);
+   System.out.println("Turning by " + angle + " degrees, then moving by " + diagonalDistance + " pixels");
    turn(robot, angle);
    robot.forward(diagonalDistance);
+   turn(robot, -angle); //face upper wall again
+  }
+  
+  public static int computeTurnAngleToMiddle(int[] distancesToMiddle)
+  {
+	   double gradient = distancesToMiddle[1]/((double)distancesToMiddle[0]);
+	   double angleRadian = Math.atan(gradient);
+	   int angleDegree = (int) Math.round(Math.toDegrees(angleRadian));
+	   if (distancesToMiddle[0] < 0 && distancesToMiddle[1] < 0)
+		   angleDegree = angleDegree - 180;
+	   if (distancesToMiddle[0] < 0 && distancesToMiddle[1] > 0)
+		   angleDegree = 180 + angleDegree;
+	   return angleDegree;
   }
   
   private void turn(TurtleRobot robot, int angle) {
@@ -86,6 +95,5 @@ class SearchMiddleEffectively
     int x = rnd.nextInt(400) + 50;
     int y = rnd.nextInt(400) + 50;
     NxtContext.setStartPosition(x, y);
-    //NxtContext.setStartDirection(rnd.nextInt(360));
   }
 }
