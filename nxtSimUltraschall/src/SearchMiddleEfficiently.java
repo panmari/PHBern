@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import ch.aplu.nxtsim.NxtContext;
+import ch.aplu.nxtsim.NxtRobot;
 import ch.aplu.nxtsim.SensorPort;
 import ch.aplu.nxtsim.TurtleRobot;
 import ch.aplu.nxtsim.UltrasonicSensor;
@@ -44,6 +45,7 @@ class SearchMiddleEfficiently
    int angle = turnAngleToMiddle(distancesToMiddle);
    int diagonalDistance = (int) Math.sqrt(distancesToMiddle[0]*distancesToMiddle[0] + distancesToMiddle[1]*distancesToMiddle[1]);
    System.out.println("Turning by " + angle + " degrees, then moving by " + diagonalDistance + " pixels");
+   NxtRobot.getGameGrid().getBg().clear(); //hacky way to clear background
    turn(robot, angle);
    robot.forward(diagonalDistance);
    turn(robot, -angle); //face upper wall again
