@@ -13,6 +13,10 @@ import ch.aplu.jgamegrid.Location;
 public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 
 
+	/**
+	 * For every location of the valid grid, the strokes surrounding it are saved in this hashtable.
+	 * It is then used for look up after a new stroke is drawn.
+	 */
 	Hashtable<Location, LinkedList<Stroke>> BoxMap = new Hashtable<Location, LinkedList<Stroke>>();
 	
 	private int currentPlayerId = 0;
@@ -41,8 +45,8 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 				}
 			}
 		}
-		setStatusText("Click on an edge to start");
 		addStatusBar(20);
+		setStatusText("Click on an edge to start");
 		show();
 	}
 		
@@ -54,17 +58,13 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 	@Override
 	public void mouseTouched(Actor actor, GGMouse mouse, Point spot) {
 		Stroke s = (Stroke) actor;
-		if (s.isDrawn()) //already drawn
+		if (s.isDrawn())
 			return;
 		s.show(1 + currentPlayerId);
 		boolean nextPlayer = true;
 		for (Location loc: s.getPossibleFillLocations()) {
-			try {
-				if (fillBoxes(loc))
-					nextPlayer = false;
-			} catch (NullPointerException e) {
-				//don't care
-			}
+			if (fillBoxes(loc))
+				nextPlayer = false;
 		}
 		if (nextPlayer)
 			currentPlayerId = (currentPlayerId + 1) % playerCounter;

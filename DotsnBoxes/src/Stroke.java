@@ -33,13 +33,10 @@ public class Stroke extends Actor {
 		LinkedList<Location> fillLocs = new LinkedList<Location>();
 		Location loc = getLocation();
 		fillLocs.add(loc);
-		if (!(loc.y == 1 && direction == StrokeDirection.HORIZONTAL) 
-				&& !( loc.x == 1 && direction == StrokeDirection.VERTICAL)) {
-			if (direction == StrokeDirection.HORIZONTAL)
-				fillLocs.add(new Location(loc.x, loc.y - 1));
-			else 
-				fillLocs.add(new Location(loc.x - 1, loc.y));
-		}
+		if (loc.y != 1 && direction == StrokeDirection.HORIZONTAL) 
+			fillLocs.add(new Location(loc.x, loc.y - 1));
+		if (loc.x != 1 && direction == StrokeDirection.VERTICAL)
+			fillLocs.add(new Location(loc.x - 1, loc.y));
 		return fillLocs;
 	}
 	
