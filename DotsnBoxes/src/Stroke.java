@@ -13,7 +13,7 @@ public class Stroke extends Actor {
 	private StrokeDirection direction;
 	
 	public Stroke(DotsnBoxes gg, StrokeDirection d) {
-		super(true, "sprites/stroke.png", 2);
+		super(true, "sprites/stroke.png", 3);
 		this.gg = gg;
 		this.direction = d;
 	}
@@ -29,17 +29,17 @@ public class Stroke extends Actor {
 		return new Point((int) (offset.x * scaleFactor), (int) (offset.y * scaleFactor));
 	}
 	
-	public String toString() {
-		//TODO: better toString
-		return super.toString();
-	}
-	
 	public LinkedList<Location> getPossibleFillLocations() {
 		LinkedList<Location> fillLocs = new LinkedList<Location>();
-		fillLocs.add(getLocation());
-		if (direction == StrokeDirection.VERTICAL)
-			fillLocs.add(new Location(getX() - 1, getY()));
-		else fillLocs.add(new Location(getX(), getY() - 1));
+		Location loc = getLocation();
+		fillLocs.add(loc);
+		if (!(loc.y == 1 && direction == StrokeDirection.HORIZONTAL) 
+				&& !( loc.x == 1 && direction == StrokeDirection.VERTICAL)) {
+			if (direction == StrokeDirection.HORIZONTAL)
+				fillLocs.add(new Location(loc.x, loc.y - 1));
+			else 
+				fillLocs.add(new Location(loc.x - 1, loc.y));
+		}
 		return fillLocs;
 	}
 	
@@ -48,6 +48,7 @@ public class Stroke extends Actor {
 	}
 
 	public boolean isDrawn() {
-		return getIdVisible() == 1;
+		return getIdVisible() != 0;
 	}
+	
 }
