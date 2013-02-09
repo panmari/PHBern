@@ -4,6 +4,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 
 import ch.aplu.jgamegrid.Actor;
+import ch.aplu.jgamegrid.GGInputInt;
 import ch.aplu.jgamegrid.GGMouse;
 import ch.aplu.jgamegrid.GGMouseTouchListener;
 import ch.aplu.jgamegrid.GameGrid;
@@ -23,8 +24,8 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 	private Player[] players = new Player[2];
 	private static int playerCounter = 0;
 	
-	public DotsnBoxes() {
-		super(5, 5, 50, Color.WHITE, false);
+	public DotsnBoxes(int height, int width) {
+		super(width + 2, height + 2, 50, Color.WHITE, false);
 		getBg().clear(Color.WHITE);
 		players[0] = new Player(Color.BLUE, "Blue");
 		players[1] = new Player(Color.RED, "Red");
@@ -51,7 +52,9 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 	}
 		
 	public static void main(String[] args) {
-		new DotsnBoxes();
+		int height = new GGInputInt("Height", "Choose the height of the grid.").show();
+		int width = new GGInputInt("Width", "Choose the width of the grid.").show();
+		new DotsnBoxes(height, width);
 	}
 	
 	
@@ -68,7 +71,8 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 		}
 		if (nextPlayer)
 			currentPlayerId = (currentPlayerId + 1) % playerCounter;
-		setStatusText("Score: " + players[0].score + " vs " + players[1].score + ", current Player is " + players[currentPlayerId] );
+		setStatusText(players[0].getLabelledScore() + " vs " + players[1].getLabelledScore() +
+				", current Player is " + players[currentPlayerId] );
 		refresh();
 	}
 	
@@ -107,6 +111,10 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 		
 		public String toString() {
 			return name;
+		}
+		
+		public String getLabelledScore() {
+			return name + ": " + score;
 		}
 	}
 }
