@@ -12,8 +12,13 @@ public class Stroke extends Actor {
 	private DotsnBoxes gg;
 	private StrokeDirection direction;
 	
+	/**
+	 * The sprite id corresponds to the player the stroke belongs to -1
+	 * @param gg
+	 * @param d
+	 */
 	public Stroke(DotsnBoxes gg, StrokeDirection d) {
-		super(true, "sprites/stroke.png", 3);
+		super(true, "sprites/strokeBoarder.png", 3);
 		this.gg = gg;
 		this.direction = d;
 	}
