@@ -11,6 +11,7 @@ public class Stroke extends Actor {
 
 	private DotsnBoxes gg;
 	private StrokeDirection direction;
+	private boolean drawn;
 	
 	/**
 	 * The sprite id corresponds to the player the stroke belongs to -1
@@ -21,6 +22,7 @@ public class Stroke extends Actor {
 		super(true, "sprites/strokeBoarder.png", 3);
 		this.gg = gg;
 		this.direction = d;
+		this.drawn = false;
 	}
 	
 	public void reset() {
@@ -48,9 +50,14 @@ public class Stroke extends Actor {
 	public StrokeDirection getStrokeDirection() {
 		return direction;
 	}
+	
+	public void draw(int playerId) {
+		drawn = true;
+		show(1 + playerId);
+	}
 
 	public boolean isDrawn() {
-		return getIdVisible() != 0;
+		return drawn;
 	}
 	
 }

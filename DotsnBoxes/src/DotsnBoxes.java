@@ -22,6 +22,8 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 	
 	private int currentPlayerId = 0;
 	private Player[] players = new Player[2];
+
+	private Stroke activeStroke;
 	private static int playerCounter = 0;
 	
 	public DotsnBoxes(int height, int width) {
@@ -40,7 +42,7 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 						continue;
 					Stroke s = new Stroke(this, d);
 					addActorNoRefresh(s, new Location(x,y));
-					s.addMouseTouchListener(this, GGMouse.lClick);
+					s.addMouseTouchListener(this, GGMouse.lClick | GGMouse.enter | GGMouse.leave);
 					for (Location l: s.getPossibleFillLocations())
 						BoxMap.get(l).add(s);
 				}
@@ -61,18 +63,25 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 	@Override
 	public void mouseTouched(Actor actor, GGMouse mouse, Point spot) {
 		Stroke s = (Stroke) actor;
-		if (s.isDrawn())
-			return;
-		s.show(1 + currentPlayerId);
-		boolean nextPlayer = true;
-		for (Location loc: s.getPossibleFillLocations()) {
-			if (fillBoxes(loc))
-				nextPlayer = false;
+		if (!s.isDrawn()) {
+			if (mouse.getEvent() == GGMouse.enter)
+			{
+				s.show(1 + currentPlayerId);
+			} else if (mouse.getEvent() == GGMouse.leave)
+				s.show(0);
+		} 
+		if (mouse.getEvent() == GGMouse.lClick) {
+			s.draw(currentPlayerId);
+			boolean nextPlayer = true;
+			for (Location loc: s.getPossibleFillLocations()) {
+				if (fillBoxes(loc))
+					nextPlayer = false;
+			}
+			if (nextPlayer)
+				currentPlayerId = (currentPlayerId + 1) % playerCounter;
+			setStatusText(players[0].getLabelledScore() + " vs " + players[1].getLabelledScore() +
+					", current Player is " + players[currentPlayerId] );
 		}
-		if (nextPlayer)
-			currentPlayerId = (currentPlayerId + 1) % playerCounter;
-		setStatusText(players[0].getLabelledScore() + " vs " + players[1].getLabelledScore() +
-				", current Player is " + players[currentPlayerId] );
 		refresh();
 	}
 	
