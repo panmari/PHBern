@@ -25,6 +25,7 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 	Hashtable<Location, LinkedList<Stroke>> BoxMap = new Hashtable<Location, LinkedList<Stroke>>();
 	private Player currentPlayer;
 	private Player[] players = new Player[2];
+	private int drawnStrokes;
 	private static int playerCounter = 0;
 	
 	public DotsnBoxes(int height, int width) {
@@ -52,6 +53,7 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 		}
 		addStatusBar(20);
 		setStatusText("Click on an edge to start");
+		setTitle("The box game -- www.java-online.ch"); 
 		show();
 	}
 		
@@ -78,6 +80,7 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 				s.show(0);
 		} 
 		if (mouse.getEvent() == GGMouse.lClick) {
+			drawnStrokes++;
 			s.draw(currentPlayer.id);
 			boolean nextPlayer = true;
 			for (Location loc: s.getPossibleFillLocations()) {
@@ -86,10 +89,17 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 			}
 			if (nextPlayer)
 				currentPlayer = currentPlayer.nextPlayer();
-			setStatusText(players[0].getLabelledScore() + " vs " + players[1].getLabelledScore() +
-					", current Player is " + currentPlayer);
+			updateStatusText();
 		}
 		refresh();
+	}
+
+	private void updateStatusText() {
+		String msg = players[0].getLabelledScore() + " vs " + players[1].getLabelledScore();
+		if (drawnStrokes == Stroke.getStrokeCount() )
+			msg = "Final Score: " + msg;
+		else msg = msg + ", current Player is " + currentPlayer;
+		setStatusText(msg);
 	}
 
 	private boolean outOfValidGrid(Location loc) {

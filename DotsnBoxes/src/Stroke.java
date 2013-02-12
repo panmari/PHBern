@@ -12,6 +12,7 @@ public class Stroke extends Actor {
 	private DotsnBoxes gg;
 	private StrokeDirection direction;
 	private boolean drawn;
+	private static int strokeCounter = 0;
 	
 	/**
 	 * The sprite id corresponds to the player the stroke belongs to -1
@@ -20,6 +21,7 @@ public class Stroke extends Actor {
 	 */
 	public Stroke(DotsnBoxes gg, StrokeDirection d) {
 		super(true, "sprites/strokeBoarder.png", 3);
+		this.strokeCounter++;
 		this.gg = gg;
 		this.direction = d;
 		this.drawn = false;
@@ -58,6 +60,10 @@ public class Stroke extends Actor {
 
 	public boolean isDrawn() {
 		return drawn;
+	}
+
+	public static int getStrokeCount() {
+		return strokeCounter;
 	}
 	
 }
