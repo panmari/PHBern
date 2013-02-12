@@ -15,28 +15,30 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 
 
 	/**
+	 * If set to true, an arbitrary grid size can be chosen at the start of the game.
+	 */
+	private static final boolean customizableGrid = false;
+	/**
 	 * For every location of the valid grid, the strokes surrounding it are saved in this hashtable.
 	 * It is then used for look up after a new stroke is drawn.
 	 */
 	Hashtable<Location, LinkedList<Stroke>> BoxMap = new Hashtable<Location, LinkedList<Stroke>>();
-	
-	private int currentPlayerId = 0;
+	private Player currentPlayer;
 	private Player[] players = new Player[2];
-
-	private Stroke activeStroke;
 	private static int playerCounter = 0;
 	
 	public DotsnBoxes(int height, int width) {
-		super(width + 2, height + 2, 50, Color.WHITE, false);
+		super(width + 2, height + 2, 75, Color.WHITE, false);
 		getBg().clear(Color.WHITE);
 		players[0] = new Player(Color.BLUE, "Blue");
 		players[1] = new Player(Color.RED, "Red");
+		currentPlayer = players[0]; //blue begins;
 		for (int x = 1; x < getNbHorzCells(); x++) {
 			for (int y = 1; y < getNbVertCells(); y++) {
 				Location loc = new Location(x, y);
 				BoxMap.put(loc, new LinkedList<Stroke>());
 				for (StrokeDirection d: StrokeDirection.values()) {
-					//prevent program from drawing unnecessary strokes
+					//prevent loop from drawing unnecessary strokes
 					if (y == getNbVertCells() - 1 && d == StrokeDirection.VERTICAL
 							|| x == getNbHorzCells() - 1 && d == StrokeDirection.HORIZONTAL)
 						continue;
@@ -54,8 +56,13 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 	}
 		
 	public static void main(String[] args) {
-		int height = new GGInputInt("Height", "Choose the height of the grid.").show();
-		int width = new GGInputInt("Width", "Choose the width of the grid.").show();
+		int height = 3;
+		int width = 3;
+		if (customizableGrid) {
+			height = new GGInputInt("Height", "Choose the height of the grid.").show();
+			width = new GGInputInt("Width", "Choose the width of the grid.").show();
+		}
+		
 		new DotsnBoxes(height, width);
 	}
 	
@@ -66,43 +73,28 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 		if (!s.isDrawn()) {
 			if (mouse.getEvent() == GGMouse.enter)
 			{
-				s.show(1 + currentPlayerId);
+				s.show(1 + currentPlayer.id); //important that not s.draw is called!
 			} else if (mouse.getEvent() == GGMouse.leave)
 				s.show(0);
 		} 
 		if (mouse.getEvent() == GGMouse.lClick) {
-			s.draw(currentPlayerId);
+			s.draw(currentPlayer.id);
 			boolean nextPlayer = true;
 			for (Location loc: s.getPossibleFillLocations()) {
-				if (fillBoxes(loc))
+				if (players[currentPlayer.id].tryToFillBoxes(loc))
 					nextPlayer = false;
 			}
 			if (nextPlayer)
-				currentPlayerId = (currentPlayerId + 1) % playerCounter;
+				currentPlayer = currentPlayer.nextPlayer();
 			setStatusText(players[0].getLabelledScore() + " vs " + players[1].getLabelledScore() +
-					", current Player is " + players[currentPlayerId] );
+					", current Player is " + currentPlayer);
 		}
 		refresh();
 	}
-	
-	/**
-	 * Returns true if a box was filled
-	 * @param loc
-	 * @return
-	 */
-	private boolean fillBoxes(Location loc) {
-		if (outOfValidGrid(loc))
-			return false;
-		for (Stroke s: BoxMap.get(loc))
-			if (!s.isDrawn())
-				return false;
-		getPanel().fillCell(loc, players[currentPlayerId].color);
-		players[currentPlayerId].score++;
-		return true;
-	}
 
 	private boolean outOfValidGrid(Location loc) {
-		return loc.y >= getNbVertCells() - 1 || loc.x >= getNbHorzCells() -1;
+		return loc.y >= getNbVertCells() - 1 || loc.x >= getNbHorzCells() -1 
+				|| loc.y < 1 || loc.x < 1;
 	}
 	
 	class Player {
@@ -122,8 +114,28 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 			return name;
 		}
 		
+		public Player nextPlayer() {
+			return players[(id + 1) % playerCounter];
+		}
 		public String getLabelledScore() {
 			return name + ": " + score;
+		}
+		
+		/**
+		 * Player tries to fill out the given location with own color, but first checks if it's surrounded
+		 * by strokes. 
+		 * @param loc
+		 * @return true if the given location was filled
+		 */
+		private boolean tryToFillBoxes(Location loc) {
+			if (outOfValidGrid(loc))
+				return false;
+			for (Stroke s: BoxMap.get(loc))
+				if (!s.isDrawn())
+					return false;
+			getPanel().fillCell(loc, color);
+			score++;
+			return true;
 		}
 	}
 }
