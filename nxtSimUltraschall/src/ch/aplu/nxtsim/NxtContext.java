@@ -15,8 +15,10 @@
 package ch.aplu.nxtsim;
 
 import ch.aplu.jgamegrid.*;
+import java.awt.Point;
 import java.util.*;
 import java.awt.image.BufferedImage;
+import javax.swing.JOptionPane;
 
 /**
  * Class to select user defined initial conditions of the
@@ -28,8 +30,10 @@ public class NxtContext
   protected static Location startLocation = new Location(250, 250);
   protected static double startDirection = -90;
   protected static boolean isNavigationBar = false;
-  protected static ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
-  protected static ArrayList<Location> obstacleLocations = new ArrayList<Location>();
+  protected static final ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
+  protected static final ArrayList<Location> obstacleLocations = new ArrayList<Location>();
+  protected static final ArrayList<Target> targets = new ArrayList<Target>();
+  protected static final ArrayList<Location> targetLocations = new ArrayList<Location>();
   protected static boolean isRun = true;
   protected static int xLoc = -1;
   protected static int yLoc = -1;
@@ -153,6 +157,99 @@ public class NxtContext
   public static void useObstacle(GGBitmap bm, int x, int y)
   {
     useObstacle(bm.getBufferedImage(), x, y);
+  }
+
+  /**
+   * Creates a target for the ultrasonic sensor using the given sprite image.
+   * The NxtRobot constructor displays all targets known at this time.
+   * Targets are scaned by the ultrasonic sensor using the mesh triangles.
+   * The mesh triangles contain the image center and two successive mesh points.
+   * @param filename the image file of the target
+   * @param mesh the mesh points (at least 2)
+   * @param x the x-coordinate of the image center
+   * @param y the y-coordinate of the image center
+   * @return the reference of the created target
+   */
+  public static Target useTarget(String filename, Point[] mesh, int x, int y)
+  {
+    if (mesh.length < 2)
+    {
+      JOptionPane.showMessageDialog(null,
+        "Ultrasonic target mesh must contain at least 2 points",
+        "Fatal Error", JOptionPane.ERROR_MESSAGE);
+      System.exit(1);
+    }
+
+    Target target = new Target(filename, mesh);
+    targets.add(target);
+    targetLocations.add(new Location(x, y));
+    return target;
+  }
+
+  /**
+   * Creates a target for the ultrasonic sensor using the given buffered image.
+   * The NxtRobot constructor displays all targets known at this time.
+   * Targets are scaned by the ultrasonic sensor using the mesh triangles.
+   * The mesh triangles contain the image center and two successive mesh points.
+   * @param bi the buffered image of the target
+   * @param mesh the mesh points (at least 2)
+   * @param x the x-coordinate of the image center
+   * @param y the y-coordinate of the image center
+   * @return the reference of the created target
+   */
+  public static Target useTarget(BufferedImage bi, Point[] mesh, int x, int y)
+  {
+    if (mesh.length < 2)
+    {
+      JOptionPane.showMessageDialog(null,
+        "Ultrasonic target mesh must contain at least 2 points",
+        "Fatal Error", JOptionPane.ERROR_MESSAGE);
+      System.exit(1);
+    }
+
+    Target target = new Target(bi, mesh);
+    targets.add(target);
+    targetLocations.add(new Location(x, y));
+    return target;
+  }
+
+  /**
+   * Creates a target for the ultrasonic sensor using the given GGBitmap.
+   * The NxtRobot constructor displays all targets known at this time.
+   * Targets are scaned by the ultrasonic sensor using the mesh triangles.
+   * The mesh triangles contain the image center and two successive mesh points.
+   * @param bm the GGBitmap to be used as target
+   * @param mesh the mesh points (at least 2)
+   * @param x the x-coordinate of the image center
+   * @param y the y-coordinate of the image center
+   * @return the reference of the created target
+   */
+  public static Target useTarget(GGBitmap bm, Point[] mesh, int x, int y)
+  {
+    return useTarget(bm.getBufferedImage(), mesh, x, y);
+  }
+
+  /**
+   * Defines a clone of the given target to be used as target.
+   * It will be shown at the given position. More than one target may be defined. 
+   * The target is detected by the ultrasonic sensor using the mesh triangles.
+   * All mesh triangles use the the image center and two successive mesh points.
+   * @param target the target to define the clone
+   * @param x the x-coordinate of the image center
+   * @param y the y-coordinate of the image center
+   * @return the reference of the target clone
+   */
+  public static Target useTarget(Target target, int x, int y)
+  {
+    Target tmp = null;
+    if (target.getImageName() != null)
+      tmp = new Target(target.getImageName(), target.getMesh());
+    if (target.getBufferedImage() != null)
+      tmp = new Target(target.getBufferedImage(), target.getMesh());
+
+    targets.add(tmp);
+    targetLocations.add(new Location(x, y));
+    return tmp;
   }
 
   /**

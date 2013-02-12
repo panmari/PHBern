@@ -1,22 +1,22 @@
 // Gear.java
 
 /*
-This software is part of the NxtSim library.
-It is Open Source Free Software, so you may
-- run the code for any purpose
-- study how the code works and adapt it to your needs
-- integrate all or parts of the code in your own programs
-- redistribute copies of the code
-- improve the code and release your improvements to the public
-However the use of the code is entirely your responsibility.
+ This software is part of the NxtSim library.
+ It is Open Source Free Software, so you may
+ - run the code for any purpose
+ - study how the code works and adapt it to your needs
+ - integrate all or parts of the code in your own programs
+ - redistribute copies of the code
+ - improve the code and release your improvements to the public
+ However the use of the code is entirely your responsibility.
 
-Author: Aegidius Pluess, www.aplu.ch
-*/
-
+ Author: Aegidius Pluess, www.aplu.ch
+ */
 package ch.aplu.nxtsim;
 
 import ch.aplu.jgamegrid.*;
 import ch.aplu.util.*;
+import javax.swing.JOptionPane;
 
 /**
  * Combines two motors on an axis to perform a car-like movement.
@@ -27,6 +27,7 @@ public class Gear extends Part
   {
     FORWARD, BACKWARD, LEFT, RIGHT, STOPPED
   };
+
   private static final Location pos = new Location(0, 0);
   private final int DEFAULT_SPEED = 50;
   private GearState state = GearState.STOPPED;
@@ -55,6 +56,7 @@ public class Gear extends Part
    */
   public Gear forward()
   {
+    checkPart();
     state = GearState.FORWARD;
     if (speed != 0)
       isMoving = true;
@@ -69,6 +71,7 @@ public class Gear extends Part
    */
   public Gear forward(int duration)
   {
+    checkPart();
     HiResAlarmTimer t = new HiResAlarmTimer(duration * 1000, true);
     state = GearState.FORWARD;
     while (t.isRunning())
@@ -86,6 +89,7 @@ public class Gear extends Part
    */
   public Gear backward()
   {
+    checkPart();
     state = GearState.BACKWARD;
     if (speed != 0)
       isMoving = true;
@@ -100,6 +104,7 @@ public class Gear extends Part
    */
   public Gear backward(int duration)
   {
+    checkPart();
     HiResAlarmTimer t = new HiResAlarmTimer(duration * 1000, true);
     state = GearState.BACKWARD;
     while (t.isRunning())
@@ -116,6 +121,7 @@ public class Gear extends Part
    */
   public Gear stop()
   {
+    checkPart();
     state = GearState.STOPPED;
     isMoving = false;
     return this;
@@ -128,6 +134,7 @@ public class Gear extends Part
    */
   public Gear left()
   {
+    checkPart();
     state = GearState.LEFT;
     radius = 0;
     if (speed != 0)
@@ -144,6 +151,7 @@ public class Gear extends Part
    */
   public Gear left(int duration)
   {
+    checkPart();
     HiResAlarmTimer t = new HiResAlarmTimer(duration * 1000, true);
     left();
     while (t.isRunning())
@@ -161,6 +169,7 @@ public class Gear extends Part
    */
   public Gear right()
   {
+    checkPart();
     state = GearState.RIGHT;
     radius = 0;
     if (speed != 0)
@@ -177,6 +186,7 @@ public class Gear extends Part
    */
   public Gear right(int duration)
   {
+    checkPart();
     HiResAlarmTimer t = new HiResAlarmTimer(duration * 1000, true);
     right();
     while (t.isRunning())
@@ -195,6 +205,7 @@ public class Gear extends Part
    */
   public Gear leftArc(double radius)
   {
+    checkPart();
     state = GearState.LEFT;
     this.radius = SharedConstants.pixelPerMeter * radius;
     if (speed != 0)
@@ -212,6 +223,7 @@ public class Gear extends Part
    */
   public Gear leftArc(double radius, int duration)
   {
+    checkPart();
     HiResAlarmTimer t = new HiResAlarmTimer(duration * 1000, true);
     leftArc(radius);
     while (t.isRunning())
@@ -230,6 +242,7 @@ public class Gear extends Part
    */
   public Gear rightArc(double radius)
   {
+    checkPart();
     state = GearState.RIGHT;
     this.radius = SharedConstants.pixelPerMeter * radius;
     if (speed != 0)
@@ -247,6 +260,7 @@ public class Gear extends Part
    */
   public Gear rightArc(double radius, int duration)
   {
+    checkPart();
     HiResAlarmTimer t = new HiResAlarmTimer(duration * 1000, true);
     rightArc(radius);
     while (t.isRunning())
@@ -274,6 +288,7 @@ public class Gear extends Part
    */
   public Gear setSpeed(int speed)
   {
+    checkPart();
     this.speed = speed;
     if (speed != 0 && state != GearState.STOPPED)
       isMoving = true;
@@ -286,6 +301,7 @@ public class Gear extends Part
    */
   public int getSpeed()
   {
+    checkPart();
     return speed;
   }
 
@@ -297,9 +313,10 @@ public class Gear extends Part
   public boolean isMoving()
   {
     delay(1);
+    checkPart();
     return isMoving;
   }
-  
+
   /**
    * Returns the x-coordinate of the current location.
    * Calls Thread.sleep(1) to prevent CPU overload in close polling loops.
@@ -308,8 +325,9 @@ public class Gear extends Part
   public int getX()
   {
     delay(1);
+    checkPart();
     return super.getX();
-  }  
+  }
 
   /**
    * Returns the y-coordinate of the current location.
@@ -319,9 +337,10 @@ public class Gear extends Part
   public int getY()
   {
     delay(1);
+    checkPart();
     return super.getY();
   }
-  
+
   /**
    * Returns the current location.
    * Calls Thread.sleep(1) to prevent CPU overload in close polling loops.
@@ -330,7 +349,20 @@ public class Gear extends Part
   public Location getLocation()
   {
     delay(1);
+    checkPart();
     return super.getLocation();
   }
-   
+
+  private void checkPart()
+  {
+    if (robot == null)
+    {
+      JOptionPane.showMessageDialog(null,
+        "Gear is not part of the NxtRobot.\n"
+        + "Call addPart() to assemble it.",
+        "Fatal Error", JOptionPane.ERROR_MESSAGE);
+      System.exit(1);
+    }
+  }
+
 }

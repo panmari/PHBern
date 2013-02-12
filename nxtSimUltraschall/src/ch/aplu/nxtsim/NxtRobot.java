@@ -1,16 +1,16 @@
 // NxtRobot.java
 
 /*
-This software is part of the NxtSim library.
-It is Open Source Free Software, so you may
-- run the code for any purpose
-- study how the code works and adapt it to your needs
-- integrate all or parts of the code in your own programs
-- redistribute copies of the code
-- improve the code and release your improvements to the public
-However the use of the code is entirely your responsibility.
+ This software is part of the NxtSim library.
+ It is Open Source Free Software, so you may
+ - run the code for any purpose
+ - study how the code works and adapt it to your needs
+ - integrate all or parts of the code in your own programs
+ - redistribute copies of the code
+ - improve the code and release your improvements to the public
+ However the use of the code is entirely your responsibility.
 
-Author: Aegidius Pluess, www.aplu.ch
+ Author: Aegidius Pluess, www.aplu.ch
  */
 package ch.aplu.nxtsim;
 
@@ -28,30 +28,30 @@ import java.io.*;
  * calling static methods of the class NxtContext in a static block. A typical example
  * is:<br><br>
  * <code>
-<font color="#0000ff">import</font><font color="#000000">&nbsp;ch.aplu.nxtsim.</font><font color="#c00000">*</font><font color="#000000">;</font><br>
-<font color="#000000"></font><br>
-<font color="#0000ff">public</font><font color="#000000">&nbsp;</font><font color="#0000ff">class</font><font color="#000000">&nbsp;Example</font><br>
-<font color="#000000">{</font><br>
-<font color="#000000">&nbsp;&nbsp;</font><font color="#0000ff">static</font><br>
-<font color="#000000">&nbsp;&nbsp;</font><font color="#000000">{</font><br>
-<font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;NxtContext.</font><font color="#000000">setStartPosition</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">,&nbsp;</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font><br>
-<font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;NxtContext.</font><font color="#000000">setStartDirection</font><font color="#000000">(</font><font color="#000000">45</font><font color="#000000">)</font><font color="#000000">;</font><br>
-<font color="#000000">&nbsp;&nbsp;</font><font color="#000000">}</font><br>
-<font color="#000000"></font><br>
-<font color="#000000">&nbsp;&nbsp;</font><font color="#0000ff">public</font><font color="#000000">&nbsp;</font><font color="#000000">Example</font><font color="#000000">()</font><br>
-<font color="#000000">&nbsp;&nbsp;</font><font color="#000000">{</font><br>
-<font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;NxtRobot&nbsp;robot&nbsp;</font><font color="#c00000">=</font><font color="#000000">&nbsp;</font><font color="#0000ff">new</font><font color="#000000">&nbsp;</font><font color="#000000">NxtRobot</font><font color="#000000">()</font><font color="#000000">;</font><br>
-<font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;Gear&nbsp;gear&nbsp;</font><font color="#c00000">=</font><font color="#000000">&nbsp;</font><font color="#0000ff">new</font><font color="#000000">&nbsp;</font><font color="#000000">Gear</font><font color="#000000">()</font><font color="#000000">;</font><br>
-<font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;robot.</font><font color="#000000">addPart</font><font color="#000000">(</font><font color="#000000">gear</font><font color="#000000">)</font><font color="#000000">;</font><br>
-<font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;gear.</font><font color="#000000">forward</font><font color="#000000">(</font><font color="#000000">5000</font><font color="#000000">)</font><font color="#000000">;</font><br>
-<font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;robot.</font><font color="#000000">exit</font><font color="#000000">()</font><font color="#000000">;</font><br>
-<font color="#000000">&nbsp;&nbsp;</font><font color="#000000">}</font><br>
-<font color="#000000"></font><br>
-<font color="#000000">&nbsp;&nbsp;</font><font color="#0000ff">public</font><font color="#000000">&nbsp;</font><font color="#0000ff">static</font><font color="#000000">&nbsp;</font><font color="#0000ff">void</font><font color="#000000">&nbsp;</font><font color="#000000">main</font><font color="#000000">(</font><font color="#00008b">String</font><font color="#000000">[]</font><font color="#000000">&nbsp;args</font><font color="#000000">)</font><br>
-<font color="#000000">&nbsp;&nbsp;</font><font color="#000000">{</font><br>
-<font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">new</font><font color="#000000">&nbsp;</font><font color="#000000">Example</font><font color="#000000">()</font><font color="#000000">;</font><br>
-<font color="#000000">&nbsp;&nbsp;</font><font color="#000000">}</font><br>
-<font color="#000000">}</font><br>
+ <font color="#0000ff">import</font><font color="#000000">&nbsp;ch.aplu.nxtsim.</font><font color="#c00000">*</font><font color="#000000">;</font><br>
+ <font color="#000000"></font><br>
+ <font color="#0000ff">public</font><font color="#000000">&nbsp;</font><font color="#0000ff">class</font><font color="#000000">&nbsp;Example</font><br>
+ <font color="#000000">{</font><br>
+ <font color="#000000">&nbsp;&nbsp;</font><font color="#0000ff">static</font><br>
+ <font color="#000000">&nbsp;&nbsp;</font><font color="#000000">{</font><br>
+ <font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;NxtContext.</font><font color="#000000">setStartPosition</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">,&nbsp;</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font><br>
+ <font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;NxtContext.</font><font color="#000000">setStartDirection</font><font color="#000000">(</font><font color="#000000">45</font><font color="#000000">)</font><font color="#000000">;</font><br>
+ <font color="#000000">&nbsp;&nbsp;</font><font color="#000000">}</font><br>
+ <font color="#000000"></font><br>
+ <font color="#000000">&nbsp;&nbsp;</font><font color="#0000ff">public</font><font color="#000000">&nbsp;</font><font color="#000000">Example</font><font color="#000000">()</font><br>
+ <font color="#000000">&nbsp;&nbsp;</font><font color="#000000">{</font><br>
+ <font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;NxtRobot&nbsp;robot&nbsp;</font><font color="#c00000">=</font><font color="#000000">&nbsp;</font><font color="#0000ff">new</font><font color="#000000">&nbsp;</font><font color="#000000">NxtRobot</font><font color="#000000">()</font><font color="#000000">;</font><br>
+ <font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;Gear&nbsp;gear&nbsp;</font><font color="#c00000">=</font><font color="#000000">&nbsp;</font><font color="#0000ff">new</font><font color="#000000">&nbsp;</font><font color="#000000">Gear</font><font color="#000000">()</font><font color="#000000">;</font><br>
+ <font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;robot.</font><font color="#000000">addPart</font><font color="#000000">(</font><font color="#000000">gear</font><font color="#000000">)</font><font color="#000000">;</font><br>
+ <font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;gear.</font><font color="#000000">forward</font><font color="#000000">(</font><font color="#000000">5000</font><font color="#000000">)</font><font color="#000000">;</font><br>
+ <font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;robot.</font><font color="#000000">exit</font><font color="#000000">()</font><font color="#000000">;</font><br>
+ <font color="#000000">&nbsp;&nbsp;</font><font color="#000000">}</font><br>
+ <font color="#000000"></font><br>
+ <font color="#000000">&nbsp;&nbsp;</font><font color="#0000ff">public</font><font color="#000000">&nbsp;</font><font color="#0000ff">static</font><font color="#000000">&nbsp;</font><font color="#0000ff">void</font><font color="#000000">&nbsp;</font><font color="#000000">main</font><font color="#000000">(</font><font color="#00008b">String</font><font color="#000000">[]</font><font color="#000000">&nbsp;args</font><font color="#000000">)</font><br>
+ <font color="#000000">&nbsp;&nbsp;</font><font color="#000000">{</font><br>
+ <font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">new</font><font color="#000000">&nbsp;</font><font color="#000000">Example</font><font color="#000000">()</font><font color="#000000">;</font><br>
+ <font color="#000000">&nbsp;&nbsp;</font><font color="#000000">}</font><br>
+ <font color="#000000">}</font><br>
  * </code><br><br>
  * In principle you may remove the static header and use the program unmodified
  * for the real NXT robot using the NxtJLib or NxtJLibA library (see www.aplu.ch/nxt).<br><br>
@@ -72,12 +72,22 @@ public class NxtRobot
         gg.setLocation(NxtContext.xLoc, NxtContext.yLoc);
       gg.setBgColor(Color.white);
       gg.setTitle(title);
-      gg.addActor(this, startLocation, startDirection);
+      gg.addActorNoRefresh(this, startLocation, startDirection);
       pos = new GGVector(getLocation().x, getLocation().y); // Double coordinates
+
       int nbObstacles = NxtContext.obstacles.size();
       for (int i = 0; i < nbObstacles; i++)
-        gg.addActor(NxtContext.obstacles.get(i),
+      {
+        gg.addActorNoRefresh(NxtContext.obstacles.get(i),
           NxtContext.obstacleLocations.get(i));
+      }
+      int nbTargets = NxtContext.targets.size();
+      for (int i = 0; i < nbTargets; i++)
+      {
+        gg.addActorNoRefresh(NxtContext.targets.get(i),
+          NxtContext.targetLocations.get(i));
+      }
+
       wheelDistance = getHeight(0) - 10;
 
       addActorCollisionListener(this);
@@ -91,6 +101,8 @@ public class NxtRobot
       try
       {
         appClass = Class.forName(new Throwable().getStackTrace()[3].getClassName());
+        if (appClass.toString().indexOf("TurtleRobot") != -1)
+          appClass = Class.forName(new Throwable().getStackTrace()[4].getClassName());
       }
       catch (Exception ex)
       {
@@ -100,8 +112,8 @@ public class NxtRobot
 
     public int collide(Actor actor1, Actor actor2)
     {
-      title = "Robot-Obstacle Collision";
-      gg.setTitle(title);
+      gg.setTitle("Robot-Obstacle Collision");
+      isCollisionInfo = true;
       return 0;
     }
 
@@ -148,8 +160,8 @@ public class NxtRobot
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         ex.getTargetException().printStackTrace(pw);
-        JOptionPane.showMessageDialog(null, sw.toString() +
-          "\n\nApplication will terminate.", "Fatal Error",
+        JOptionPane.showMessageDialog(null, sw.toString()
+          + "\n\nApplication will terminate.", "Fatal Error",
           JOptionPane.ERROR_MESSAGE);
         System.exit(0);
       }
@@ -164,9 +176,8 @@ public class NxtRobot
     {
       synchronized (NxtRobot.class)
       {
-        if (!title.equals(""))
+        if (!title.equals("") && isCollisionInfo)
         {
-          title = "";
           gg.setTitle("");
         }
         // Add new obstacles as collision actor
@@ -178,11 +189,18 @@ public class NxtRobot
           nbObstacles = nb;
         }
 
-        // ------------------ We have a LightListener -------------
+        // ------------------ We notify light listeners -------------
         for (Part part : parts)
         {
           if (part instanceof LightSensor)
             ((LightSensor)part).notifyEvent();
+        }
+
+        // ------------------ We notify ultrasonic listeners -------------
+        for (Part part : parts)
+        {
+          if (part instanceof UltrasonicSensor)
+            ((UltrasonicSensor)part).notifyEvent();
         }
 
         Gear gear = (Gear)(gg.getOneActor(Gear.class));
@@ -225,7 +243,10 @@ public class NxtRobot
               break;
             case LEFT:
               if (gear.getRadius() == 0)
-                turn(-SharedConstants.gearTurnAngle);
+              {
+                dphi = SharedConstants.gearTurnAngle * speed / 50;
+                turn(-dphi);
+              }
               else
               {
                 pos = getRotatedPosition(pos, rotCenter, dphi);
@@ -236,7 +257,10 @@ public class NxtRobot
               break;
             case RIGHT:
               if (gear.getRadius() == 0)
-                turn(SharedConstants.gearTurnAngle);
+              {
+                dphi = SharedConstants.gearTurnAngle * speed / 50;
+                turn(dphi);
+              }
               else
               {
                 pos = getRotatedPosition(pos, rotCenter, dphi);
@@ -511,8 +535,10 @@ public class NxtRobot
       gameGrid.setSimulationPeriod(period);
 //    System.out.println("new period: " + period);
     }
+
   }
   // ---------------------- End of class Nxt ---------------------
+
   /**
    * Center of a circle to detect robot-obstacle collisions
    * (pixel coordinates relative to center of robot image, default: (-13, 0)).
@@ -528,7 +554,8 @@ public class NxtRobot
   private static GameGrid gg;
   private static Nxt nxt;
   private int nbObstacles = 0;
-  private String title = "";
+  private String title = "NxtSim V"
+    + SharedConstants.VERSION.substring(0, SharedConstants.VERSION.indexOf(" "));
   private ArrayList<Part> parts = new ArrayList<Part>();
   private double rotInc;
   private int currentSpeed;
@@ -543,30 +570,31 @@ public class NxtRobot
   private GGVector pos;
   private double dir;
   private int sign;
-  double oldRadius;
-  double dphi;
+  private double oldRadius;
+  private double dphi;
+  private boolean isCollisionInfo = false;
 
   /**
    * Creates a robot with its playground using defaults from NxtContext.
    */
   public NxtRobot()
   {
-    gg = new GameGrid(500, 500, 1, null, 
+    gg = new GameGrid(500, 500, 1, null,
       NxtContext.imageName, NxtContext.isNavigationBar, nbRotatableSprites);
     nxt = new Nxt(NxtContext.startLocation, NxtContext.startDirection);
   }
 
   /**
    * Assembles the given part into the robot.
-   * If already connected, initialize the part.
    * @param part the part to assemble
    */
   public void addPart(Part part)
   {
     synchronized (NxtRobot.class)
     {
+      part.setRobot(this);
       parts.add(part);
-      gg.addActor(part, nxt.getPartLocation(part), nxt.getDirection());
+      gg.addActorNoRefresh(part, nxt.getPartLocation(part), nxt.getDirection());
       gg.setPaintOrder(getClass(), part.getClass());  // On top of obstacles
       gg.setActOrder(getClass());  // First
     }
@@ -619,10 +647,10 @@ public class NxtRobot
     JOptionPane.showMessageDialog(null, message, "Fatal Error", JOptionPane.ERROR_MESSAGE);
     System.exit(0);
   }
-  
+
   /**
-  * Resets Nxt to start location/direction.
-  */
+   * Resets Nxt to start location/direction.
+   */
   public void reset()
   {
     Actor nxt = getNxt();
@@ -630,4 +658,75 @@ public class NxtRobot
     nxt.setLocation(nxt.getLocationStart());
     nxt.setDirection(nxt.getDirectionStart());
   }
+
+  /**
+   * Adds the given target in the target list and shows it at the given 
+   * location. If the target is already in the target list, it is first removed.
+   * @param target the target to add
+   * @param x the x location of the target center
+   * @param y the y location of the target center
+   */
+  public void addTarget(Target target, int x, int y)
+  {
+    synchronized (NxtContext.targets)
+    {
+      if (NxtContext.targets.contains(target))
+      {
+        removeTarget(target);
+      }
+      gg.addActorNoRefresh(target, new Location(x, y));
+      NxtContext.targets.add(target);
+      // targetLocations not used
+    }
+  }
+
+  /**
+   * Removes the given target from the target list and hides it.
+   * If the target is not part of the target list, nothing happens.
+   * @param target the target to remove
+   */
+  public void removeTarget(Target target)
+  {
+    synchronized (NxtContext.targets)
+    {
+      gg.removeActor(target);
+      NxtContext.targets.remove(target);
+    }
+  }
+
+  /**
+   * Adds the given obstacle in the obstacle list and shows it at the given 
+   * location. If the obstacle is already in the obstacle list, it is first removed.
+   * @param obstacle the obstacle to add
+   * @param x the x location of the target center
+   * @param y the y location of the target center
+   */
+  public void addObstacle(Obstacle obstacle, int x, int y)
+  {
+    synchronized (NxtContext.obstacles)
+    {
+      if (NxtContext.obstacles.contains(obstacle))
+      {
+        removeObstacle(obstacle);
+      }
+      gg.addActorNoRefresh(obstacle, new Location(x, y));
+      NxtContext.obstacles.add(obstacle);
+      // obstacleLocations not used
+    }
+  }
+
+  /**
+   * Removes the given obstacle from the obstacle list and hides it.
+   * If the obstacle is not part of the obstacle list, nothing happens.
+   * @param obstacle the obstacle to remove
+   */
+  public void removeObstacle(Obstacle obstacle)
+  {
+    synchronized (NxtContext.obstacles)
+    {
+      gg.removeActor(obstacle);
+      NxtContext.obstacles.remove(obstacle);
+    }
+  }
+
 }

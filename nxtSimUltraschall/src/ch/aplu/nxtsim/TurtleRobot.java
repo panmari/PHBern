@@ -134,6 +134,8 @@ public class TurtleRobot extends NxtRobot
       left(-angle);
       return this;
     }
+    int oldSpeed = gear.getSpeed();
+    gear.setSpeed(10);
     gear.right();
     double dir = getNxt().getDirection();
     double inc = 0;
@@ -147,6 +149,7 @@ public class TurtleRobot extends NxtRobot
       Tools.delay(1);
     }
     gear.stop();
+    gear.setSpeed(oldSpeed);
     return this;
   }
 
@@ -175,6 +178,8 @@ public class TurtleRobot extends NxtRobot
       right(-angle);
       return this;
     }
+    int oldSpeed = gear.getSpeed();
+    gear.setSpeed(10);
     gear.left();
     double dir = getNxt().getDirection();
     double inc = 0;
@@ -187,6 +192,7 @@ public class TurtleRobot extends NxtRobot
       inc = inc % 360;
       Tools.delay(1);
     }
+    gear.setSpeed(oldSpeed);
     gear.stop();
     return this;
   }

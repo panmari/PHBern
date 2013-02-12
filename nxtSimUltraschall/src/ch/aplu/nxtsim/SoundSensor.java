@@ -1,16 +1,16 @@
 // SoundSensor.java
 
 /*
-This software is part of the NxtSim library.
-It is Open Source Free Software, so you may
-- run the code for any purpose
-- study how the code works and adapt it to your needs
-- integrate all or parts of the code in your own programs
-- redistribute copies of the code
-- improve the code and release your improvements to the public
-However the use of the code is entirely your responsibility.
+ This software is part of the NxtSim library.
+ It is Open Source Free Software, so you may
+ - run the code for any purpose
+ - study how the code works and adapt it to your needs
+ - integrate all or parts of the code in your own programs
+ - redistribute copies of the code
+ - improve the code and release your improvements to the public
+ However the use of the code is entirely your responsibility.
 
-Author: Aegidius Pluess, www.aplu.ch
+ Author: Aegidius Pluess, www.aplu.ch
  */
 package ch.aplu.nxtsim;
 
@@ -18,6 +18,7 @@ import ch.aplu.jgamegrid.*;
 import ch.aplu.util.*;
 import javax.sound.sampled.*;
 import java.io.*;
+import javax.swing.JOptionPane;
 
 /**
  * Class that represents a sound sensor. The sound is taken from the standard
@@ -116,6 +117,7 @@ public class SoundSensor extends Part implements SoundSampleListener
           {
             soundListener.loud(port, ampl);
           }
+
         }.start();
       }
       isQuiet = false;
@@ -130,6 +132,7 @@ public class SoundSensor extends Part implements SoundSampleListener
           {
             soundListener.quiet(port, ampl);
           }
+
         }.start();
       }
       isQuiet = true;
@@ -155,7 +158,21 @@ public class SoundSensor extends Part implements SoundSampleListener
    */
   public int getValue()
   {
+    checkPart();
     delay(1);
     return (int)(150 * ampl / 127.0);
   }
+
+  private void checkPart()
+  {
+    if (robot == null)
+    {
+      JOptionPane.showMessageDialog(null,
+        "SoundSensor is not part of the NxtRobot.\n"
+        + "Call addPart() to assemble it.",
+        "Fatal Error", JOptionPane.ERROR_MESSAGE);
+      System.exit(1);
+    }
+  }
+
 }

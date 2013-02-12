@@ -17,6 +17,7 @@ package ch.aplu.nxtsim;
 
 import ch.aplu.jgamegrid.*;
 import java.awt.Color;
+import javax.swing.JOptionPane;
 
 /**
  * Class that represents a light sensor.
@@ -26,8 +27,8 @@ public class LightSensor extends Part
   private static final Location pos1 = new Location(8, 7);
   private static final Location pos2 = new Location(8, -7);
   private static final Location pos3 = new Location(8, 0);
-  private volatile boolean isBrightNotified = true;
-  private volatile boolean isDarkNotified = true;
+  private volatile boolean isBrightNotified = false;
+  private volatile boolean isDarkNotified = false;
   private LightListener lightListener = null;
   private SensorPort port;
   private int triggerLevel;
@@ -57,7 +58,7 @@ public class LightSensor extends Part
   /**
    * Registers the given LightListener to detect crossing the given trigger triggerLevel.
    * @param listener the LightListener to register
-   * @param triggerLevel the light value used as trigger triggerLevel
+   * @param triggerLevel the light value used as trigger level
    */
   public void addLightListener(LightListener listener, int triggerLevel)
   {
@@ -66,7 +67,7 @@ public class LightSensor extends Part
   }
 
    /**
-   * Registers the given light listener with default trigger triggerLevel 500.
+   * Registers the given LightListener with default trigger triggerLevel 500.
    * @param lightListener the LightListener to register
    */
   public void addLightListener(LightListener lightListener)
@@ -95,6 +96,7 @@ public class LightSensor extends Part
    */
   public int getValue()
   {
+    checkPart();
     Tools.delay(1);
     Color c = getBackground().getColor(getLocation());
     float[] hsb = new float[3];
@@ -125,11 +127,11 @@ public class LightSensor extends Part
     if (lightListener == null)
       return;
     final int value = getValue();
-    if (value <= triggerLevel)
+    if (value < triggerLevel)
       isBrightNotified = false;
     if (value >= triggerLevel)
       isDarkNotified = false;
-    if (value > triggerLevel && !isBrightNotified)
+    if (value >= triggerLevel && !isBrightNotified)
     {
       isBrightNotified = true;
       new Thread()
@@ -150,6 +152,18 @@ public class LightSensor extends Part
           lightListener.dark(port, value);
         }
       }.start();
+    }
+  }
+  
+  private void checkPart()
+  {
+    if (robot == null)
+    {
+      JOptionPane.showMessageDialog(null,
+        "LightSensor is not part of the NxtRobot.\n"
+        + "Call addPart() to assemble it.",
+        "Fatal Error", JOptionPane.ERROR_MESSAGE);
+      System.exit(1);
     }
   }
 }

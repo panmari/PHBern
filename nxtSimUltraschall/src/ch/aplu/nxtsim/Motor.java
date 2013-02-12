@@ -1,23 +1,26 @@
 // Motor.java
 
 /*
-This software is part of the NxtSim library.
-It is Open Source Free Software, so you may
-- run the code for any purpose
-- study how the code works and adapt it to your needs
-- integrate all or parts of the code in your own programs
-- redistribute copies of the code
-- improve the code and release your improvements to the public
-However the use of the code is entirely your responsibility.
+ This software is part of the NxtSim library.
+ It is Open Source Free Software, so you may
+ - run the code for any purpose
+ - study how the code works and adapt it to your needs
+ - integrate all or parts of the code in your own programs
+ - redistribute copies of the code
+ - improve the code and release your improvements to the public
+ However the use of the code is entirely your responsibility.
 
-Author: Aegidius Pluess, www.aplu.ch
-*/
-
+ Author: Aegidius Pluess, www.aplu.ch
+ */
 package ch.aplu.nxtsim;
 
 import ch.aplu.jgamegrid.*;
+import javax.swing.JOptionPane;
 
-enum MotorState {FORWARD, BACKWARD, STOPPED};
+enum MotorState
+{
+  FORWARD, BACKWARD, STOPPED
+};
 
 /**
  * Class that represents one of the NXT motors.
@@ -30,16 +33,16 @@ public class Motor extends Part
   private MotorPort port;
   private boolean isMoving = false;
 
-   /**
+  /**
    * Creates a motor instance that is plugged into given port.
    * @param port the port where the motor is plugged-in (MotorPort.A, MotorPort.B, MotorPort.C)
    */
   public Motor(MotorPort port)
   {
-    super(port == MotorPort.A ?
-      "sprites/leftmotor.gif" :
-      (port == MotorPort.B ? "sprites/rightmotor.gif" :
-        "sprites/rightmotor.gif"), pos);
+    super(port == MotorPort.A
+      ? "sprites/leftmotor.gif"
+      : (port == MotorPort.B ? "sprites/rightmotor.gif"
+      : "sprites/rightmotor.gif"), pos);
     this.port = port;
   }
 
@@ -56,6 +59,7 @@ public class Motor extends Part
    */
   public Motor forward()
   {
+    checkPart();
     state = MotorState.FORWARD;
     if (speed != 0)
       isMoving = true;
@@ -69,6 +73,7 @@ public class Motor extends Part
    */
   public Motor backward()
   {
+    checkPart();
     state = MotorState.BACKWARD;
     if (speed != 0)
       isMoving = true;
@@ -81,6 +86,7 @@ public class Motor extends Part
    */
   public Motor stop()
   {
+    checkPart();
     state = MotorState.STOPPED;
     isMoving = false;
     return this;
@@ -98,6 +104,7 @@ public class Motor extends Part
    */
   public Motor setSpeed(int speed)
   {
+    checkPart();
     this.speed = speed;
     if (speed != 0 && state != MotorState.STOPPED)
       isMoving = true;
@@ -110,6 +117,7 @@ public class Motor extends Part
    */
   public int getSpeed()
   {
+    checkPart();
     return speed;
   }
 
@@ -119,6 +127,7 @@ public class Motor extends Part
    */
   public MotorPort getPort()
   {
+    checkPart();
     return port;
   }
 
@@ -129,7 +138,21 @@ public class Motor extends Part
    */
   public boolean isMoving()
   {
+    checkPart();
     delay(1);
     return isMoving;
   }
+
+  private void checkPart()
+  {
+    if (robot == null)
+    {
+      JOptionPane.showMessageDialog(null,
+        "Motor is not part of the NxtRobot.\n"
+        + "Call addPart() to assemble it.",
+        "Fatal Error", JOptionPane.ERROR_MESSAGE);
+      System.exit(1);
+    }
+  }
+
 }

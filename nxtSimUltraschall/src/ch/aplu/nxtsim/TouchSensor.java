@@ -1,22 +1,22 @@
 // TouchSensor.java
 
 /*
-This software is part of the NxtSim library.
-It is Open Source Free Software, so you may
-- run the code for any purpose
-- study how the code works and adapt it to your needs
-- integrate all or parts of the code in your own programs
-- redistribute copies of the code
-- improve the code and release your improvements to the public
-However the use of the code is entirely your responsibility.
+ This software is part of the NxtSim library.
+ It is Open Source Free Software, so you may
+ - run the code for any purpose
+ - study how the code works and adapt it to your needs
+ - integrate all or parts of the code in your own programs
+ - redistribute copies of the code
+ - improve the code and release your improvements to the public
+ However the use of the code is entirely your responsibility.
 
-Author: Aegidius Pluess, www.aplu.ch
-*/
-
+ Author: Aegidius Pluess, www.aplu.ch
+ */
 package ch.aplu.nxtsim;
 
 import ch.aplu.jgamegrid.*;
 import java.awt.*;
+import javax.swing.JOptionPane;
 
 /**
  * Class that represents a touch sensor.
@@ -52,9 +52,11 @@ public class TouchSensor extends Part
       }
       touchListener = null;
     }
+
   }
   // -------------- End of inner class ------------------
   //
+
   private static final Location pos1 = new Location(6, 10);
   private static final Location pos2 = new Location(6, -10);
   private static final Location pos3 = new Location(6, 0);
@@ -63,15 +65,17 @@ public class TouchSensor extends Part
   private int nbObstacles = 0;
   private TouchListener touchListener = null;
   private SensorPort port;
-  private Actor collisionActor =  null;
+  private Actor collisionActor = null;
   private final SensorThread st = new SensorThread();
   private volatile boolean isRunning = false;
   private volatile boolean isPressNotified = true;
   private volatile boolean isReleaseNotified = true;
-  protected final Object monitor = new Object();
+  private final Object monitor = new Object();
 
   /**
    * Creates a sensor instance connected to the given port.
+   * The port selection determines the position of the sensor:
+   * S1: right; S2: left, S3: middle.
    * @param port the port where the sensor is plugged-in
    */
   public TouchSensor(SensorPort port)
@@ -89,7 +93,7 @@ public class TouchSensor extends Part
 
   /**
    * Register the given TouchListener to detect press or release events.
-   * Starts a internal sensor thread that polls the sensor level and runs the
+   * Starts an internal sensor thread that polls the sensor level and runs the
    * sensor callbacks.
    * @param listener the LightListener to register; null, to terminate any running
    * sensor thread
@@ -157,6 +161,7 @@ public class TouchSensor extends Part
    */
   public boolean isPressed()
   {
+    checkPart();
     Tools.delay(1);
     for (Actor a : NxtContext.obstacles)
     {
@@ -169,4 +174,17 @@ public class TouchSensor extends Part
     collisionActor = null;
     return false;
   }
+
+  private void checkPart()
+  {
+    if (robot == null)
+    {
+      JOptionPane.showMessageDialog(null,
+        "TouchSensor is not part of the NxtRobot.\n"
+        + "Call addPart() to assemble it.",
+        "Fatal Error", JOptionPane.ERROR_MESSAGE);
+      System.exit(1);
+    }
+  }
+
 }

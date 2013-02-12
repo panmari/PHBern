@@ -22,18 +22,23 @@ import ch.aplu.jgamegrid.*;
 public abstract class Part extends Actor
 {
   private Location pos;
+  protected NxtRobot robot = null;
 
   protected Part(String imageName, Location pos)
   {
-    super(true, imageName);
-    this.pos = pos;
+    this(imageName, pos, 1);
   }
 
   protected Part(String imageName, Location pos, int nbSprites)
   {
-    super(true, imageName, nbSprites);
+    super(true, imageName, nbSprites, 360);
     this.pos = pos;
   }
+  
+  protected void setRobot(NxtRobot robot)
+  {
+    this.robot = robot;
+  }  
 
   protected void setPosition(Location pos)
   {

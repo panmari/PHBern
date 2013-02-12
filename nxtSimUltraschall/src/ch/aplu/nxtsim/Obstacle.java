@@ -27,7 +27,7 @@ public class Obstacle extends Actor
 {
   /**
    * Creates an obstacle from given image file.
-   * @param imageName the image to be uses as obstacle
+   * @param imageName the image to be used as obstacle
    */
   public Obstacle(String imageName)
   {
@@ -37,7 +37,7 @@ public class Obstacle extends Actor
   
   /**
    * Creates an obstacle from given buffered image.
-   * @param bi the image to be uses as obstacle
+   * @param bi the image to be used as obstacle
    */
   public Obstacle(BufferedImage bi)
   {

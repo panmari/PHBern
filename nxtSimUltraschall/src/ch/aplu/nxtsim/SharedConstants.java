@@ -41,6 +41,12 @@ Author: Aegidius Pluess, www.aplu.ch
  * V1.12 - Mar 2012  - Added: Button.isDown() for compatiblity with leJOS 0.91
  *                   - Fixed: Blocking methods wait with Thread.sleep(1) now
  *                   - Modified: polling methods calls Thread.sleep(1) now
+ * V1.13 - Jul 2012  - Fixed: Part instances may now be created as instance variables
+ *                     (ArrayOutOfBounds error fixed)
+ * V1.14 - Jan 2013  - Modified: gearTurnAngle depends on speed now
+ *                   - Modified: TurtleRobot.left(), right() now turn with small speed
+ *                   - Fixed: _init() now also works with TurtleRobot
+ *                   - Added: Support of ultrasonic sensor
  */
 
 package ch.aplu.nxtsim;  
@@ -57,17 +63,18 @@ interface SharedConstants
   int simulationPeriod = 30;
   int nbSteps = 3;  // Number of pixels advances per simulation period
   double motTurnAngle = 15;  // Angle per simulation period (in degrees) when motors have same speed of 50
-  double gearTurnAngle = 22.5; // Angle per simulation period (in degrees) when gear turns around center
+  double gearTurnAngle = 15; // Angle per simulation period (in degrees) when gear turns around center when speed is 50
   double motorRotIncFactor = 2.0;  // Factor that determines motor rotation speed
   double gearRotIncFactor = 3.0;   // Factor that determines gear rotation speed
   int pixelPerMeter = 200; // Distance corresponding to 1 meter
   int defaultSpeed = 50;  // Default gear and motor speed
+  int ultrasonicBeamWidth = 20; // Beam width (opening angle) of ultrasonic sensor (degrees)
 
 
   String ABOUT =
-    "2003-2012 Aegidius Pluess\n" +
+    "2003-2013 Aegidius Pluess\n" +
     "OpenSource Free Software\n" +
     "http://www.aplu.ch\n" +
     "All rights reserved";
-  String VERSION = "1.12 - March 2012";
+  String VERSION = "1.14 - Jan 2013";
 }
