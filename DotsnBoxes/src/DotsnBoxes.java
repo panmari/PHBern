@@ -72,24 +72,27 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 	@Override
 	public void mouseTouched(Actor actor, GGMouse mouse, Point spot) {
 		Stroke s = (Stroke) actor;
-		if (!s.isDrawn()) {
-			if (mouse.getEvent() == GGMouse.enter)
-			{
-				s.show(1 + currentPlayer.id); //important that not s.draw is called!
-			} else if (mouse.getEvent() == GGMouse.leave)
+		if (s.isDrawn()) 
+			return;
+		switch (mouse.getEvent()) {
+			case GGMouse.enter:
+				s.show(1 + currentPlayer.id); //important, that not s.draw is called!
+				break;
+			case GGMouse.leave:
 				s.show(0);
-		} 
-		if (mouse.getEvent() == GGMouse.lClick) {
-			drawnStrokes++;
-			s.draw(currentPlayer.id);
-			boolean nextPlayer = true;
-			for (Location loc: s.getPossibleFillLocations()) {
-				if (players[currentPlayer.id].tryToFillBoxes(loc))
-					nextPlayer = false;
-			}
-			if (nextPlayer)
-				currentPlayer = currentPlayer.nextPlayer();
-			updateStatusText();
+				break;
+			case GGMouse.lClick:
+				drawnStrokes++;
+				s.draw(currentPlayer.id);
+				boolean nextPlayer = true;
+				for (Location loc: s.getPossibleFillLocations()) {
+					if (players[currentPlayer.id].tryToFillBoxes(loc))
+						nextPlayer = false;
+				}
+				if (nextPlayer)
+					currentPlayer = currentPlayer.nextPlayer();
+				updateStatusText();
+				break;
 		}
 		refresh();
 	}
@@ -97,7 +100,7 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 	private void updateStatusText() {
 		String msg = players[0].getLabelledScore() + " vs " + players[1].getLabelledScore();
 		if (drawnStrokes == Stroke.getStrokeCount() )
-			msg = "Final Score: " + msg;
+			msg = "Final Score -- " + msg;
 		else msg = msg + ", current Player is " + currentPlayer;
 		setStatusText(msg);
 	}
