@@ -11,7 +11,7 @@ import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 
 
-public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
+public class BoxGame extends GameGrid implements GGMouseTouchListener{
 
 
 	/**
@@ -28,7 +28,7 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 	private int drawnStrokes;
 	private static int playerCounter = 0;
 	
-	public DotsnBoxes(int height, int width) {
+	public BoxGame(int height, int width) {
 		super(width + 2, height + 2, 75, Color.WHITE, false);
 		getBg().clear(Color.WHITE);
 		players[0] = new Player(Color.BLUE, "Blue");
@@ -65,7 +65,7 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 			width = new GGInputInt("Width", "Choose the width of the grid.").show();
 		}
 		
-		new DotsnBoxes(height, width);
+		new BoxGame(height, width);
 	}
 	
 	

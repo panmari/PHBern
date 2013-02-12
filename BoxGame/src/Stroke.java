@@ -9,7 +9,7 @@ import ch.aplu.jgamegrid.Location;
 
 public class Stroke extends Actor {
 
-	private DotsnBoxes gg;
+	private BoxGame gg;
 	private StrokeDirection direction;
 	private boolean drawn;
 	private static int drawnStrokes;
@@ -20,7 +20,7 @@ public class Stroke extends Actor {
 	 * @param gg
 	 * @param d
 	 */
-	public Stroke(DotsnBoxes gg, StrokeDirection d) {
+	public Stroke(BoxGame gg, StrokeDirection d) {
 		super(true, "sprites/strokeBoarder.png", 3);
 		this.strokeCounter++;
 		this.gg = gg;
