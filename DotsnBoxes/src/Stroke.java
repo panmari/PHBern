@@ -12,6 +12,7 @@ public class Stroke extends Actor {
 	private DotsnBoxes gg;
 	private StrokeDirection direction;
 	private boolean drawn;
+	private static int drawnStrokes;
 	private static int strokeCounter = 0;
 	
 	/**
@@ -54,6 +55,7 @@ public class Stroke extends Actor {
 	}
 	
 	public void draw(int playerId) {
+		drawnStrokes++;
 		drawn = true;
 		show(1 + playerId);
 	}
@@ -62,8 +64,8 @@ public class Stroke extends Actor {
 		return drawn;
 	}
 
-	public static int getStrokeCount() {
-		return strokeCounter;
+	public static boolean allDrawn() {
+		return strokeCounter == drawnStrokes;
 	}
 	
 }

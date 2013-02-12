@@ -99,7 +99,7 @@ public class DotsnBoxes extends GameGrid implements GGMouseTouchListener{
 
 	private void updateStatusText() {
 		String msg = players[0].getLabelledScore() + " vs " + players[1].getLabelledScore();
-		if (drawnStrokes == Stroke.getStrokeCount() )
+		if (Stroke.allDrawn())
 			msg = "Final Score -- " + msg;
 		else msg = msg + ", current Player is " + currentPlayer;
 		setStatusText(msg);
