@@ -47,6 +47,7 @@ Author: Aegidius Pluess, www.aplu.ch
  *                   - Modified: TurtleRobot.left(), right() now turn with small speed
  *                   - Fixed: _init() now also works with TurtleRobot
  *                   - Added: Support of ultrasonic sensor
+ * V1.15 - Jan 2013  - Modified documentation
  */
 
 package ch.aplu.nxtsim;  
@@ -76,5 +77,5 @@ interface SharedConstants
     "OpenSource Free Software\n" +
     "http://www.aplu.ch\n" +
     "All rights reserved";
-  String VERSION = "1.14 - Jan 2013";
+  String VERSION = "1.15 - Jan 2013";
 }

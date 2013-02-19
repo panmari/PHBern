@@ -30,6 +30,8 @@ public class NxtContext
   protected static Location startLocation = new Location(250, 250);
   protected static double startDirection = -90;
   protected static boolean isNavigationBar = false;
+  protected static boolean isStatusBar = false;
+  protected static int statusBarHeight;
   protected static final ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
   protected static final ArrayList<Location> obstacleLocations = new ArrayList<Location>();
   protected static final ArrayList<Target> targets = new ArrayList<Target>();
@@ -269,6 +271,18 @@ public class NxtContext
   public static void showNavigationBar()
   {
     showNavigationBar(true);
+  }
+  
+  /**
+   * Shows a status bar with given height. System.out is redirected to the
+   * status bar. All print(), println(), printf() methods are available. Each
+   * invocation erases the old content.
+   * @param height the height of the status window in pixels.
+   */
+  public static void showStatusBar(int height)
+  {
+    statusBarHeight = height;
+    isStatusBar = true;
   }
 
 }

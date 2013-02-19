@@ -107,7 +107,8 @@ public class NxtRobot
       catch (Exception ex)
       {
       }
-      exec(appClass, gg, "_init");
+      if (appClass != null)
+        exec(appClass, gg, "_init");
     }
 
     public int collide(Actor actor1, Actor actor2)
@@ -539,6 +540,199 @@ public class NxtRobot
   }
   // ---------------------- End of class Nxt ---------------------
 
+  // ---------------------- Class Interceptor --------------------
+  private class Interceptor extends PrintStream
+  {
+    public Interceptor(OutputStream out)
+    {
+      super(out, true);
+    }
+
+ /**
+   * Print a boolean value.
+   */
+  public void print(boolean b)
+  {
+    gg.setStatusText("" + b);
+  }
+
+  /**
+   * Print a character.
+   */
+  public void print(char c)
+  {
+    gg.setStatusText("" + c);
+  }
+
+  /**
+   * Print an array of characters.
+   */
+  public void print(char[] s)
+  {
+    StringBuffer sbuf = new StringBuffer();
+    for (int i = 0; i < s.length; i++)
+      sbuf.append(s[i]);
+    gg.setStatusText(sbuf.toString());
+  }
+
+  /**
+   * Print a double-precision floating-point number.
+   */
+  public void print(double d)
+  {
+    gg.setStatusText("" + d);
+  }
+
+  /**
+   * Print a floating-point number.
+   */
+  public void print(float f)
+  {
+    gg.setStatusText("" + f);
+  }
+
+  /**
+   * Print an integer.
+   */
+  public void print(int i)
+  {
+    gg.setStatusText("" + i);
+  }
+
+  /**
+   * Print a long integer.
+   */
+  public void print(long l)
+  {
+    gg.setStatusText("" + l);
+  }
+
+  /**
+   * Print an object.
+   */
+  public void print(Object obj)
+  {
+    gg.setStatusText(obj.toString());
+  }
+
+  /**
+   * Print a string.
+   */
+  public void print(String s)
+  {
+    gg.setStatusText(s);
+  }
+
+  /**
+   *  Terminate the current line by writing the line separator string.
+   */
+  public void println()
+  {
+    gg.setStatusText("\n");
+  }
+
+  /**
+   * Print a boolean and then terminate the line.
+   */
+  public void println(boolean b)
+  {
+    gg.setStatusText(b + "\n");
+  }
+
+  /**
+   * Print a character and then terminate the line.
+   */
+  public void println(char c)
+  {
+    gg.setStatusText(c + "\n");
+  }
+
+  /**
+   * Print an array of characters and then terminate the line.
+   */
+  public void println(char[] s)
+  {
+    StringBuffer sbuf = new StringBuffer();
+    for (int i = 0; i < s.length; i++)
+      sbuf.append(s[i]);
+    gg.setStatusText(sbuf.toString() + "\n");
+  }
+
+  /**
+   * Print a double and then terminate the line.
+   */
+  public void println(double d)
+  {
+    gg.setStatusText(d + "\n");
+  }
+
+  /**
+   * Print a float and then terminate the line.
+   */
+  public void println(float f)
+  {
+    gg.setStatusText(f + "\n");
+  }
+
+  /**
+   * Print an integer and then terminate the line.
+   */
+  public void println(int i)
+  {
+    gg.setStatusText(i + "\n");
+  }
+
+  /**
+   * Print a long and then terminate the line.
+   */
+  public void println(long l)
+  {
+    gg.setStatusText(l + "\n");
+  }
+
+  /**
+   * Print an Object and then terminate the line.
+   */
+
+  public void println(Object obj)
+  {
+    gg.setStatusText(obj.toString() + "\n");
+  }
+
+  /**
+   * Print a String and then terminate the line.
+   */
+  public void println(String s)
+  {
+    gg.setStatusText(s + "\n");
+  }
+
+  /**
+   * Print a formatted string using the specified format string and varargs.
+   * (See PrintStream.printf() for more information)
+   * @return the PrintStream reference
+   */
+   public PrintStream printf(String format, Object... args)
+   {
+     gg.setStatusText(String.format(format, args));
+     return this;
+   }
+
+  /**
+   * Print a formatted string using the specified format string and varargs
+   * and applying given locale during formatting.
+   * (See PrintStream.printf() for more information)
+   * @return the PrintStream reference
+   */
+   public PrintStream printf(Locale l, String format, Object... args)
+   {
+     gg.setStatusText(String.format(l, format, args));
+     return this;
+   }
+
+  }
+  // ---------------------- End of class Interceptor -------------
+
   /**
    * Center of a circle to detect robot-obstacle collisions
    * (pixel coordinates relative to center of robot image, default: (-13, 0)).
@@ -582,6 +776,13 @@ public class NxtRobot
     gg = new GameGrid(500, 500, 1, null,
       NxtContext.imageName, NxtContext.isNavigationBar, nbRotatableSprites);
     nxt = new Nxt(NxtContext.startLocation, NxtContext.startDirection);
+    if (NxtContext.isStatusBar)
+    {
+      gg.addStatusBar(NxtContext.statusBarHeight);
+      PrintStream originOut = System.out;
+      PrintStream interceptor = new Interceptor(originOut);
+      System.setOut(interceptor);
+    }
   }
 
   /**

@@ -110,9 +110,12 @@ public class UltrasonicSensor extends Part
   }
 
   /**
-   * Returns the distance to the nearest target object.
-   * @return the distance (in pixels); -1 of no target in range or 
-   * robot inside a target
+   * Returns the distance to the nearest target object. The distance must
+   * be adapted to the real robot's environment (the real ultrasonic sensor
+   * returns distances in cm in the range 0..255 (255 corresponds to no target 
+   * detected).
+   * @return the distance (in pixels of the 501x501 pixel window); 
+   * -1 of no target in range or robot inside a target
    */
   public int getDistance()
   {
