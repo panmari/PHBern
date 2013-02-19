@@ -66,7 +66,7 @@ public class BumpBot
       }
       
     
-      if (distance >= 255 || distance == -1) //nothing in sight
+      if (distance == -1) //nothing in sight, has to be replaced with >= 255 in real nxt
         searchTarget();
       else
         gear.forward();
@@ -77,12 +77,12 @@ public class BumpBot
    * Only used in simulation to remove budged over obstacles
    */
   private void removeClosestObstacle() {
-	  Location roboLoc = robot.getNxt().getLocation();
-	  ArrayList<Actor> targets = robot.getGameGrid().getActors(Target.class);
+	  Location roboLoc = NxtRobot.getNxt().getLocation();
+	  ArrayList<Actor> targets = NxtRobot.getGameGrid().getActors(Target.class);
 	  for (Actor a: targets) {
 		  int dist = a.getLocation().getDistanceTo(roboLoc);
 		  if (dist < 50)
-			  a.removeSelf();
+			  robot.removeTarget((Target)a);
 	  }
 }
 
@@ -116,7 +116,6 @@ private void searchTarget()
       new Point(-14, 0), new Point(-7, -12), new Point(7, -12)
     };
     BufferedImage dummy = new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
-    Target t = new Target(dummy, mesh);
     NxtContext.useTarget(dummy, mesh, 100, 100);
     NxtContext.useTarget(dummy, mesh, 300, 300);
     NxtContext.useTarget(dummy, mesh, 400, 150);
