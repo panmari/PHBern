@@ -188,20 +188,16 @@ class Triangle implements IObstacle
   {
     Color oldPaintColor = bg.getPaintColor();
     bg.setPaintColor(color);
-    drawLine(bg, getVertices()[0], getVertices()[1]);
-    drawLine(bg, getVertices()[1], getVertices()[2]);
-    drawLine(bg, getVertices()[2], getVertices()[0]);
+    bg.fillPolygon(toPoints(getVertices()));
     bg.setPaintColor(oldPaintColor);
   }
 
-  private void drawLine(GGBackground bg, GGVector v1, GGVector v2)
+  private Point[] toPoints(GGVector[] v)
   {
-    bg.drawLine(toPoint(v1), toPoint(v2));
+	Point[] p = new Point[v.length]; 
+	for (int i = 0; i < v.length; i++) {
+		p[i] = new Point((int)Math.round(v[i].x), (int) Math.round(v[i].y));
+	}
+    return p;
   }
-
-  private Point toPoint(GGVector v)
-  {
-    return new Point((int)v.x, (int)v.y);
-  }
-
 }

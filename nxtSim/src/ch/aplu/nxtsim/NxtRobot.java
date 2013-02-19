@@ -890,6 +890,17 @@ public class NxtRobot
   {
     synchronized (NxtContext.targets)
     {
+      Location l = target.getLocation();
+      GGBackground bg = gg.getBg();
+      Color oldPaintColor = bg.getPaintColor();
+      bg.setPaintColor(bg.getBgColor());
+      Point[] mesh = target.getMesh();
+      Point[] clearMesh = new Point[mesh.length];
+      for (int i = 0; i < mesh.length; i++) {
+    	  clearMesh[i] = new Point(mesh[i].x + l.x, mesh[i].y + l.y);
+      }
+      bg.fillPolygon(clearMesh);
+      bg.setPaintColor(oldPaintColor);
       gg.removeActor(target);
       NxtContext.targets.remove(target);
     }
