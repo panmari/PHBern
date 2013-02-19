@@ -25,7 +25,6 @@ public class BoxGame extends GameGrid implements GGMouseTouchListener{
 	Hashtable<Location, LinkedList<Stroke>> BoxMap = new Hashtable<Location, LinkedList<Stroke>>();
 	private Player currentPlayer;
 	private Player[] players = new Player[2];
-	private int drawnStrokes;
 	private static int playerCounter = 0;
 	
 	public BoxGame(int height, int width) {
@@ -82,7 +81,6 @@ public class BoxGame extends GameGrid implements GGMouseTouchListener{
 				s.show(0);
 				break;
 			case GGMouse.lClick:
-				drawnStrokes++;
 				s.draw(currentPlayer.id);
 				boolean nextPlayer = true;
 				for (Location loc: s.getPossibleFillLocations()) {
@@ -101,7 +99,7 @@ public class BoxGame extends GameGrid implements GGMouseTouchListener{
 		String msg = players[0].getLabelledScore() + " vs " + players[1].getLabelledScore();
 		if (Stroke.allDrawn())
 			msg = "Final Score -- " + msg;
-		else msg = msg + ", current Player is " + currentPlayer;
+		else msg = msg + " -- current Player is " + currentPlayer;
 		setStatusText(msg);
 	}
 
