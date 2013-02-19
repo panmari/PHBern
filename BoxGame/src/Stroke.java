@@ -22,7 +22,7 @@ public class Stroke extends Actor {
 	 */
 	public Stroke(BoxGame gg, StrokeDirection d) {
 		super(true, "sprites/strokeBoarder.png", 3);
-		this.strokeCounter++;
+		strokeCounter++;
 		this.gg = gg;
 		this.direction = d;
 		this.drawn = false;
