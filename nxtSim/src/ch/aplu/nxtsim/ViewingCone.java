@@ -183,7 +183,7 @@ class ViewingCone extends Triangle
     drawLine(bg, a, a.add(border2));
   }
 
-  private void paintCircle(GGBackground bg, Point center, int radius)
+  private static void paintCircle(GGBackground bg, Point center, int radius)
   {
     bg.drawCircle(center, radius);
   }
@@ -227,6 +227,11 @@ class ViewingCone extends Triangle
   {
     paintCone(bg, oldApex, oldBaseCenter);
     oldApex = null;
+  }
+  
+  protected static void eraseProximityCircle(GGBackground bg) {
+	paintCircle(bg, toPoint(oldCircle.center), (int) oldCircle.radius);
+	oldCircle = null;
   }
 
   private static void drawLine(GGBackground bg, GGVector v1, GGVector v2)

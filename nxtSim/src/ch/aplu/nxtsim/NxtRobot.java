@@ -893,6 +893,7 @@ public class NxtRobot
       Location l = target.getLocation();
       GGBackground bg = gg.getBg();
       ViewingCone.eraseCone(bg);
+      ViewingCone.eraseProximityCircle(bg);
       Color oldPaintColor = bg.getPaintColor();
       bg.setPaintColor(bg.getBgColor());
       Point[] mesh = target.getMesh();
