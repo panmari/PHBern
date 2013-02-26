@@ -64,7 +64,7 @@ interface SharedConstants
   int simulationPeriod = 30;
   int nbSteps = 3;  // Number of pixels advances per simulation period
   double motTurnAngle = 15;  // Angle per simulation period (in degrees) when motors have same speed of 50
-  double gearTurnAngle = 15; // Angle per simulation period (in degrees) when gear turns around center when speed is 50
+  double gearTurnAngle = 37; // Angle per simulation period (in degrees) when gear turns around center when speed is 50
   double motorRotIncFactor = 2.0;  // Factor that determines motor rotation speed
   double gearRotIncFactor = 3.0;   // Factor that determines gear rotation speed
   int pixelPerMeter = 200; // Distance corresponding to 1 meter
