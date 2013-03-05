@@ -4,12 +4,13 @@ import java.util.LinkedList;
 
 import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.GGVector;
+import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 
 
 public class Stroke extends Actor {
 
-	private BoxGame gg;
+	private GameGrid gg;
 	private StrokeDirection direction;
 	private boolean drawn;
 	private static int drawnStrokes;
@@ -20,7 +21,7 @@ public class Stroke extends Actor {
 	 * @param gg
 	 * @param d
 	 */
-	public Stroke(BoxGame gg, StrokeDirection d) {
+	public Stroke(GameGrid gg, StrokeDirection d) {
 		super(true, "sprites/strokeBoarder.png", 3);
 		strokeCounter++;
 		this.gg = gg;

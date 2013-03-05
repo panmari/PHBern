@@ -46,7 +46,7 @@ public class UltrasonicSensor extends Part
   private volatile boolean isFarNotified = false;
   private volatile boolean isNearNotified = false;
   private Color sectorColor = null;
-  private Color meshTriangleColor = null;
+  static Color meshTriangleColor = null;
   private Color proximityCircleColor = null;
   private static int nbInstances = 0;
 
