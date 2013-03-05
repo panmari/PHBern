@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
@@ -33,10 +35,10 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 	private Player currentPlayer;
 	private Player[] players = new Player[2];
 	private static int playerCounter = 0;
-	 private String sessionID = "13$BoxGame";
-	  private final String nickname = "plr";
-	  private TcpNode tcpNode = new TcpNode();
-	  private boolean isMyMove;
+	private String sessionID = "$BoxGame";
+	private final String nickname = "plr";
+	private TcpNode tcpNode = new TcpNode();
+	private boolean isMyMove = false;
 	interface Command
 	{
 		char change = 'c'; // change player
@@ -71,6 +73,7 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 		}
 		addStatusBar(20);
 		setTitle("The box game -- www.java-online.ch"); 
+		tcpNode.addTcpNodeListener(this);
 		show();
 		connect();
 		//setStatusText("Click on an edge to start");
@@ -91,7 +94,7 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 	@Override
 	public void mouseTouched(Actor actor, GGMouse mouse, Point spot) {
 		Stroke s = (Stroke) actor;
-		if (s.isDrawn()) 
+		if (s.isDrawn() || !isMyMove) 
 			return;
 		switch (mouse.getEvent()) {
 			case GGMouse.enter:
@@ -102,6 +105,7 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 				break;
 			case GGMouse.lClick:
 				s.draw(currentPlayer.id);
+				tcpNode.sendMessage("" + Command.move + s);
 				boolean nextPlayer = true;
 				for (Location loc: s.getPossibleFillLocations()) {
 					if (players[currentPlayer.id].tryToFillBoxes(loc))
@@ -118,7 +122,6 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 		String msg = players[0].getLabelledScore() + " vs " + players[1].getLabelledScore();
 		if (Stroke.allDrawn())
 			msg = "Final Score -- " + msg;
-		else msg = msg + " -- current Player is " + currentPlayer;
 		setStatusText(additionalMessage + " " + msg);
 	}
 
@@ -171,6 +174,7 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 	
 	private void connect()
 	  {
+		setStatusText("Connecting...");
 	    String id = requestEntry("Enter unique game room ID (more than 3 characters)");  
 	    sessionID = sessionID + id;
 	    tcpNode.connect(sessionID, nickname);
@@ -194,10 +198,10 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 	    switch (command)
 	    {
 	      case Command.start:
-	        if (isMyMove) {
+	        if (isMyMove) { //not really needed, this player is always second
 	          updateStatusText("Game started.");
 	        } else {
-	          updateStatusText("Game started. Wait for the partner's move.");
+	          setStatusText("Game started. Wait for the partner's move.");
 	        }
 	        break;
 	      case Command.terminate:
@@ -206,16 +210,21 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 	        System.exit(0);
 	        break;
 	      case Command.move:
-	    	  //TODO: rewrite for boxgame
-	        int x = text.charAt(1) - 48; // We get ASCII code of number
-	        int y = text.charAt(2) - 48;
+	    	//some regex magic for finding location:
+	    	Pattern locRegex = Pattern.compile("\\((\\d*),(\\d*)\\) (.*)");
+	    	Matcher locFinder = locRegex.matcher(text);
+	        int x = Integer.parseInt(locFinder.group(1));
+	        int y = Integer.parseInt(locFinder.group(2));
 	        Location loc = new Location(x, y);
+	        StrokeDirection dir;
+	        if (locFinder.group(3).equals(StrokeDirection.HORIZONTAL.toString()))
+	        	dir	 = StrokeDirection.HORIZONTAL;
+	        else dir = StrokeDirection.VERTICAL;
 	        getOneActorAt(loc).removeSelf();
 	        updateStatusText("Wait for partner's move.");
 	        break;
 	      case Command.over:    	  
 	        setStatusText("You won. Press 'New Game' to play again.");
-	        isMyMove = true;
 	        break;
 	      case Command.change:
 	        isMyMove = true;
@@ -239,8 +248,9 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 	    }
 	    else if (text.contains("In session:--- (1)")) // we are second player
 	    {
-	      updateStatusText();
+	      setStatusText("Connected. Make first move.");
 	      isMyMove = true;  // Second player starts
+	      tcpNode.sendMessage("" + Command.start);
 	    }
 	    else if (text.contains("In session:--- ")) // we are next player
 	    {

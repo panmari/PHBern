@@ -69,4 +69,7 @@ public class Stroke extends Actor {
 		return strokeCounter == drawnStrokes;
 	}
 	
+	public String toString() {
+		return "" + getLocation() + direction;
+	}
 }
