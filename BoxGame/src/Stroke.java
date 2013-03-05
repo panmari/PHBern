@@ -13,6 +13,7 @@ public class Stroke extends Actor {
 	private GameGrid gg;
 	private StrokeDirection direction;
 	private boolean drawn;
+	private int id;
 	private static int drawnStrokes;
 	private static int strokeCounter = 0;
 	
@@ -23,7 +24,7 @@ public class Stroke extends Actor {
 	 */
 	public Stroke(GameGrid gg, StrokeDirection d) {
 		super(true, "sprites/strokeBoarder.png", 3);
-		strokeCounter++;
+		this.id = strokeCounter++;
 		this.gg = gg;
 		this.direction = d;
 		this.drawn = false;
@@ -69,7 +70,11 @@ public class Stroke extends Actor {
 		return strokeCounter == drawnStrokes;
 	}
 	
+	public int getId() {
+		return id;
+	}
+	
 	public String toString() {
-		return "" + getLocation() + direction;
+		return getLocation() + " " + direction;
 	}
 }

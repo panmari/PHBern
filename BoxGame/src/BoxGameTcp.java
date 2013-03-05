@@ -32,13 +32,19 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 	 * It is then used for look up after a new stroke is drawn.
 	 */
 	Hashtable<Location, LinkedList<Stroke>> BoxMap = new Hashtable<Location, LinkedList<Stroke>>();
-	private Player currentPlayer;
+	/**
+	 * We only want to send a number over the network to minimize communication. This is
+	 * why we add a unique identifier to every stroke
+	 */
+	Hashtable<Integer, Stroke> StrokeMap = new Hashtable<Integer, Stroke>();
 	private Player[] players = new Player[2];
 	private static int playerCounter = 0;
-	private String sessionID = "$BoxGame";
+	private String sessionID = "$BoxGame:";
 	private final String nickname = "plr";
 	private TcpNode tcpNode = new TcpNode();
 	private boolean isMyMove = false;
+	private Player thisPlayer;
+	private Player otherPlayer;
 	interface Command
 	{
 		char change = 'c'; // change player
@@ -53,7 +59,6 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 		getBg().clear(Color.WHITE);
 		players[0] = new Player(Color.BLUE, "Blue");
 		players[1] = new Player(Color.RED, "Red");
-		currentPlayer = players[0]; //blue begins;
 		for (int x = 1; x < getNbHorzCells(); x++) {
 			for (int y = 1; y < getNbVertCells(); y++) {
 				Location loc = new Location(x, y);
@@ -66,6 +71,7 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 					Stroke s = new Stroke(this, d);
 					addActorNoRefresh(s, new Location(x,y));
 					s.addMouseTouchListener(this, GGMouse.lClick | GGMouse.enter | GGMouse.leave);
+					StrokeMap.put(s.getId(), s);
 					for (Location l: s.getPossibleFillLocations())
 						BoxMap.get(l).add(s);
 				}
@@ -74,19 +80,15 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 		addStatusBar(20);
 		setTitle("The box game -- www.java-online.ch"); 
 		tcpNode.addTcpNodeListener(this);
+		addExitListener(this);
 		show();
 		connect();
-		//setStatusText("Click on an edge to start");
 	}
 		
 	public static void main(String[] args) {
 		int height = 3;
 		int width = 3;
-		if (customizableGrid) {
-			height = new GGInputInt("Height", "Choose the height of the grid.").show();
-			width = new GGInputInt("Width", "Choose the width of the grid.").show();
-		}
-		
+
 		new BoxGameTcp(height, width);
 	}
 	
@@ -98,21 +100,24 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 			return;
 		switch (mouse.getEvent()) {
 			case GGMouse.enter:
-				s.show(1 + currentPlayer.id); //important, that not s.draw is called!
+				s.show(thisPlayer.id + 1); //important, that not s.draw is called!
 				break;
 			case GGMouse.leave:
 				s.show(0);
 				break;
 			case GGMouse.lClick:
-				s.draw(currentPlayer.id);
-				tcpNode.sendMessage("" + Command.move + s);
+				s.draw(thisPlayer.id);
+				tcpNode.sendMessage("" + Command.move + s.getId());
 				boolean nextPlayer = true;
 				for (Location loc: s.getPossibleFillLocations()) {
-					if (players[currentPlayer.id].tryToFillBoxes(loc))
+					if (players[thisPlayer.id].tryToFillBoxes(loc))
 						nextPlayer = false;
 				}
-				if (nextPlayer)
-					currentPlayer = currentPlayer.nextPlayer();
+				if (nextPlayer) {
+					tcpNode.sendMessage("" + Command.change);
+					updateStatusText("Wait for your turn.");
+					isMyMove = false;
+				} else updateStatusText("Your turn again.");
 				break;
 		}
 		refresh();
@@ -120,9 +125,11 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 
 	private void updateStatusText(String additionalMessage) {
 		String msg = players[0].getLabelledScore() + " vs " + players[1].getLabelledScore();
-		if (Stroke.allDrawn())
+		if (Stroke.allDrawn()) {
+			isMyMove = false;
 			msg = "Final Score -- " + msg;
-		setStatusText(additionalMessage + " " + msg);
+		} else msg = additionalMessage + " " + msg;
+		setStatusText(msg);
 	}
 
 	private boolean outOfValidGrid(Location loc) {
@@ -194,15 +201,13 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 	
 	  public void messageReceived(String sender, String text)
 	  {
+		if (isMyMove) 
+			return;
 	    char command = text.charAt(0);
 	    switch (command)
 	    {
 	      case Command.start:
-	        if (isMyMove) { //not really needed, this player is always second
-	          updateStatusText("Game started.");
-	        } else {
-	          setStatusText("Game started. Wait for the partner's move.");
-	        }
+	        setStatusText("Game started. Wait for the partner's move.");
 	        break;
 	      case Command.terminate:
 	        setStatusText("Partner exited game room. Terminating now...");
@@ -210,21 +215,13 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 	        System.exit(0);
 	        break;
 	      case Command.move:
-	    	//some regex magic for finding location:
-	    	Pattern locRegex = Pattern.compile("\\((\\d*),(\\d*)\\) (.*)");
-	    	Matcher locFinder = locRegex.matcher(text);
-	        int x = Integer.parseInt(locFinder.group(1));
-	        int y = Integer.parseInt(locFinder.group(2));
-	        Location loc = new Location(x, y);
-	        StrokeDirection dir;
-	        if (locFinder.group(3).equals(StrokeDirection.HORIZONTAL.toString()))
-	        	dir	 = StrokeDirection.HORIZONTAL;
-	        else dir = StrokeDirection.VERTICAL;
-	        getOneActorAt(loc).removeSelf();
-	        updateStatusText("Wait for partner's move.");
-	        break;
-	      case Command.over:    	  
-	        setStatusText("You won. Press 'New Game' to play again.");
+	    	int strokeId = Integer.parseInt(text.substring(1, text.length()));
+	    	Stroke s = StrokeMap.get(strokeId);
+	    	s.draw(otherPlayer.id);
+	    	for (Location loc: s.getPossibleFillLocations()) {
+				players[otherPlayer.id].tryToFillBoxes(loc);
+			}
+	    	updateStatusText("Wait for your turn.");
 	        break;
 	      case Command.change:
 	        isMyMove = true;
@@ -236,20 +233,23 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 
 	@Override
 	public void nodeStateChanged(TcpNodeState arg0) {
-		// TODO Auto-generated method stub
-		
+		// Not used
 	}
 
 	 public void statusReceived(String text)
 	  {
 	    if (text.contains("In session:--- (0)"))  // we are first player
 	    {
-	      setStatusText("Connected. Wait for partner.");
+	      setStatusText("Connected to room " + sessionID + ". Wait for partner.");
+	      thisPlayer = players[0];
+	      otherPlayer = players[1];
 	    }
 	    else if (text.contains("In session:--- (1)")) // we are second player
 	    {
 	      setStatusText("Connected. Make first move.");
 	      isMyMove = true;  // Second player starts
+	      thisPlayer = players[1];
+	      otherPlayer = players[0];
 	      tcpNode.sendMessage("" + Command.start);
 	    }
 	    else if (text.contains("In session:--- ")) // we are next player
