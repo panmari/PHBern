@@ -128,6 +128,9 @@ public class BoxGameTcp extends GameGrid implements GGMouseTouchListener, TcpNod
 		if (Stroke.allDrawn()) {
 			isMyMove = false;
 			msg = "Final Score -- " + msg;
+			if (thisPlayer.score < otherPlayer.score)
+				msg += " -- You lose!";
+			else msg += " -- You win!";
 		} else msg = additionalMessage + " " + msg;
 		setStatusText(msg);
 	}
