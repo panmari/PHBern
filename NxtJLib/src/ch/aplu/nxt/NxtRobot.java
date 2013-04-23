@@ -12,13 +12,29 @@ However the use of the code is entirely your responsibility.
  */
 package ch.aplu.nxt;
 
-import ch.aplu.nxt.platform.*;
-import javax.bluetooth.*;
-import javax.microedition.io.*;
-import ch.aplu.bluetooth.*;
-import ch.aplu.util.*;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.Vector;
+
+import javax.bluetooth.RemoteDevice;
+import javax.microedition.io.Connector;
+import javax.microedition.io.StreamConnection;
+
+import ch.aplu.bluetooth.BluetoothFinder;
+import ch.aplu.bluetooth.BluetoothResponder;
+import ch.aplu.bluetooth.BtDeviceInfo;
+import ch.aplu.nxt.platform.ConnectPanel;
+import ch.aplu.nxt.platform.DebugConsole;
+import ch.aplu.nxt.platform.NxtProperties;
+import ch.aplu.nxt.platform.NxtThread;
+import ch.aplu.nxt.platform.PlatformTools;
+import ch.aplu.nxt.platform.ShowError;
+import ch.aplu.nxt.platform.ShowException;
+import ch.aplu.util.Cleanable;
 
 /**
  * Class that represents a NXT robot brick. Parts (e.g. motors, sensors) may
@@ -356,21 +372,22 @@ public class NxtRobot implements SharedConstants
     this.isConnectPane = isConnectPane;
     
     //Hack for Mac OS X 10.8: Load custom drivers:
-    if (System.getProperty("os.name").equalsIgnoreCase("Mac OS X")) { //TODO: add version check?
+    if (System.getProperty("os.name").equalsIgnoreCase("Mac OS X") &&
+    		System.getProperty("os.version").contains("10.8")) {
 	    String driverLocation =  System.getProperty("user.home") + 
-				File.separator + ".legoNXT" + 
+				File.separator + "legoNXT" + 
 				File.separator + "lejosNXJ" +
 				File.separator + "lib" +
-				File.separator + "mac";
+				File.separator + "bluetooth";
 		File f = new File(driverLocation, "IOBluetooth");
-		System.out.println(driverLocation);
+		System.out.println("Trying to load custom library from: " + f.getAbsolutePath());
 		if (f.exists()) {
 			try {
 				Runtime.getRuntime().exec("export DYLD_LIBRARY_PATH=" + driverLocation);
-			} catch(Exception e) {
-				System.out.println("Could not load new driver.");
-				return false;
-			}
+				System.out.println("done!");
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 			
 		} else {
 			System.out.println("Could not find driver file, please run installation first.");
 			return false;
