@@ -2,14 +2,11 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.Hashtable;
 import java.util.LinkedList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
 import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.GGExitListener;
-import ch.aplu.jgamegrid.GGInputInt;
 import ch.aplu.jgamegrid.GGMouse;
 import ch.aplu.jgamegrid.GGMouseTouchListener;
 import ch.aplu.jgamegrid.GameGrid;

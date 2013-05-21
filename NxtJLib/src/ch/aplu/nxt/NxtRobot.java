@@ -380,16 +380,14 @@ public class NxtRobot implements SharedConstants
 				File.separator + "lib" +
 				File.separator + "bluetooth";
 		File f = new File(driverLocation, "IOBluetooth");
-		System.out.println("Trying to load custom library from: " + f.getAbsolutePath());
 		if (f.exists()) {
 			try {
-				Runtime.getRuntime().exec("export DYLD_LIBRARY_PATH=" + driverLocation);
-				System.out.println("done!");
+				System.load(f.getAbsolutePath());
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println("Could not load bluetooth driver.");
 			} 			
 		} else {
-			System.out.println("Could not find driver file, please run installation first.");
+			ConnectPanel.show("Could not find driver file, please run installation first.");
 			return false;
 		}
     }
