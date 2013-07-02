@@ -17,7 +17,10 @@ public class Mandelbrot extends GameGrid implements GGMouseListener{
 	public Mandelbrot() {
 		super(600, 600, 1, false);
 		show();
+		long start = System.currentTimeMillis();
 		draw(-2.2, 1.0, -1.2, 1.2);
+		long end = System.currentTimeMillis();
+		System.out.println("Total execution time: " + (end-start) + "ms"); 
 		addMouseListener(this, GGMouse.lPress | GGMouse.lDrag | GGMouse.lRelease);
 	}
 	
@@ -25,7 +28,8 @@ public class Mandelbrot extends GameGrid implements GGMouseListener{
 		// might need some reordering, depending on how selection was made
 		p = getPanel(Math.min(xmin, xmax), Math.max(xmin, xmax), 
 						Math.min(ymin, ymax), Math.max(ymin, ymax));
-		setTitle(String.format("Mandelbrot set -- xmin: %.4f xmax: %.4f ymin: %.4f ymax: %.4f", 
+		p.setRefreshEnabled(false);
+		setTitle(String.format("Mandelbrot -- xmin: %.3f xmax: %.3f ymin: %.3f ymax: %.3f", 
 				p.getXmin(), p.getXmax(), p.getYmin(), p.getYmax()));
 		
 		p.setPaintMode();
@@ -38,28 +42,23 @@ public class Mandelbrot extends GameGrid implements GGMouseListener{
 				p.setPaintColor(drawColor);
 				p.drawPoint(new Point(xPixel, yPixel));
 			}
-			if (xPixel % 50 == 0) // refresh every 50 columns
+			if (xPixel % 100 == 0) // refresh every 50 columns
 				refresh();
 		}
 	}
 
 	private Color getColorForIterCount(int iterCount) {
-		if (iterCount == maxIterations)
+		if (iterCount >= maxIterations)
 			return Color.black;
-		if (iterCount > maxIterations*0.8)
-			return Color.yellow;
-		if (iterCount > maxIterations*0.6)
-			return Color.blue;
-		if (iterCount > maxIterations*0.4)
-			return Color.red;
-		if (iterCount > maxIterations*0.2)
-			return Color.orange;
-		return Color.white;
+		float c = iterCount/(float) maxIterations;
+		return new Color(c, c, 1f, 1f);
 	}
 
 
 
 	private int getIterCount(double x_p, double y_p) {
+		if (isStable(x_p, y_p))
+			return maxIterations;
 		double x = 0, y = 0;
 		int iter = 0;
 		while (isInCircle(x, y) && iter < maxIterations) {
@@ -71,9 +70,17 @@ public class Mandelbrot extends GameGrid implements GGMouseListener{
 		}
 		return iter;
 	}
-
-
-
+	
+	/**
+	 * Returns true, if the given points are inside the cardioid (first expression)
+	 * or inside the period 2 bulb (second expression). These values are considered
+	 * stable, since they'll fulfill insideCircle for every iteration step.
+	 */
+	private boolean isStable(double x, double y) {
+		double p = Math.sqrt(Math.pow(x - 1/4f, 2) + y*y);
+		return x < p - 2*(p*p) + 1/4f || (x + 1)*(x + 1) + y*y < 1/16f;
+	}
+	
 	private boolean isInCircle(double x, double y) {
 		return Math.pow(x, 2) + Math.pow(y, 2) < RADIUS_SQUARE;
 	}
